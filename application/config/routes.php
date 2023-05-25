@@ -572,15 +572,6 @@ $route['get_product_size'] = 'Administrator/Products/getProductSize';
 $route['get_product_color_stock'] = 'Administrator/Products/getProductColorStock';
 $route['get_product_size_stock'] = 'Administrator/Products/getProductColorSize';
 
-// Supplier Commission
-$route['supplier_commission_list'] = 'Administrator/Supplier/supplierCommission';
-$route['get_commission_list'] = 'Administrator/Supplier/getSupplierCommission';
-$route['commission_withdraw'] = 'Administrator/Supplier/CommissionWithdraw';
-$route['save_commission_withdraw'] = 'Administrator/Supplier/SaveCommissionWithdraw';
-$route['update_commission_withdraw'] = 'Administrator/Supplier/UpdateCommissionWithdraw';
-$route['get_commission_withdraw'] = 'Administrator/Supplier/getWithdrwaCommissions';
-$route['delete_withdraw_commission'] = 'Administrator/Supplier/DeleteWithdrwaCommission';
-
 // Order module 
 $route['order_entry'] = 'Administrator/Order/index';
 $route['add_order'] = 'Administrator/Order/addOrder';

@@ -31,8 +31,8 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12" style="border-bottom:1px #ccc solid;">
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right" for="searchType"> Search Type </label>
-				<div class="col-sm-2">
+				<label class="col-lg-2 control-label no-padding-right" for="searchType"> Search Type </label>
+				<div class="col-lg-2">
 					<select id="searchType" class="form-control" style="padding: 0px 3px" v-model="searchType" v-on:change="onChangeSearchType">
 						<option value="all"> All </option>
 						<option value="supplier"> By Supplier </option>
@@ -41,14 +41,14 @@
 			</div>
 
 			<div class="form-group" style="display:none" v-bind:style="{display: searchType == 'supplier' ? '' : 'none'}">
-				<label class="col-sm-1 control-label no-padding-right" for="searchType"> Suppliers </label>
-				<div class="col-sm-2">
+				<label class="col-lg-1 control-label no-padding-right" for="searchType"> Suppliers </label>
+				<div class="col-lg-2">
 					<v-select v-bind:options="suppliers" v-model="selectedSupplier" label="Supplier_Name"></v-select>
 				</div>
 			</div>
 
 			<div class="form-group">
-				<div class="col-sm-2">
+				<div class="col-lg-2">
 					<input type="button" class="btn btn-primary" value="Show Report" v-on:click="getDues" style="margin-top:0px;border:0px;height:28px;">
 				</div>
 			</div>

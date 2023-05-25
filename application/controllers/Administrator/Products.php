@@ -911,7 +911,7 @@ class Products extends CI_Controller {
             where pc.product_id = ?
             and pc.color_id = ?
             and pc.branch_id = ?
-        ",[$data->productId, $data->colorId, $this->brunch])->row()->stock;
+        ",[$data->productId, $data->colorId, $this->brunch])->result();
 
         echo json_encode($colorQty);
     }

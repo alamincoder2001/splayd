@@ -60,11 +60,6 @@ class Purchase extends CI_Controller
                 where pd.PurchaseMaster_IDNo = '$data->purchaseId'
             ")->result();
             $res['purchaseDetails'] = $purchaseDetails;
-
-            $purchaseDetails = array_map(function($detail) {
-                $detail->quantity_text = floor($detail->PurchaseDetails_TotalQuantity / $detail->per_unit_convert) .' Ton/Sheet ' . $detail->PurchaseDetails_TotalQuantity % $detail->per_unit_convert . ' '. $detail->Unit_Name;
-                return $detail;
-            }, $purchaseDetails);
         }
         $purchases = $this->db->query("
             select
@@ -256,16 +251,16 @@ class Purchase extends CI_Controller
             $totalReturnAmount = 0;
             foreach($data->cart as $product){
                 $returnDetails = array(
-                    'PurchaseReturn_SlNo' => $purchaseReturnId,
-                    'PurchaseReturnDetailsProduct_SlNo' => $product->Product_IDNo,
-                    'PurchaseReturnDetailsColorId' => $product->Product_colorId,
-                    'PurchaseReturnDetailsSizeId' => $product->Product_sizeId,
+                    'PurchaseReturn_SlNo'                  => $purchaseReturnId,
+                    'PurchaseReturnDetailsProduct_SlNo'    => $product->Product_IDNo,
+                    'PurchaseReturnDetailsColorId'         => $product->Product_colorId,
+                    'PurchaseReturnDetailsSizeId'          => $product->Product_sizeId,
                     'PurchaseReturnDetails_ReturnQuantity' => $product->return_quantity,
-                    'PurchaseReturnDetails_ReturnAmount' => $product->return_amount,
-                    'Status' => 'a',
-                    'UpdateBy' => $this->session->userdata("FullName"),
-                    'UpdateTime' => date('Y-m-d H:i:s'),
-                    'PurchaseReturnDetails_brachid' => $this->session->userdata('BRANCHid')
+                    'PurchaseReturnDetails_ReturnAmount'   => $product->return_amount,
+                    'Status'                               => 'a',
+                    'UpdateBy'                             => $this->session->userdata("FullName"),
+                    'UpdateTime'                           => date('Y-m-d H:i:s'),
+                    'PurchaseReturnDetails_brachid'        => $this->session->userdata('BRANCHid')
                 );
 
                 $this->db->insert('tbl_purchasereturndetails', $returnDetails);
@@ -546,24 +541,23 @@ class Purchase extends CI_Controller
             }
 
             $purchase = array(
-                'Supplier_SlNo' => $supplierId,
-                'PurchaseMaster_InvoiceNo' => $invoice,
-                'PurchaseMaster_OrderDate' => $data->purchase->purchaseDate,
-                'PurchaseMaster_PurchaseFor' => $data->purchase->purchaseFor,
-                'PurchaseMaster_TotalAmount' => $data->purchase->total,
+                'Supplier_SlNo'                 => $supplierId,
+                'PurchaseMaster_InvoiceNo'      => $invoice,
+                'PurchaseMaster_OrderDate'      => $data->purchase->purchaseDate,
+                'PurchaseMaster_PurchaseFor'    => $data->purchase->purchaseFor,
+                'PurchaseMaster_TotalAmount'    => $data->purchase->total,
                 'PurchaseMaster_DiscountAmount' => $data->purchase->discount,
-                'PurchaseMaster_CommissionAmount' => $data->purchase->commission,
-                'PurchaseMaster_Tax' => $data->purchase->vat,
-                'PurchaseMaster_Freight' => $data->purchase->freight,
+                'PurchaseMaster_Tax'            => $data->purchase->vat,
+                'PurchaseMaster_Freight'        => $data->purchase->freight,
                 'PurchaseMaster_SubTotalAmount' => $data->purchase->subTotal,
-                'PurchaseMaster_PaidAmount' => $data->purchase->paid,
-                'PurchaseMaster_DueAmount' => $data->purchase->due,
-                'previous_due' => $data->purchase->previousDue,
-                'PurchaseMaster_Description' => $data->purchase->note,
-                'status' => 'a',
-                'AddBy' => $this->session->userdata("FullName"),
-                'AddTime' => date('Y-m-d H:i:s'),
-                'PurchaseMaster_BranchID' => $this->session->userdata('BRANCHid')
+                'PurchaseMaster_PaidAmount'     => $data->purchase->paid,
+                'PurchaseMaster_DueAmount'      => $data->purchase->due,
+                'previous_due'                  => $data->purchase->previousDue,
+                'PurchaseMaster_Description'    => $data->purchase->note,
+                'status'                        => 'a',
+                'AddBy'                         => $this->session->userdata("FullName"),
+                'AddTime'                       => date('Y-m-d H:i:s'),
+                'PurchaseMaster_BranchID'       => $this->session->userdata('BRANCHid')
             );
 
             $this->db->insert('tbl_purchasemaster', $purchase);
@@ -676,24 +670,23 @@ class Purchase extends CI_Controller
             }
 
             $purchase = array(
-                'Supplier_SlNo' => $supplierId,
-                'PurchaseMaster_InvoiceNo' => $data->purchase->invoice,
-                'PurchaseMaster_OrderDate' => $data->purchase->purchaseDate,
-                'PurchaseMaster_PurchaseFor' => $data->purchase->purchaseFor,
-                'PurchaseMaster_TotalAmount' => $data->purchase->total,
+                'Supplier_SlNo'                 => $supplierId,
+                'PurchaseMaster_InvoiceNo'      => $data->purchase->invoice,
+                'PurchaseMaster_OrderDate'      => $data->purchase->purchaseDate,
+                'PurchaseMaster_PurchaseFor'    => $data->purchase->purchaseFor,
+                'PurchaseMaster_TotalAmount'    => $data->purchase->total,
                 'PurchaseMaster_DiscountAmount' => $data->purchase->discount,
-                'PurchaseMaster_CommissionAmount' => $data->purchase->commission,
-                'PurchaseMaster_Tax' => $data->purchase->vat,
-                'PurchaseMaster_Freight' => $data->purchase->freight,
+                'PurchaseMaster_Tax'            => $data->purchase->vat,
+                'PurchaseMaster_Freight'        => $data->purchase->freight,
                 'PurchaseMaster_SubTotalAmount' => $data->purchase->subTotal,
-                'PurchaseMaster_PaidAmount' => $data->purchase->paid,
-                'PurchaseMaster_DueAmount' => $data->purchase->due,
-                'previous_due' => $data->purchase->previousDue,
-                'PurchaseMaster_Description' => $data->purchase->note,
-                'status' => 'a',
-                'UpdateBy' => $this->session->userdata("FullName"),
-                'UpdateTime' => date('Y-m-d H:i:s'),
-                'PurchaseMaster_BranchID' => $this->session->userdata('BRANCHid')
+                'PurchaseMaster_PaidAmount'     => $data->purchase->paid,
+                'PurchaseMaster_DueAmount'      => $data->purchase->due,
+                'previous_due'                  => $data->purchase->previousDue,
+                'PurchaseMaster_Description'    => $data->purchase->note,
+                'status'                        => 'a',
+                'UpdateBy'                      => $this->session->userdata("FullName"),
+                'UpdateTime'                    => date('Y-m-d H:i:s'),
+                'PurchaseMaster_BranchID'       => $this->session->userdata('BRANCHid')
             );
 
             $this->db->where('PurchaseMaster_SlNo', $purchaseId);

@@ -773,20 +773,6 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				<?php if (array_search("supplier_commission_list", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
-					<div class="col-md-2 col-xs-6 ">
-						<div class="col-md-12 section20">
-							<a href="<?php echo base_url(); ?>supplier_commission_list">
-								<div class="logo">
-									<i class="menu-icon fa fa-th-list"></i>
-								</div>
-								<div class="textModule" style="margin-top: 0; line-height: 14px;">
-									Supplier Commission List
-								</div>
-							</a>
-						</div>
-					</div>
-				<?php endif; ?>
 				<?php if (array_search("returnsList", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6">
 						<div class="col-md-12 section20">

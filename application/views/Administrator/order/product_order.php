@@ -174,7 +174,7 @@
 										<input type="number" id="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
 									</div>
 									<div class="col-xs-4">
-										<input type="number" min="0" id="quantity" placeholder="Quantity" class="form-control" ref="quantity" v-model="selectedProduct.quantity" v-on:input="productTotal" autocomplete="off" />
+										<input type="text" min="0" class="form-control" ref="quantity" v-model="selectedProduct.quantity" placeholder="Quantity" v-on:input="productTotal" required>
 									</div>
 								</div>
 
@@ -226,7 +226,7 @@
 							<th style="width:15%;color:#000;">Product Code</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="width:5%;color:#000;">Quantity</th>
+							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
 							<th style="width:10%;color:#000;">Action</th>
@@ -538,7 +538,6 @@
 			},
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_SellingPrice)).toFixed(2);
-
 			},
 			getProductColors() {
 				axios.post('/get_product_color', {
@@ -644,7 +643,6 @@
 						})
 						.then(res => {
 							this.productStock = res.data;
-							// console.log(this.productStock);
 						})
 
 					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
