@@ -135,6 +135,9 @@ class Sales extends CI_Controller
                 'SaleMaster_Freight'             => $data->sales->transportCost,
                 'SaleMaster_SubTotalAmount'      => $data->sales->subTotal,
                 'SaleMaster_PaidAmount'          => $data->sales->paid,
+                'SaleMaster_cashPaid'            => $data->sales->cashPaid,
+                'SaleMaster_bankPaid'            => $data->sales->bankPaid,
+                'account_id'                     => $data->sales->account_id,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
                 'SaleMaster_Description'         => $data->sales->note,
@@ -346,7 +349,7 @@ class Sales extends CI_Controller
         }
 
         if (isset($data->salesId) && $data->salesId != 0 && $data->salesId != '') {
-            $clauses .= " and SaleMaster_SlNo = '$data->salesId'";
+            $clauses .= " and sm.SaleMaster_SlNo = '$data->salesId'";
             $saleDetails = $this->db->query("
                 select 
                     sd.*,
@@ -378,11 +381,15 @@ class Sales extends CI_Controller
             c.Customer_Address,
             c.Customer_Type,
             e.Employee_Name,
+            a.account_name,
+            a.account_number,
+            a.bank_name,
             br.Brunch_name
             from tbl_salesmaster sm
             left join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
             left join tbl_employee e on e.Employee_SlNo = sm.employee_id
             left join tbl_brunch br on br.brunch_id = sm.SaleMaster_branchid
+            left join tbl_bank_accounts a on a.account_id = sm.account_id
             where sm.SaleMaster_branchid = '$branchId'
             and sm.Status = 'a'
             $clauses
@@ -431,22 +438,25 @@ class Sales extends CI_Controller
             }
 
             $sales = array(
-                'SalseCustomer_IDNo' => $customerId,
-                'employee_id' => $data->sales->employeeId,
-                'SaleMaster_SaleDate' => $data->sales->salesDate,
-                'SaleMaster_SaleType' => $data->sales->salesType,
-                'SaleMaster_TotalSaleAmount' => $data->sales->total,
+                'SalseCustomer_IDNo'             => $customerId,
+                'employee_id'                    => $data->sales->employeeId,
+                'SaleMaster_SaleDate'            => $data->sales->salesDate,
+                'SaleMaster_SaleType'            => $data->sales->salesType,
+                'SaleMaster_TotalSaleAmount'     => $data->sales->total,
                 'SaleMaster_TotalDiscountAmount' => $data->sales->discount,
-                'SaleMaster_TaxAmount' => $data->sales->vat,
-                'SaleMaster_Freight' => $data->sales->transportCost,
-                'SaleMaster_SubTotalAmount' => $data->sales->subTotal,
-                'SaleMaster_PaidAmount' => $data->sales->paid,
-                'SaleMaster_DueAmount' => $data->sales->due,
-                'SaleMaster_Previous_Due' => $data->sales->previousDue,
-                'SaleMaster_Description' => $data->sales->note,
-                "UpdateBy" => $this->session->userdata("FullName"),
-                'UpdateTime' => date("Y-m-d H:i:s"),
-                "SaleMaster_branchid" => $this->session->userdata("BRANCHid")
+                'SaleMaster_TaxAmount'           => $data->sales->vat,
+                'SaleMaster_Freight'             => $data->sales->transportCost,
+                'SaleMaster_SubTotalAmount'      => $data->sales->subTotal,
+                'SaleMaster_PaidAmount'          => $data->sales->paid,
+                'SaleMaster_cashPaid'            => $data->sales->cashPaid,
+                'SaleMaster_bankPaid'            => $data->sales->bankPaid,
+                'account_id'                     => $data->sales->account_id,
+                'SaleMaster_DueAmount'           => $data->sales->due,
+                'SaleMaster_Previous_Due'        => $data->sales->previousDue,
+                'SaleMaster_Description'         => $data->sales->note,
+                "UpdateBy"                       => $this->session->userdata("FullName"),
+                'UpdateTime'                     => date("Y-m-d H:i:s"),
+                "SaleMaster_branchid"            => $this->session->userdata("BRANCHid")
             );
 
             $this->db->where('SaleMaster_SlNo', $salesId);

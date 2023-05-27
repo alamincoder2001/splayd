@@ -40,7 +40,6 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</a>
 					</div>
 				</div>
-
 				<div class="col-md-3 col-xs-6 section4">
 					<div class="col-md-12 section122" style="background-color:#dcf5ea;" onmouseover="this.style.background = '#bdecd7'" onmouseout="this.style.background = '#dcf5ea'">
 						<a href="<?php echo base_url(); ?>module/PurchaseModule">
@@ -375,9 +374,9 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
-				
-				<?php if($this->session->userdata('BRANCHid') == 1 && (isset($CheckSuperAdmin) || isset($CheckAdmin))) : ?>
+
+
+				<?php if ($this->session->userdata('BRANCHid') == 1 && (isset($CheckSuperAdmin) || isset($CheckAdmin))) : ?>
 					<div class="col-md-2 col-xs-6 ">
 						<div class="col-md-12 section20">
 							<a href="<?php echo base_url(); ?>companyProfile">
@@ -642,6 +641,79 @@ if ($module == 'dashboard' or $module == '') { ?>
 								</div>
 								<div class="textModule">
 									Quotation Record
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+
+	<?php } elseif ($module == 'OrderModule') { ?>
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<div class="col-md-12 header">
+
+					<h3>Order Sales Module </h3>
+				</div>
+
+				<?php if (array_search("order_entry", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>order_entry">
+								<div class="logo">
+									<i class="menu-icon fa fa-shopping-cart"></i>
+								</div>
+								<div class="textModule">
+									Order Sales Entry
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+				
+				<?php if (array_search("orderinvoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>orderinvoice">
+								<div class="logo">
+									<i class="menu-icon fa fa-file-text-o"></i>
+								</div>
+								<div class="textModule">
+									Order Sales Invoice
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+				
+
+				<?php if (array_search("delivery_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>delivery_order">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Order Sales Delivery List
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+				<?php if (array_search("orderrecord", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>orderrecord">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Order Sales Record
 								</div>
 							</a>
 						</div>

@@ -122,7 +122,7 @@
 							<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 							<td>{{ sale.SaleMaster_SaleDate }}</td>
 							<td>{{ sale.Customer_Name }}</td>
-							<td style="text-align:right;">{{ sale.SaleMaster_PaidAmount | decimal }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_cashPaid | decimal }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
@@ -422,7 +422,7 @@
 							<td>{{ purchase.PurchaseMaster_InvoiceNo }}</td>
 							<td>{{ purchase.PurchaseMaster_OrderDate }}</td>
 							<td>{{ purchase.Supplier_Name }}</td>
-							<td style="text-align:right;">{{ purchase.PurchaseMaster_PaidAmount | decimal }}</td>
+							<td style="text-align:right;">{{ purchase.PurchaseMaster_cashPaid | decimal }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
@@ -753,12 +753,12 @@
 		computed: {
 			totalSales() {
 				return this.sales.reduce((prev, curr) => {
-					return prev + parseFloat(curr.SaleMaster_PaidAmount)
+					return prev + parseFloat(curr.SaleMaster_cashPaid)
 				}, 0).toFixed(2);
 			},
 			totalPurchase() {
 				return this.purchases.reduce((prev, curr) => {
-					return prev + parseFloat(curr.PurchaseMaster_PaidAmount)
+					return prev + parseFloat(curr.PurchaseMaster_cashPaid)
 				}, 0).toFixed(2);
 			},
 			totalReceivedFromCustomers() {

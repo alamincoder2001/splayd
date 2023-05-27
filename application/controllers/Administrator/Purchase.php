@@ -70,9 +70,13 @@ class Purchase extends CI_Controller
             s.Supplier_Email,
             s.Supplier_Code,
             s.Supplier_Address,
-            s.Supplier_Type
+            s.Supplier_Type,
+            a.account_name,
+            a.account_number,
+            a.bank_name
             from tbl_purchasemaster pm
             join tbl_supplier s on s.Supplier_SlNo = pm.Supplier_SlNo
+            left join tbl_bank_accounts a on a.account_id = pm.account_id
             where pm.PurchaseMaster_BranchID = '$branchId' 
             and pm.status = 'a'
             $purchaseIdClause $clauses
@@ -551,7 +555,9 @@ class Purchase extends CI_Controller
                 'PurchaseMaster_Freight'        => $data->purchase->freight,
                 'PurchaseMaster_SubTotalAmount' => $data->purchase->subTotal,
                 'PurchaseMaster_PaidAmount'     => $data->purchase->paid,
-                'PurchaseMaster_DueAmount'      => $data->purchase->due,
+                'PurchaseMaster_cashPaid'       => $data->purchase->cashPaid,
+                'PurchaseMaster_bankPaid'       => $data->purchase->bankPaid,
+                'account_id'                    => $data->purchase->account_id,
                 'previous_due'                  => $data->purchase->previousDue,
                 'PurchaseMaster_Description'    => $data->purchase->note,
                 'status'                        => 'a',
@@ -680,6 +686,9 @@ class Purchase extends CI_Controller
                 'PurchaseMaster_Freight'        => $data->purchase->freight,
                 'PurchaseMaster_SubTotalAmount' => $data->purchase->subTotal,
                 'PurchaseMaster_PaidAmount'     => $data->purchase->paid,
+                'PurchaseMaster_cashPaid'       => $data->purchase->cashPaid,
+                'PurchaseMaster_bankPaid'       => $data->purchase->bankPaid,
+                'account_id'                    => $data->purchase->account_id,
                 'PurchaseMaster_DueAmount'      => $data->purchase->due,
                 'previous_due'                  => $data->purchase->previousDue,
                 'PurchaseMaster_Description'    => $data->purchase->note,
@@ -789,7 +798,7 @@ class Purchase extends CI_Controller
             }
 
             $this->db->trans_commit();
-            $res=['success'=>true, 'message'=>'Purchase Success', 'purchaseId'=>$purchaseId];
+            $res=['success'=>true, 'message'=>'Purchase Update Success', 'purchaseId'=>$purchaseId];
         } catch (Exception $ex){
             $this->db->trans_rollback();
             $res = ['success'=>false, 'message'=>$ex->getMessage()];

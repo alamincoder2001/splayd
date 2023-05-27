@@ -590,7 +590,6 @@ class Account extends CI_Controller {
         $damageClause = "";
         $returnClause = "";
         $purchaseClause = "";
-        $withdrawClause = "";
         if(isset($data->dateFrom) && $data->dateFrom != '' && isset($data->dateTo) && $data->dateTo != ''){
             $transactionDateClause = " and ct.Tr_date between '$data->dateFrom' and '$data->dateTo'";
             $employePaymentDateClause = " and ep.payment_date between '$data->dateFrom' and '$data->dateTo'";
@@ -600,7 +599,6 @@ class Account extends CI_Controller {
             $damageClause = " and d.Damage_Date between '$data->dateFrom' and '$data->dateTo'";
             $returnClause = " and r.SaleReturn_ReturnDate between '$data->dateFrom' and '$data->dateTo'";
             $purchaseClause = " and pm.PurchaseMaster_OrderDate between '$data->dateFrom' and '$data->dateTo'";
-            $withdrawClause = " and cw.date between '$data->dateFrom' and '$data->dateTo'";
         }
 
         $result = $this->db->query("
@@ -698,15 +696,7 @@ class Account extends CI_Controller {
                 where r.Status = 'a'
                 and r.SaleReturn_brunchId = '" . $this->session->userdata('BRANCHid') . "'
                 $returnClause
-            ) as returned_amount,
-
-            (
-                select ifnull(sum(cw.amount), 0) 
-                from tbl_commission_withdraw cw
-                where cw.branch_id = '" . $this->session->userdata('BRANCHid') . "'
-                and cw.status = 'a'
-                $withdrawClause
-            ) as withdraw_commission
+            ) as returned_amount
         ")->row();
 
         echo json_encode($result);
@@ -1233,6 +1223,54 @@ class Account extends CI_Controller {
                 and sp.SPayment_status = 'a'
                 and sp.SPayment_TransactionType = 'CR'
                 and sp.SPayment_brunchid = " . $this->session->userdata('BRANCHid') . "
+
+                UNION
+                select 
+                    'g' as sequence,
+                    pm.PurchaseMaster_SlNo as id,
+                    concat('Product Purchase- ', s.Supplier_Name, ' (Invoice: ', pm.PurchaseMaster_InvoiceNo, ')') as description, 
+                    pm.account_id,
+                    pm.PurchaseMaster_OrderDate as transaction_date,
+                    'withdraw' as transaction_type,
+                    0.00 as deposit,
+                    pm.PurchaseMaster_bankPaid as withdraw,
+                    pm.PurchaseMaster_Description as note,
+                    ac.account_name,
+                    ac.account_number,
+                    ac.bank_name,
+                    ac.branch_name,
+                    0.00 as balance
+                from tbl_purchasemaster pm
+                join tbl_bank_accounts ac on ac.account_id = pm.account_id
+                join tbl_supplier s on s.Supplier_SlNo = pm.Supplier_SlNo
+                where pm.account_id is not null
+                and pm.status = 'a'
+                and pm.PurchaseMaster_bankPaid > 0
+                and pm.PurchaseMaster_BranchID = " . $this->session->userdata('BRANCHid') . "
+
+                UNION
+                select 
+                    'h' as sequence,
+                    sm.SaleMaster_SlNo as id,
+                    concat('Product Sales- ', c.Customer_Name, ' (Invoice: ', sm.SaleMaster_InvoiceNo, ')') as description, 
+                    sm.account_id,
+                    sm.SaleMaster_SaleDate as transaction_date,
+                    'withdraw' as transaction_type,
+                    sm.SaleMaster_bankPaid as deposit,
+                    0.00 as withdraw,
+                    sm.SaleMaster_Description as note,
+                    ac.account_name,
+                    ac.account_number,
+                    ac.bank_name,
+                    ac.branch_name,
+                    0.00 as balance
+                from tbl_salesmaster sm
+                join tbl_bank_accounts ac on ac.account_id = sm.account_id
+                join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
+                where sm.account_id is not null
+                and sm.Status = 'a'
+                and sm.SaleMaster_bankPaid > 0
+                and sm.SaleMaster_branchid = " . $this->session->userdata('BRANCHid') . "
             ) as tbl
             where 1 = 1 $clauses
             order by $order
@@ -1350,12 +1388,13 @@ class Account extends CI_Controller {
                 sm.SaleMaster_SlNo as id,
                 sm.SaleMaster_SaleDate as date,
                 concat('Sale - ', sm.SaleMaster_InvoiceNo, ' - ', c.Customer_Name, ' (', c.Customer_Code, ')', ' - Bill: ', sm.SaleMaster_TotalSaleAmount) as description,
-                sm.SaleMaster_PaidAmount as in_amount,
+                sm.SaleMaster_cashPaid as in_amount,
                 0.00 as out_amount
             from tbl_salesmaster sm 
             join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
             where sm.Status = 'a'
             and sm.SaleMaster_branchid = '$this->brunch'
+            and sm.SaleMaster_cashPaid > 0
             and sm.SaleMaster_SaleDate between '$data->fromDate' and '$data->toDate'
             
             UNION
@@ -1474,19 +1513,6 @@ class Account extends CI_Controller {
             and ass.status = 'a'
             and ass.buy_or_sale = 'sale'
             and ass.as_date between '$data->fromDate' and '$data->toDate'
-
-            UNION
-            select
-                cw.id,
-                cw.date,
-                concat_ws(' - ', 'Commission Withdraw', s.Supplier_Name, s.Supplier_Code)as description,
-                cw.amount as in_amount,
-                0.00 as out_amount
-            from tbl_commission_withdraw cw
-            join tbl_supplier s on s.Supplier_SlNo = cw.supplier_id
-            where cw.branch_id = '$this->brunch'
-            and cw.status = 'a'
-            and cw.date between '$data->fromDate' and '$data->toDate'
             
             /* Cash out */
             
@@ -1497,11 +1523,12 @@ class Account extends CI_Controller {
                 pm.PurchaseMaster_OrderDate as date,
                 concat('Purchase - ', pm.PurchaseMaster_InvoiceNo, ' - ', s.Supplier_Name, ' (', s.Supplier_Code, ')', ' - Bill: ', pm.PurchaseMaster_TotalAmount) as description,
                 0.00 as in_amount,
-                pm.PurchaseMaster_PaidAmount as out_amount
+                pm.PurchaseMaster_cashPaid as out_amount
             from tbl_purchasemaster pm 
             join tbl_supplier s on s.Supplier_SlNo = pm.Supplier_SlNo
             where pm.status = 'a'
             and pm.PurchaseMaster_BranchID = '$this->brunch'
+            and pm.PurchaseMaster_cashPaid > 0
             and pm.PurchaseMaster_OrderDate between '$data->fromDate' and '$data->toDate'
             
             UNION

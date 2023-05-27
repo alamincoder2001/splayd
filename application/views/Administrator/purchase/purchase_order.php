@@ -47,23 +47,23 @@
 	<div class="col-xs-12 col-md-12 col-lg-12" style="border-bottom:1px #ccc solid;margin-bottom:5px;">
 		<div class="row">
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Invoice no </label>
-				<div class="col-sm-2">
-					<input type="text" id="invoice" name="invoice" v-model="purchase.invoice" readonly style="height:26px;" />
+				<label class="col-md-1 col-xs-4 control-label no-padding-right"> Invoice no </label>
+				<div class="col-md-2 col-xs-8">
+					<input type="text" id="invoice" class="form-control" name="invoice" v-model="purchase.invoice" readonly />
 				</div>
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-2 control-label no-padding-right"> Purchase For </label>
-				<div class="col-sm-3">
+				<label class="col-md-2 col-xs-4 control-label no-padding-right"> Purchase For </label>
+				<div class="col-md-3 col-xs-8">
 					<v-select id="branchDropdown" v-bind:options="branches" v-model="selectedBranch" label="Brunch_name" disabled></v-select>
 				</div>
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Date </label>
-				<div class="col-sm-3">
-					<input class="form-control" id="purchaseDate" name="purchaseDate" type="date" v-model="purchase.purchaseDate" v-bind:disabled="userType == 'u' ? true : false" style="border-radius: 5px 0px 0px 5px !important;padding: 4px 6px 4px !important;width: 230px;" />
+				<label class="col-md-1 col-xs-4 control-label no-padding-right"> Date </label>
+				<div class="col-md-3 col-xs-8">
+					<input class="form-control" id="purchaseDate" name="purchaseDate" type="date" v-model="purchase.purchaseDate" v-bind:disabled="userType == 'u' ? true : false" style="border-radius: 5px 0px 0px 5px !important;padding: 4px 6px 4px !important;" />
 				</div>
 			</div>
 		</div>
@@ -87,7 +87,7 @@
 			<div class="widget-body">
 				<div class="widget-main">
 					<div class="row">
-						<div class="col-sm-6">
+						<div class="col-md-6 col-xs-12">
 							<div class="form-group">
 								<label class="col-xs-4 control-label no-padding-right"> Supplier </label>
 								<div class="col-xs-7">
@@ -120,7 +120,7 @@
 							</div>
 						</div>
 
-						<div class="col-sm-6">
+						<div class="col-md-6 col-xs-12">
 							<form v-on:submit.prevent="addToCart">
 								<div class="form-group">
 									<label class="col-xs-4 control-label no-padding-right"> Product </label>
@@ -327,12 +327,48 @@
 										</td>
 									</tr>
 
-									<tr>
+									<!-- <tr>
 										<td>
 											<div class="form-group">
 												<label class="col-xs-12 control-label no-padding-right">Paid</label>
 												<div class="col-xs-12">
 													<input type="number" id="paid" class="form-control" v-model="purchase.paid" v-on:input="calculateTotal" v-bind:disabled="selectedSupplier.Supplier_Type == 'G' ? true : false" />
+												</div>
+											</div>
+										</td>
+									</tr> -->
+
+									<tr>
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Cash
+													Paid</label>
+												<div class="col-xs-12">
+													<input type="number" id="cashPaid" class="form-control" v-model="purchase.cashPaid" v-on:input="calculateTotal" />
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Bank
+													Paid</label>
+												<div class="col-xs-12">
+													<input type="number" id="bankPaid" class="form-control" v-model="purchase.bankPaid" v-on:input="calculateTotal" />
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr v-if="purchase.bankPaid > 0">
+										<td>
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Bank
+													Account</label>
+												<div class="col-sm-12">
+													<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
 												</div>
 											</div>
 										</td>
@@ -349,7 +385,7 @@
 
 									<tr>
 										<td>
-											<div class="form-group">												
+											<div class="form-group">
 												<div class="col-xs-6">
 													<input type="number" id="due" name="due" class="form-control" v-model="purchase.due" readonly />
 												</div>
@@ -405,6 +441,9 @@
 					freight: 0.00,
 					total: 0.00,
 					paid: 0.00,
+					cashPaid: 0.00,
+					bankPaid: 0.00,
+					account_id: '',
 					due: 0.00,
 					previousDue: 0.00,
 					note: ''
@@ -414,7 +453,6 @@
 				sizes: [],
 				selectedSize: null,
 				vatPercent: 0.00,
-				commissionPercent: 0.00,
 				branches: [],
 				selectedBranch: {
 					brunch_id: "<?php echo $this->session->userdata('BRANCHid'); ?>",
@@ -445,6 +483,12 @@
 					total: ''
 				},
 				cart: [],
+				accounts: [],
+				account: {
+					account_id: '',
+					display_name: 'Select Account',
+					account_name: ''
+				},
 				purchaseOnProgress: false,
 				userType: '<?php echo $this->session->userdata("accountType") ?>'
 			}
@@ -453,12 +497,23 @@
 			await this.getSuppliers();
 			this.getBranches();
 			this.getProducts();
+			this.getAccounts();
 
 			if (this.purchase.purchaseId != 0) {
 				await this.getPurchase();
 			}
 		},
 		methods: {
+			getAccounts() {
+				axios.get('/get_bank_accounts')
+					.then(res => {
+						this.accounts = res.data.map((account, display_text) => {
+							account.display_text =
+								`${account.account_name} - ${account.account_number} (${account.bank_name})`;
+							return account;
+						});
+					})
+			},
 			getBranches() {
 				axios.get('/get_branches').then(res => {
 					this.branches = res.data;
@@ -517,16 +572,25 @@
 				this.calculateTotal();
 			},
 			async onChangeProduct() {
-				this.selectedColor = null;
-				this.selectedSize = null;
-				await this.getProductColors();
+				if (this.selectedProduct.Product_SlNo == '') {
+					return
+				}
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
+					this.selectedColor = null;
+					this.selectedSize = null;
+					await this.getProductColors();
+				}
 			},
 			async productColorChange() {
-				this.selectedSize = null;
-				await this.getProductSizes();
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null) {
+					this.selectedSize = null;
+					await this.getProductSizes();
+				}
 			},
 			productSizeChange() {
-				this.$refs.quantity.focus();
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.selectedSize != null) {
+					this.$refs.quantity.focus();
+				}
 			},
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_Purchase_Rate)).toFixed(2);
@@ -613,22 +677,13 @@
 				}, 0).toFixed(2);
 				this.purchase.vat = ((this.purchase.subTotal * parseFloat(this.vatPercent)) / 100).toFixed(2);
 
-				if (event.target.id == 'commissionPercent') {
-					this.purchase.commission = ((parseFloat(this.purchase.subTotal) * parseFloat(this.commissionPercent)) / 100).toFixed(2);
-				} else {
-					this.commissionPercent = (parseFloat(this.purchase.commission) / parseFloat(this.purchase.subTotal) * 100).toFixed(2);
-				}
-
 				this.purchase.total = ((parseFloat(this.purchase.subTotal) + parseFloat(this.purchase.vat) + parseFloat(this.purchase.freight)) - parseFloat(this.purchase.discount)).toFixed(2);
 				if (this.selectedSupplier.Supplier_Type == 'G') {
 					this.purchase.paid = this.purchase.total;
 					this.purchase.due = 0;
 				} else {
-					if (event.target.id != 'paid') {
-						this.purchase.paid = 0;
-					}
-
-					this.purchase.due = (parseFloat(this.purchase.total) - parseFloat(this.purchase.paid)).toFixed(2);
+					this.purchase.due = (parseFloat(this.purchase.total) - parseFloat(this.purchase.cashPaid) - parseFloat(
+						this.purchase.bankPaid)).toFixed(2);
 				}
 			},
 			savePurchase() {
@@ -646,6 +701,19 @@
 					alert('Cart is empty');
 					return;
 				}
+
+				if (this.purchase.bankPaid > 0 && this.account.account_id == '') {
+					alert('Select a Bank Account');
+					return;
+				}
+
+				if (this.selectedSupplier.Supplier_Type == 'G' && ((parseFloat(this.purchase.bankPaid) + parseFloat(this.purchase.cashPaid)) != parseFloat(this.purchase.total))) {
+					alert('Payment amount and total amount is not equal');
+					return;
+				}
+
+				this.purchase.account_id = parseFloat(this.purchase.bankPaid) > 0 ? this.account.account_id : ''
+				this.purchase.paid = parseFloat(this.purchase.cashPaid) + parseFloat(this.purchase.bankPaid);
 
 				this.purchase.supplierId = this.selectedSupplier.Supplier_SlNo;
 				this.purchase.purchaseFor = this.selectedBranch.brunch_id;
@@ -705,13 +773,23 @@
 					this.purchase.subTotal = purchase.PurchaseMaster_SubTotalAmount;
 					this.purchase.vat = purchase.PurchaseMaster_Tax;
 					this.purchase.discount = purchase.PurchaseMaster_DiscountAmount;
-					this.purchase.commission = purchase.PurchaseMaster_CommissionAmount;
 					this.purchase.freight = purchase.PurchaseMaster_Freight;
 					this.purchase.total = purchase.PurchaseMaster_TotalAmount;
 					this.purchase.paid = purchase.PurchaseMaster_PaidAmount;
+					this.purchase.cashPaid = purchase.PurchaseMaster_cashPaid;
+					this.purchase.bankPaid = purchase.PurchaseMaster_bankPaid;
+					this.purchase.account_id = purchase.account_id;
 					this.purchase.due = purchase.PurchaseMaster_DueAmount;
 					this.purchase.previousDue = purchase.previous_due;
 					this.purchase.note = purchase.PurchaseMaster_Description;
+
+					if (purchase.account_id != 0 && purchase.account_id != null) {
+						this.account = {
+							account_id: purchase.account_id,
+							account_name: purchase.account_name,
+							display_text: purchase.account_name + ' - ' + purchase.account_number + '(' + purchase.bank_name + ')'
+						}
+					}
 
 					this.oldSupplierId = purchase.Supplier_SlNo;
 					this.oldPreviousDue = purchase.previous_due;

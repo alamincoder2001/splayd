@@ -176,9 +176,9 @@ class Model_Table extends CI_Model{
             select
             /* Received */
             (
-                select ifnull(sum(sm.SaleMaster_PaidAmount), 0) from tbl_salesmaster sm
+                select ifnull(sum(sm.SaleMaster_cashPaid), 0) from tbl_salesmaster sm
                 where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
-                and sm.Status = 'a'
+                and sm.Status = 'a' and sm.SaleMaster_cashPaid > 0
                 " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
             ) as received_sales,
             (
@@ -239,17 +239,10 @@ class Model_Table extends CI_Model{
                 " . ($date == null ? "" : " and ass.as_date < '$date'") . "
             ) as sale_asset,
 
-            (
-                select ifnull(sum(cw.amount), 0) from tbl_commission_withdraw cw
-                where cw.branch_id = " . $this->session->userdata('BRANCHid') . "
-                and cw.status = 'a'
-                " . ($date == null ? "" : " and cw.date < '$date'") . "
-            ) as withdraw_commission,
-
             /* paid */
             (
-                select ifnull(sum(pm.PurchaseMaster_PaidAmount), 0) from tbl_purchasemaster pm
-                where pm.status = 'a'
+                select ifnull(sum(pm.PurchaseMaster_cashPaid), 0) from tbl_purchasemaster pm
+                where pm.status = 'a' and pm.PurchaseMaster_cashPaid > 0
                 and pm.PurchaseMaster_BranchID= " . $this->session->userdata('BRANCHid') . "
                 " . ($date == null ? "" : " and pm.PurchaseMaster_OrderDate < '$date'") . "
             ) as paid_purchase,
@@ -312,7 +305,7 @@ class Model_Table extends CI_Model{
             ) as buy_asset,
             /* total */
             (
-                select received_sales + received_customer + received_supplier + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received + sale_asset + withdraw_commission
+                select received_sales + received_customer + received_supplier + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received + sale_asset
             ) as total_in,
             (
                 select paid_purchase + paid_customer + paid_supplier + paid_cash + bank_deposit + employee_payment + loan_payment + invest_payment + buy_asset
@@ -329,6 +322,18 @@ class Model_Table extends CI_Model{
         $bankTransactionSummary = $this->db->query("
             select 
                 ba.*,
+                (
+                    select ifnull(sum(sm.SaleMaster_bankPaid), 0) from tbl_salesmaster sm
+                    where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
+                    and sm.Status = 'a' and sm.SaleMaster_bankPaid > 0
+                    " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
+                ) as received_sales,
+                (
+                    select ifnull(sum(pm.PurchaseMaster_bankPaid), 0) from tbl_purchasemaster pm
+                    where pm.status = 'a' and pm.PurchaseMaster_bankPaid > 0
+                    and pm.PurchaseMaster_BranchID= " . $this->session->userdata('BRANCHid') . "
+                    " . ($date == null ? "" : " and pm.PurchaseMaster_OrderDate < '$date'") . "
+                ) as paid_purchase,
                 (
                     select ifnull(sum(bt.amount), 0) from tbl_bank_transactions bt
                     where bt.account_id = ba.account_id
@@ -378,7 +383,7 @@ class Model_Table extends CI_Model{
                     " . ($date == null ? "" : " and sp.SPayment_date < '$date'") . "
                 ) as total_received_from_supplier,
                 (
-                    select (ba.initial_balance + total_deposit + total_received_from_customer + total_received_from_supplier) - (total_withdraw + total_paid_to_customer + total_paid_to_supplier)
+                    select (ba.initial_balance + received_sales + total_deposit + total_received_from_customer + total_received_from_supplier) - (total_withdraw + paid_purchase + total_paid_to_customer + total_paid_to_supplier)
                 ) as balance
             from tbl_bank_accounts ba
             where ba.branch_id = " . $this->session->userdata('BRANCHid') . "

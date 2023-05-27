@@ -47,28 +47,28 @@
 	<div class="col-xs-12 col-md-12 col-lg-12" style="border-bottom:1px #ccc solid;margin-bottom:5px;">
 		<div class="row">
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Invoice no </label>
-				<div class="col-sm-2">
+				<label class="col-md-1 col-xs-4 control-label no-padding-right"> Invoice no </label>
+				<div class="col-md-2 col-xs-8">
 					<input type="text" id="invoiceNo" class="form-control" v-model="sales.invoiceNo" readonly />
 				</div>
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Sales By </label>
-				<div class="col-sm-2">
+				<label class="col-md-1 col-xs-4 control-label no-padding-right"> Sales By </label>
+				<div class="col-md-2 col-xs-8">
 					<v-select v-bind:options="employees" v-model="selectedEmployee" label="Employee_Name" placeholder="Select Employee"></v-select>
 				</div>
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Sales From </label>
-				<div class="col-sm-2">
+				<label class="col-md-1 col-xs-4 control-label no-padding-right"> Sales From </label>
+				<div class="col-md-2 col-xs-8">
 					<v-select id="branchDropdown" v-bind:options="branches" label="Brunch_name" v-model="selectedBranch" disabled></v-select>
 				</div>
 			</div>
 
 			<div class="form-group">
-				<div class="col-sm-3">
+				<div class="col-md-3 col-xs-12">
 					<input class="form-control" id="salesDate" type="date" v-model="sales.salesDate" v-bind:disabled="userType == 'u' ? true : false" />
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 				<div class="widget-main">
 
 					<div class="row">
-						<div class="col-sm-5">
+						<div class="col-md-5 col-xs-12">
 							<div class="form-group clearfix" style="margin-bottom: 8px;">
 								<label class="col-xs-4 control-label no-padding-right"> Sales Type </label>
 								<div class="col-xs-8">
@@ -135,7 +135,7 @@
 							</div>
 						</div>
 
-						<div class="col-sm-5">
+						<div class="col-md-5 col-xs-12">
 							<form v-on:submit.prevent="addToCart">
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Product </label>
@@ -174,7 +174,7 @@
 										<input type="number" id="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
 									</div>
 									<div class="col-xs-4">
-										<input type="number" min="0" id="quantity" placeholder="Quantity" class="form-control" ref="quantity" v-model="selectedProduct.quantity" v-on:input="productTotal" autocomplete="off" />
+										<input type="text" min="0" class="form-control" ref="quantity" v-model="selectedProduct.quantity" placeholder="Quantity" v-on:input="productTotal" required>
 									</div>
 								</div>
 
@@ -201,7 +201,7 @@
 							</form>
 
 						</div>
-						<div class="col-sm-2">
+						<div class="col-md-2 col-xs-12">
 							<div style="display:none;" v-bind:style="{display:sales.isService == 'true' ? 'none' : ''}">
 								<div class="text-center" style="display:none;" v-bind:style="{color: productStock > 0 ? 'green' : 'red', display: selectedProduct.Product_SlNo == '' ? 'none' : ''}">{{ productStockText }}</div class="text-center">
 
@@ -226,7 +226,7 @@
 							<th style="width:15%;color:#000;">Product Code</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="width:5%;color:#000;">Quantity</th>
+							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
 							<th style="width:10%;color:#000;">Action</th>
@@ -358,13 +358,37 @@
 											</div>
 										</td>
 									</tr>
+									<tr>
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Cash
+													Paid</label>
+												<div class="col-xs-12">
+													<input type="number" id="cashPaid" class="form-control" v-model="sales.cashPaid" v-on:input="calculateTotal" />
+												</div>
+											</div>
+										</td>
+									</tr>
 
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Paid</label>
+												<label class="col-xs-12 control-label no-padding-right">Bank
+													Paid</label>
 												<div class="col-xs-12">
-													<input type="number" id="paid" class="form-control" v-model="sales.paid" v-on:input="calculateTotal" v-bind:disabled="selectedCustomer.Customer_Type == 'G' ? true : false" />
+													<input type="number" id="bankPaid" class="form-control" v-model="sales.bankPaid" v-on:input="calculateTotal" />
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr v-if="sales.bankPaid > 0">
+										<td>
+											<div class="form-group">
+												<label class="col-sm-12 control-label no-padding-right">Bank
+													Account</label>
+												<div class="col-sm-12">
+													<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
 												</div>
 											</div>
 										</td>
@@ -433,6 +457,9 @@
 					transportCost: 0.00,
 					total: 0.00,
 					paid: 0.00,
+					cashPaid: 0.00,
+					bankPaid: 0.00,
+					account_id: '',
 					previousDue: 0.00,
 					due: 0.00,
 					isService: '<?php echo $isService; ?>',
@@ -476,6 +503,12 @@
 				selectedColor: null,
 				sizes: [],
 				selectedSize: null,
+				accounts: [],
+				account: {
+					account_id: '',
+					display_name: 'Select Account',
+					account_name: ''
+				},
 				productPurchaseRate: '',
 				productStockText: '',
 				productStock: '',
@@ -490,12 +523,23 @@
 			await this.getBranches();
 			await this.getCustomers();
 			this.getProducts();
+			this.getAccounts();
 
 			if (this.sales.salesId != 0) {
 				await this.getSales();
 			}
 		},
 		methods: {
+			getAccounts() {
+				axios.get('/get_bank_accounts')
+					.then(res => {
+						this.accounts = res.data.map((account, display_text) => {
+							account.display_text =
+								`${account.account_name} - ${account.account_number} (${account.bank_name})`;
+							return account;
+						});
+					})
+			},
 			getEmployees() {
 				axios.get('/get_employees').then(res => {
 					this.employees = res.data;
@@ -538,7 +582,6 @@
 			},
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_SellingPrice)).toFixed(2);
-
 			},
 			getProductColors() {
 				axios.post('/get_product_color', {
@@ -605,6 +648,9 @@
 				})
 			},
 			async productOnChange() {
+				if (this.selectedProduct.Product_SlNo == '') {
+					return
+				}
 				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.sales.isService == 'false') {
 					this.productStock = await axios.post('/get_product_stock', {
 						productId: this.selectedProduct.Product_SlNo
@@ -631,9 +677,9 @@
 						})
 
 					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
+					this.selectedSize = null;
+					this.getProductSizes();
 				}
-				this.selectedSize = null;
-				this.getProductSizes();
 			},
 			async productSizeChange() {
 				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.selectedSize != null && this.sales.isService == 'false') {
@@ -644,12 +690,11 @@
 						})
 						.then(res => {
 							this.productStock = res.data;
-							// console.log(this.productStock);
 						})
 
 					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
+					this.$refs.quantity.focus();
 				}
-				this.$refs.quantity.focus();
 			},
 			toggleProductPurchaseRate() {
 				//this.productPurchaseRate = this.productPurchaseRate == '' ? this.selectedProduct.Product_Purchase_Rate : '';
@@ -687,7 +732,7 @@
 					return;
 				}
 
-				if (product.quantity > this.productStock && this.sales.isService == 'false') {
+				if (parseFloat(product.quantity) > parseFloat(this.productStock) && this.sales.isService == 'false') {
 					alert('Stock unavailable');
 					return;
 				}
@@ -730,19 +775,19 @@
 					return +prev + +(curr.total * (curr.vat / 100))
 				}, 0);
 				if (event.target.id == 'discountPercent') {
-					this.sales.discount = ((parseFloat(this.sales.subTotal) * parseFloat(this.discountPercent)) / 100).toFixed(2);
+					this.sales.discount = ((parseFloat(this.sales.subTotal) * parseFloat(this.discountPercent)) /
+						100).toFixed(2);
 				} else {
-					this.discountPercent = (parseFloat(this.sales.discount) / parseFloat(this.sales.subTotal) * 100).toFixed(2);
+					this.discountPercent = (parseFloat(this.sales.discount) / parseFloat(this.sales.subTotal) * 100)
+						.toFixed(2);
 				}
-				this.sales.total = ((parseFloat(this.sales.subTotal) + parseFloat(this.sales.vat) + parseFloat(this.sales.transportCost)) - parseFloat(this.sales.discount)).toFixed(2);
+				this.sales.total = ((parseFloat(this.sales.subTotal) + parseFloat(this.sales.vat) + parseFloat(this
+					.sales.transportCost)) - parseFloat(this.sales.discount)).toFixed(2);
 				if (this.selectedCustomer.Customer_Type == 'G') {
-					this.sales.paid = this.sales.total;
 					this.sales.due = 0;
 				} else {
-					if (event.target.id != 'paid') {
-						this.sales.paid = 0;
-					}
-					this.sales.due = (parseFloat(this.sales.total) - parseFloat(this.sales.paid)).toFixed(2);
+					this.sales.due = (parseFloat(this.sales.total) - parseFloat(this.sales.cashPaid) - parseFloat(
+						this.sales.bankPaid)).toFixed(2);
 				}
 			},
 			async saveSales() {
@@ -755,6 +800,17 @@
 					return;
 				}
 
+				if (this.sales.bankPaid > 0 && this.account.account_id == '') {
+					alert('Select a Bank Account');
+					return;
+				}
+
+				if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) != parseFloat(this.sales.total))) {
+					alert('Payment amount and total amount is not equal');
+					return;
+				}
+				this.sales.account_id = parseFloat(this.sales.bankPaid) > 0 ? this.account.account_id:''
+				this.sales.paid = parseFloat(this.sales.cashPaid)+parseFloat(this.sales.bankPaid);
 				this.saleOnProgress = true;
 
 				await this.getCustomerDue();
@@ -809,23 +865,25 @@
 				await axios.post('/get_sales', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r = res.data;
-					let sales = r.sales[0];
-					this.sales.salesBy = sales.AddBy;
-					this.sales.salesFrom = sales.SaleMaster_branchid;
-					this.sales.salesDate = sales.SaleMaster_SaleDate;
-					this.sales.salesType = sales.SaleMaster_SaleType;
-					this.sales.customerId = sales.SalseCustomer_IDNo;
-					this.sales.employeeId = sales.Employee_SlNo;
-					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
-					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
-					this.sales.vat = sales.SaleMaster_TaxAmount;
-					this.sales.transportCost = sales.SaleMaster_Freight;
-					this.sales.total = sales.SaleMaster_TotalSaleAmount;
-					this.sales.paid = sales.SaleMaster_PaidAmount;
-					this.sales.previousDue = sales.SaleMaster_Previous_Due;
-					this.sales.due = sales.SaleMaster_DueAmount;
-					this.sales.note = sales.SaleMaster_Description;
+					let r                        = res.data;
+					let sales                    = r.sales[0];
+					    this.sales.salesBy       = sales.AddBy;
+					    this.sales.salesFrom     = sales.SaleMaster_branchid;
+					    this.sales.salesDate     = sales.SaleMaster_SaleDate;
+					    this.sales.salesType     = sales.SaleMaster_SaleType;
+					    this.sales.customerId    = sales.SalseCustomer_IDNo;
+					    this.sales.employeeId    = sales.Employee_SlNo;
+					    this.sales.subTotal      = sales.SaleMaster_SubTotalAmount;
+					    this.sales.discount      = sales.SaleMaster_TotalDiscountAmount;
+					    this.sales.vat           = sales.SaleMaster_TaxAmount;
+					    this.sales.transportCost = sales.SaleMaster_Freight;
+					    this.sales.total         = sales.SaleMaster_TotalSaleAmount;
+					    this.sales.paid          = sales.SaleMaster_PaidAmount;
+					    this.sales.cashPaid      = sales.SaleMaster_cashPaid;
+					    this.sales.bankPaid      = sales.SaleMaster_bankPaid;
+					    this.sales.previousDue   = sales.SaleMaster_Previous_Due;
+					    this.sales.due           = sales.SaleMaster_DueAmount;
+					    this.sales.note          = sales.SaleMaster_Description;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
@@ -837,6 +895,14 @@
 					this.selectedEmployee = {
 						Employee_SlNo: sales.employee_id,
 						Employee_Name: sales.Employee_Name
+					}
+
+					if (sales.account_id != 0 && sales.account_id != null) {
+						this.account = {
+							account_id: sales.account_id,
+							account_name: sales.account_name,
+							display_text: sales.account_name+' - '+sales.account_number+'('+sales.bank_name+')'
+						}
 					}
 
 					this.selectedCustomer = {
@@ -871,6 +937,6 @@
 					this.customers.splice(gCustomerInd, 1);
 				})
 			}
-		}
+		},
 	})
 </script>
