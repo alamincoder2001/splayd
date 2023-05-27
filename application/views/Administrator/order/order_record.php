@@ -157,7 +157,7 @@
 					</thead>
 					<tbody>
 						<template v-for="sale in sales">
-							<tr>
+							<tr :style="{background: sale.Status == 'a' ? '' : '#F7CB73'}">
 								<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 								<td>{{ sale.SaleMaster_SaleDate }}</td>
 								<td>{{ sale.Customer_Name }}</td>
@@ -171,7 +171,10 @@
 									<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
 									<?php if ($this->session->userdata('accountType') != 'u') { ?>
 										<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-										<a href="" title="Order Delivered" @click.prevent="processOrder(sale.SaleMaster_SlNo)"><i class="fa fa-truck"></i></a>
+										<a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
+											<i title="Order Sales Processing" v-if="sale.Status == 'p'" class="fa fa-spinner"></i>
+											<i title="Order Sales Delivered" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
+										</a>
 										<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
 									<?php } ?>
 								</td>
@@ -218,34 +221,32 @@
 						</tr>
 					</thead>
 					<tbody>
-						<template v-for="sale in sales">
-							<tr :style="{background: sale.Status == 'p' ? '#F7CB73':''}">
-								<td>{{ sale.SaleMaster_InvoiceNo }}</td>
-								<td>{{ sale.SaleMaster_SaleDate }}</td>
-								<td>{{ sale.Customer_Name }}</td>
-								<td>{{ sale.Employee_Name }}</td>
-								<td>{{ sale.AddBy }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_SubTotalAmount }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_TaxAmount }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_TotalDiscountAmount }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_Freight }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_TotalSaleAmount }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_PaidAmount }}</td>
-								<td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
-								<td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
-								<td style="text-align:center;">
-									<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
-									<?php if ($this->session->userdata('accountType') != 'u') { ?>
-										<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-										<a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
-											<i title="Order Sales Processing" v-if="sale.Status == 'p'" class="fa fa-spinner"></i>
-											<i title="Order Sales Delivered" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
-										</a>
-										<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
-									<?php } ?>
-								</td>
-							</tr>
-						</template>
+						<tr v-for="sale in sales" :style="{background: sale.Status == 'a' ? '' : '#F7CB73'}">
+							<td>{{ sale.SaleMaster_InvoiceNo }}</td>
+							<td>{{ sale.SaleMaster_SaleDate }}</td>
+							<td>{{ sale.Customer_Name }}</td>
+							<td>{{ sale.Employee_Name }}</td>
+							<td>{{ sale.AddBy }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_SubTotalAmount }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_TaxAmount }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_TotalDiscountAmount }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_Freight }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_TotalSaleAmount }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_PaidAmount }}</td>
+							<td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
+							<td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
+							<td style="text-align:center;">
+								<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
+								<?php if ($this->session->userdata('accountType') != 'u') { ?>
+									<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
+									<a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
+										<i title="Order Sales Processing" v-if="sale.Status == 'p'" class="fa fa-spinner"></i>
+										<i title="Order Sales Delivered" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
+									</a>
+									<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+								<?php } ?>
+							</td>
+						</tr>
 					</tbody>
 					<tfoot>
 						<tr style="font-weight:bold;">
@@ -532,7 +533,7 @@
 				if (sale.Status == 'p') {
 					filter.Status = 'process'
 				}
-				if(sale.Status == 'process'){
+				if (sale.Status == 'process') {
 					filter.Status = 'a'
 				}
 				axios.post('/delivered_order', filter)

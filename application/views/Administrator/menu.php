@@ -671,22 +671,30 @@ if ($module == 'dashboard' or $module == '') {
 						</li>
 					<?php endif; ?>
 
+					<?php if (array_search("pending_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+						<li class="">
+							<a href="<?php echo base_url(); ?>pending_order">
+								<i class="menu-icon fa fa-caret-right"></i>
+								Pending Order Sales List
+							</a>
+							<b class="arrow"></b>
+						</li>
+					<?php endif; ?>
+					<?php if (array_search("processing_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+						<li class="">
+							<a href="<?php echo base_url(); ?>processing_order">
+								<i class="menu-icon fa fa-caret-right"></i>
+								Processing Order Sales List
+							</a>
+							<b class="arrow"></b>
+						</li>
+					<?php endif; ?>
 
 					<?php if (array_search("delivery_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
 							<a href="<?php echo base_url(); ?>delivery_order">
 								<i class="menu-icon fa fa-caret-right"></i>
 								Order Delivery List
-							</a>
-							<b class="arrow"></b>
-						</li>
-					<?php endif; ?>
-
-					<?php if (array_search("orderrecord", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
-						<li class="">
-							<a href="<?php echo base_url(); ?>orderrecord">
-								<i class="menu-icon fa fa-caret-right"></i>
-								Order Record
 							</a>
 							<b class="arrow"></b>
 						</li>
