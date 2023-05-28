@@ -536,7 +536,7 @@
 				if (sale.Status == 'process') {
 					filter.Status = 'a'
 				}
-				axios.post('/delivered_order', filter)
+				axios.post('/order_status_change', filter)
 					.then(res => {
 						let r = res.data;
 						alert(r.message);

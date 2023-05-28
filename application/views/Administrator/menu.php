@@ -675,7 +675,7 @@ if ($module == 'dashboard' or $module == '') {
 						<li class="">
 							<a href="<?php echo base_url(); ?>pending_order">
 								<i class="menu-icon fa fa-caret-right"></i>
-								Pending Order Sales List
+								Pending Order Sales
 							</a>
 							<b class="arrow"></b>
 						</li>
@@ -684,7 +684,7 @@ if ($module == 'dashboard' or $module == '') {
 						<li class="">
 							<a href="<?php echo base_url(); ?>processing_order">
 								<i class="menu-icon fa fa-caret-right"></i>
-								Processing Order Sales List
+								Processing Order Sales
 							</a>
 							<b class="arrow"></b>
 						</li>

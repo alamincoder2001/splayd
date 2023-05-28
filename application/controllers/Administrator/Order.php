@@ -427,7 +427,7 @@ class Order extends CI_Controller
         }
 
         $saleDetails = $this->db->query("
-            select 
+                select 
                 sd.*,
                 p.Product_Code,
                 p.Product_Name,
@@ -442,7 +442,7 @@ class Order extends CI_Controller
             join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
             join tbl_salesmaster sm on sm.SaleMaster_SlNo = sd.SaleMaster_IDNo
             join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
-            where sd.Status = 'p'
+            where sd.Status != 'd'
             and sm.SaleMaster_branchid = ?
             $clauses
         ", $this->sbrunch)->result();
@@ -483,7 +483,7 @@ class Order extends CI_Controller
         echo json_encode($res);
     }
 
-    public function  deleveredOrder()
+    public function  OrderStatusChange()
     {
         $res = ['success' => false, 'message' => ''];
         try {
@@ -500,7 +500,7 @@ class Order extends CI_Controller
 
             if ($data->Status == 'a') {
                 /*Get Sale Details Data*/
-                $saleDetails = $this->db->select('Product_IDNo, SaleDetails_TotalQuantity')->where('SaleMaster_IDNo', $saleId)->get('tbl_saledetails')->result();
+                $saleDetails = $this->db->select('Product_IDNo, SaleDetails_TotalQuantity, Product_colorId, Product_sizeId')->where('SaleMaster_IDNo', $saleId)->get('tbl_saledetails')->result();
 
                 foreach ($saleDetails as $product) {
                     $stock = $this->mt->productStock($product->Product_IDNo);
@@ -527,6 +527,16 @@ class Order extends CI_Controller
                     where product_id = ?
                     and branch_id = ?
                 ", [$detail->SaleDetails_TotalQuantity, $detail->Product_IDNo, $this->session->userdata('BRANCHid')]);
+
+                    // update color wise stock
+                    $this->db->query("
+                                update tbl_color_size 
+                                set stock = stock - ?
+                                where product_id = ?
+                                and color_id = ? 
+                                and size_id = ? 
+                                and branch_id = ?
+                            ", [$detail->SaleDetails_TotalQuantity, $detail->Product_IDNo, $detail->Product_colorId, $detail->Product_sizeId, $this->session->userdata('BRANCHid')]);
                 }
             }
             if ($data->Status == 'process') {
@@ -542,7 +552,29 @@ class Order extends CI_Controller
         echo json_encode($res);
     }
 
-    public function deliveryOrder()
+    public function PendingOrder()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Pending Order Record";
+        $data['content'] = $this->load->view('Administrator/order/order_pending_record', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function ProcessingOrder()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Processing Order Record";
+        $data['content'] = $this->load->view('Administrator/order/order_processing_record', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function DeleveredOrder()
     {
         $access = $this->mt->userAccess();
         if (!$access) {
@@ -553,7 +585,7 @@ class Order extends CI_Controller
         $this->load->view('Administrator/index', $data);
     }
 
-    public function getDeliveryOrder()
+    public function getAllOrder()
     {
         $query = $this->db->query("
             select 
@@ -570,7 +602,7 @@ class Order extends CI_Controller
             left join tbl_employee e on e.Employee_SlNo = sm.employee_id
             left join tbl_brunch br on br.brunch_id = sm.SaleMaster_branchid
             where sm.SaleMaster_branchid = ?
-            and sm.Status = 'a'
+            and sm.Status != 'd'
             and sm.is_order = 'true'
             order by sm.SaleMaster_SlNo desc
         ", $this->session->userdata('BRANCHid'))->result();

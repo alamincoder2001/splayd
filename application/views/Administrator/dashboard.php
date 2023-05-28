@@ -650,7 +650,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 		</div>
 	</div>
 
-	<?php } elseif ($module == 'OrderModule') { ?>
+<?php } elseif ($module == 'OrderModule') { ?>
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
 			<div class="col-md-1"></div>
@@ -674,7 +674,7 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
+
 				<?php if (array_search("orderinvoice", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 ">
 						<div class="col-md-12 section20">
@@ -689,17 +689,47 @@ if ($module == 'dashboard' or $module == '') { ?>
 						</div>
 					</div>
 				<?php endif; ?>
-				
 
-				<?php if (array_search("delivery_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+
+				<?php if (array_search("pending_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 					<div class="col-md-2 col-xs-6 ">
 						<div class="col-md-12 section20">
-							<a href="<?php echo base_url(); ?>delivery_order">
+							<a href="<?php echo base_url(); ?>pending_order">
 								<div class="logo">
 									<i class="menu-icon fa fa-list"></i>
 								</div>
 								<div class="textModule">
-									Order Sales Delivery List
+									Pending Order Sales
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
+				<?php if (array_search("processing_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>processing_order">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Processing Order Sales
+								</div>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
+
+				<?php if (array_search("delivered_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<div class="col-md-2 col-xs-6 ">
+						<div class="col-md-12 section20">
+							<a href="<?php echo base_url(); ?>delivered_order">
+								<div class="logo">
+									<i class="menu-icon fa fa-list"></i>
+								</div>
+								<div class="textModule">
+									Delivery Order Sales
 								</div>
 							</a>
 						</div>

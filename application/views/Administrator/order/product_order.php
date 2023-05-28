@@ -79,7 +79,7 @@
 	<div class="col-xs-12 col-md-9 col-lg-9">
 		<div class="widget-box">
 			<div class="widget-header">
-				<h4 class="widget-title">Sales Information</h4>
+				<h4 class="widget-title">Order Sales Information</h4>
 				<div class="widget-toolbar">
 					<a href="#" data-action="collapse">
 						<i class="ace-icon fa fa-chevron-up"></i>
@@ -849,7 +849,7 @@
 					if (r.success) {
 						let conf = confirm('Sale success, Do you want to view invoice?');
 						if (conf) {
-							window.open('/sale_invoice_print/' + r.salesId, '_blank');
+							window.open('/order_invoice_print/' + r.salesId, '_blank');
 							await new Promise(r => setTimeout(r, 1000));
 							window.location = this.sales.isService == 'false' ? '/sales/product' : '/sales/service';
 						} else {

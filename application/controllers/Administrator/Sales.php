@@ -189,15 +189,15 @@ class Sales extends CI_Controller
                     and branch_id = ?
                 ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->colorId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
             }
-            $currentDue = $data->sales->previousDue + ($data->sales->total - $data->sales->paid);
-            //Send sms
-            $customerInfo = $this->db->query("select * from tbl_customer where Customer_SlNo = ?", $customerId)->row();
-            $sendToName = $customerInfo->owner_name != '' ? $customerInfo->owner_name : $customerInfo->Customer_Name;
-            $currency = $this->session->userdata('Currency_Name');
+            // $currentDue = $data->sales->previousDue + ($data->sales->total - $data->sales->paid);
+            // //Send sms
+            // $customerInfo = $this->db->query("select * from tbl_customer where Customer_SlNo = ?", $customerId)->row();
+            // $sendToName = $customerInfo->owner_name != '' ? $customerInfo->owner_name : $customerInfo->Customer_Name;
+            // $currency = $this->session->userdata('Currency_Name');
 
-            $message = "Dear {$sendToName},\nYour bill is {$currency} {$data->sales->total}. Received {$currency} {$data->sales->paid} and current due is {$currency} {$currentDue} for invoice {$invoice}";
-            $recipient = $customerInfo->Customer_Mobile;
-            $this->sms->sendSms($recipient, $message);
+            // $message = "Dear {$sendToName},\nYour bill is {$currency} {$data->sales->total}. Received {$currency} {$data->sales->paid} and current due is {$currency} {$currentDue} for invoice {$invoice}";
+            // $recipient = $customerInfo->Customer_Mobile;
+            // $this->sms->sendSms($recipient, $message);
 
             $this->db->trans_commit();
             $res = ['success' => true, 'message' => 'Sales Success', 'salesId' => $salesId];
