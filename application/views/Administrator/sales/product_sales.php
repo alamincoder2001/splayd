@@ -881,6 +881,7 @@
 					    this.sales.paid          = sales.SaleMaster_PaidAmount;
 					    this.sales.cashPaid      = sales.SaleMaster_cashPaid;
 					    this.sales.bankPaid      = sales.SaleMaster_bankPaid;
+					    this.sales.account_id    = sales.account_id;
 					    this.sales.previousDue   = sales.SaleMaster_Previous_Due;
 					    this.sales.due           = sales.SaleMaster_DueAmount;
 					    this.sales.note          = sales.SaleMaster_Description;

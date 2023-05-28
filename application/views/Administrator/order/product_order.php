@@ -865,25 +865,26 @@
 				await axios.post('/get_orders', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r = res.data;
-					let sales = r.sales[0];
-					this.sales.salesBy = sales.AddBy;
-					this.sales.salesFrom = sales.SaleMaster_branchid;
-					this.sales.salesDate = sales.SaleMaster_SaleDate;
-					this.sales.salesType = sales.SaleMaster_SaleType;
-					this.sales.customerId = sales.SalseCustomer_IDNo;
-					this.sales.employeeId = sales.Employee_SlNo;
-					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
-					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
-					this.sales.vat = sales.SaleMaster_TaxAmount;
-					this.sales.transportCost = sales.SaleMaster_Freight;
-					this.sales.total = sales.SaleMaster_TotalSaleAmount;
-					this.sales.paid = sales.SaleMaster_PaidAmount;
-					this.sales.cashPaid = sales.SaleMaster_cashPaid;
-					this.sales.bankPaid = sales.SaleMaster_bankPaid;
-					this.sales.previousDue = sales.SaleMaster_Previous_Due;
-					this.sales.due = sales.SaleMaster_DueAmount;
-					this.sales.note = sales.SaleMaster_Description;
+					let r                        = res.data;
+					let sales                    = r.sales[0];
+					    this.sales.salesBy       = sales.AddBy;
+					    this.sales.salesFrom     = sales.SaleMaster_branchid;
+					    this.sales.salesDate     = sales.SaleMaster_SaleDate;
+					    this.sales.salesType     = sales.SaleMaster_SaleType;
+					    this.sales.customerId    = sales.SalseCustomer_IDNo;
+					    this.sales.employeeId    = sales.Employee_SlNo;
+					    this.sales.subTotal      = sales.SaleMaster_SubTotalAmount;
+					    this.sales.discount      = sales.SaleMaster_TotalDiscountAmount;
+					    this.sales.vat           = sales.SaleMaster_TaxAmount;
+					    this.sales.transportCost = sales.SaleMaster_Freight;
+					    this.sales.total         = sales.SaleMaster_TotalSaleAmount;
+					    this.sales.paid          = sales.SaleMaster_PaidAmount;
+					    this.sales.cashPaid      = sales.SaleMaster_cashPaid;
+					    this.sales.bankPaid      = sales.SaleMaster_bankPaid;
+					    this.sales.account_id    = sales.account_id;
+					    this.sales.previousDue   = sales.SaleMaster_Previous_Due;
+					    this.sales.due           = sales.SaleMaster_DueAmount;
+					    this.sales.note          = sales.SaleMaster_Description;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
