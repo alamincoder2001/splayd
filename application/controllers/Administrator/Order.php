@@ -36,7 +36,6 @@ class Order extends CI_Controller
         $this->load->view('Administrator/index', $data);
     }
 
-
     public function addOrder()
     {
         $res = ['success' => false, 'message' => ''];
@@ -194,16 +193,16 @@ class Order extends CI_Controller
             $this->db->update('tbl_salesmaster', $sales);
 
             $currentSaleDetails = $this->db->query("select * from tbl_saledetails where SaleMaster_IDNo = ?", $salesId)->result();
-            $this->db->query("delete from tbl_saledetails where SaleMaster_IDNo = ?", $salesId);
 
             foreach ($currentSaleDetails as $product) {
                 $this->db->query("
-                    update tbl_currentinventory 
-                    set sales_quantity = sales_quantity - ? 
-                    where product_id = ?
-                    and branch_id = ?
+                update tbl_currentinventory 
+                set sales_quantity = sales_quantity - ? 
+                where product_id = ?
+                and branch_id = ?
                 ", [$product->SaleDetails_TotalQuantity, $product->Product_IDNo, $this->session->userdata('BRANCHid')]);
             }
+            $this->db->query("delete from tbl_saledetails where SaleMaster_IDNo = ?", $salesId);
 
             foreach ($data->cart as $cartProduct) {
                 $saleDetails = array(
@@ -443,6 +442,7 @@ class Order extends CI_Controller
             join tbl_salesmaster sm on sm.SaleMaster_SlNo = sd.SaleMaster_IDNo
             join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
             where sd.Status != 'd'
+            and sm.is_order = 'true'
             and sm.SaleMaster_branchid = ?
             $clauses
         ", $this->sbrunch)->result();
@@ -454,12 +454,21 @@ class Order extends CI_Controller
     {
         $res = ['success' => false, 'message' => ''];
         try {
+            $this->db->trans_begin();
             $data = json_decode($this->input->raw_input_stream);
             $saleId = $data->saleId;
 
             $sale = $this->db->select('*')->where('SaleMaster_SlNo', $saleId)->get('tbl_salesmaster')->row();
-            if ($sale->Status != 'p') {
-                $res = ['success' => false, 'message' => 'Order not found'];
+            if ($sale->Status != 'a') {
+                $res = ['success' => false, 'message' => 'Sale not found'];
+                echo json_encode($res);
+                exit;
+            }
+
+            $returnCount = $this->db->query("select * from tbl_salereturn sr where sr.SaleMaster_InvoiceNo = ? and sr.Status = 'a'", $sale->SaleMaster_InvoiceNo)->num_rows();
+
+            if ($returnCount != 0) {
+                $res = ['success' => false, 'message' => 'Unable to delete. Sale return found'];
                 echo json_encode($res);
                 exit;
             }
@@ -467,16 +476,39 @@ class Order extends CI_Controller
             /*Get Sale Details Data*/
             $saleDetails = $this->db->select('Product_IDNo, SaleDetails_TotalQuantity')->where('SaleMaster_IDNo', $saleId)->get('tbl_saledetails')->result();
 
-            foreach ($saleDetails as $detail) {
+            if ($sale->Status == 'a') {
+                foreach ($saleDetails as $detail) {
+                    /*Get Product Current Quantity*/
+                    $totalQty = $this->db->where(['product_id' => $detail->Product_IDNo, 'branch_id' => $sale->SaleMaster_branchid])->get('tbl_currentinventory')->row()->sales_quantity;
+
+                    /* Subtract Product Quantity form  Current Quantity  */
+                    $newQty = $totalQty - $detail->SaleDetails_TotalQuantity;
+
+                    /*Update Sales Inventory*/
+                    $this->db->set('sales_quantity', $newQty)->where(['product_id' => $detail->Product_IDNo, 'branch_id' => $sale->SaleMaster_branchid])->update('tbl_currentinventory');
+
+                    // update color wise stock
+                    $this->db->query("
+                    update tbl_color_size 
+                    set stock = stock + ?
+                    where product_id = ?
+                    and color_id = ? 
+                    and size_id = ? 
+                    and branch_id = ?
+                ", [$detail->SaleDetails_TotalQuantity, $detail->Product_IDNo, $detail->Product_colorId, $detail->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                }
             }
 
-            /*Delete order Details*/
+            /*Delete Sale Details*/
             $this->db->set('Status', 'd')->where('SaleMaster_IDNo', $saleId)->update('tbl_saledetails');
 
             /*Delete Sale Master Data*/
             $this->db->set('Status', 'd')->where('SaleMaster_SlNo', $saleId)->update('tbl_salesmaster');
-            $res = ['success' => true, 'message' => 'Order deleted'];
+
+            $this->db->trans_commit();
+            $res = ['success' => true, 'message' => 'Sale deleted'];
         } catch (Exception $ex) {
+            $this->db->trans_rollback();
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
 
@@ -608,5 +640,103 @@ class Order extends CI_Controller
         ", $this->session->userdata('BRANCHid'))->result();
 
         echo json_encode($query);
+    }
+
+    // exchange
+    public function Exchange($salesId)
+    {
+        $data['title'] = "Order Sales Exchange";
+        $sales = $this->db->query("select * from tbl_salesmaster where SaleMaster_SlNo = ?", $salesId)->row();
+        $data['isService'] = 'false';
+        $data['salesId'] = $salesId;
+        $data['invoice'] = $sales->SaleMaster_InvoiceNo;
+        $data['content'] = $this->load->view('Administrator/order/exchange_order', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function ExchangeUpdate()
+    {
+        $res = ['success' => false, 'message' => ''];
+        try {
+            $this->db->trans_begin();
+            $data = json_decode($this->input->raw_input_stream);
+            $salesId = $data->sales->salesId;
+
+            if (isset($data->customer)) {
+                $customer = (array)$data->customer;
+                unset($customer['Customer_SlNo']);
+                unset($customer['display_name']);
+                $customer['UpdateBy'] = $this->session->userdata("FullName");
+                $customer['UpdateTime'] = date("Y-m-d H:i:s");
+
+                $this->db->where('Customer_SlNo', $data->sales->customerId)->update('tbl_customer', $customer);
+            }
+
+            $sales = array(
+                'SalseCustomer_IDNo'             => $data->sales->customerId,
+                'employee_id'                    => $data->sales->employeeId,
+                'SaleMaster_SaleDate'            => $data->sales->salesDate,
+                'SaleMaster_SaleType'            => $data->sales->salesType,
+                'SaleMaster_TotalSaleAmount'     => $data->sales->total,
+                'SaleMaster_TotalDiscountAmount' => $data->sales->discount,
+                'SaleMaster_TaxAmount'           => $data->sales->vat,
+                'SaleMaster_Freight'             => $data->sales->transportCost,
+                'SaleMaster_SubTotalAmount'      => $data->sales->subTotal,
+                'SaleMaster_PaidAmount'          => $data->sales->paid,
+                'SaleMaster_cashPaid'            => $data->sales->cashPaid,
+                'SaleMaster_bankPaid'            => $data->sales->bankPaid,
+                'account_id'                     => $data->sales->account_id,
+                'SaleMaster_DueAmount'           => $data->sales->due,
+                'SaleMaster_Previous_Due'        => $data->sales->previousDue,
+                'SaleMaster_Description'         => $data->sales->note,
+                'Status'                         => 'p',
+                'is_order'                       => 'true',
+                'is_service'                     => $data->sales->isService,
+                "AddBy"                          => $this->session->userdata("FullName"),
+                'AddTime'                        => date("Y-m-d H:i:s"),
+                'SaleMaster_branchid'            => $this->session->userdata("BRANCHid")
+            );
+
+            $this->db->where('SaleMaster_SlNo', $salesId);
+            $this->db->update('tbl_salesmaster', $sales);
+
+            $currentSaleDetails = $this->db->query("select * from tbl_saledetails where SaleMaster_IDNo = ?", $salesId)->result();
+            foreach ($currentSaleDetails as $product) {
+                $this->db->query("
+                update tbl_currentinventory 
+                set sales_quantity = sales_quantity - ? 
+                where product_id = ?
+                and branch_id = ?
+                ", [$product->SaleDetails_TotalQuantity, $product->Product_IDNo, $this->session->userdata('BRANCHid')]);
+            }
+            $this->db->query("delete from tbl_saledetails where SaleMaster_IDNo = ?", $salesId);
+
+            foreach ($data->cart as $cartProduct) {
+                $saleDetails = array(
+                    'SaleMaster_IDNo'           => $salesId,
+                    'Product_IDNo'              => $cartProduct->productId,
+                    'Product_colorId'           => $cartProduct->colorId,
+                    'Product_sizeId'            => $cartProduct->sizeId,
+                    'SaleDetails_TotalQuantity' => $cartProduct->quantity,
+                    'Purchase_Rate'             => $cartProduct->purchaseRate,
+                    'SaleDetails_Rate'          => $cartProduct->salesRate,
+                    'SaleDetails_Tax'           => $cartProduct->vat,
+                    'SaleDetails_TotalAmount'   => $cartProduct->total,
+                    'Status'                    => 'p',
+                    'AddBy'                     => $this->session->userdata("FullName"),
+                    'AddTime'                   => date('Y-m-d H:i:s'),
+                    'SaleDetails_BranchId'      => $this->session->userdata('BRANCHid')
+                );
+
+                $this->db->insert('tbl_saledetails', $saleDetails);
+            }
+
+            $this->db->trans_commit();
+            $res = ['success' => true, 'message' => 'Order Updated', 'salesId' => $salesId];
+        } catch (Exception $ex) {
+            $this->db->trans_rollback();
+            $res = ['success' => false, 'message' => $ex->getMessage()];
+        }
+        echo json_encode($res);
     }
 }

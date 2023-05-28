@@ -459,11 +459,6 @@
 							}
 						}
 					})
-					.catch(error => {
-						if (error.response) {
-							alert(`${error.response.status}, ${error.response.statusText}`);
-						}
-					})
 			},
 			getSaleDetails() {
 				let filter = {

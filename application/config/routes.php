@@ -589,3 +589,6 @@ $route['pending_order']    = 'Administrator/Order/PendingOrder';
 $route['processing_order'] = 'Administrator/Order/ProcessingOrder';
 $route['delivered_order']  = 'Administrator/Order/DeleveredOrder';
 $route['get_all_order']  = 'Administrator/Order/getAllOrder';
+// exchange
+$route['sales_exchange/(:any)']  = 'Administrator/Order/Exchange/$1';
+$route['sales_exchange_update']  = 'Administrator/Order/ExchangeUpdate';
