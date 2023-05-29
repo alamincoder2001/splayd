@@ -122,7 +122,6 @@
         el: '#orderProcessing',
         data() {
             return {
-                searchType: '',
                 orders: []
             }
         },

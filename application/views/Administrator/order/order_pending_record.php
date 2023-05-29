@@ -122,7 +122,6 @@
         el: '#orderPending',
         data() {
             return {
-                searchType: '',
                 orders: []
             }
         },

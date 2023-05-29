@@ -53,7 +53,7 @@
     }
 </style>
 <div id="orderDelivery">
-    <div class="row" style="display:none;margin-top: 15px;" v-bind:style="{display: orders.length > 0 ? '' : 'none'}">
+    <div class="row" style="margin-top: 15px;">
         <div class="col-md-12" style="margin-bottom: 10px;">
             <a href="" @click.prevent="print"><i class="fa fa-print"></i> Print</a>
         </div>
@@ -93,6 +93,9 @@
                             <td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
                         </tr>
+                        <tr v-if="orders.length == 0">
+                            <td colspan="14">No Found Data</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -111,7 +114,6 @@
         el: '#orderDelivery',
         data() {
             return {
-                searchType: '',
                 orders: []
             }
         },
