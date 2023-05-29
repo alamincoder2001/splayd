@@ -239,6 +239,7 @@
 								<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
+									<a href="javascript:" title="Edit Order" @click="checkExchangeAndEdit(sale)"><i class="fa fa-exchange"></i></a>
 									<a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
 										<i title="Order Sales Processing" v-if="sale.Status == 'p'" class="fa fa-spinner"></i>
 										<i title="Order Sales Delivered" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
@@ -366,6 +367,13 @@
 						}
 					}
 				})
+			},
+			checkExchangeAndEdit(sale) {
+				if (sale.is_service == 'true') {
+					window.open('/sales_exchange/' + sale.SaleMaster_SlNo, '_blank');
+				} else {
+					window.open('/sales_exchange/' + sale.SaleMaster_SlNo, '_blank');
+				}
 			},
 			onChangeSearchType() {
 				this.sales = [];

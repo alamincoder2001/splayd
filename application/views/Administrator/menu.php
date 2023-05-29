@@ -692,7 +692,7 @@ if ($module == 'dashboard' or $module == '') {
 
 					<?php if (array_search("delivery_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
-							<a href="<?php echo base_url(); ?>delivery_order">
+							<a href="<?php echo base_url(); ?>delivered_order">
 								<i class="menu-icon fa fa-caret-right"></i>
 								Order Delivery List
 							</a>
