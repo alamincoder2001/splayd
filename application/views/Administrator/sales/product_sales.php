@@ -93,7 +93,6 @@
 
 			<div class="widget-body">
 				<div class="widget-main">
-
 					<div class="row">
 						<div class="col-md-5 col-xs-12">
 							<div class="form-group clearfix" style="margin-bottom: 8px;">
@@ -216,16 +215,17 @@
 			</div>
 		</div>
 
-
 		<div class="col-xs-12 col-md-12 col-lg-12" style="padding-left: 0px;padding-right: 0px;">
 			<div class="table-responsive">
 				<table class="table table-bordered" style="color:#000;margin-bottom: 5px;">
 					<thead>
-						<tr class="">
+						<tr>
 							<th style="width:7%;color:#000;">Sl</th>
-							<th style="width:15%;color:#000;">Product Code</th>
+							<th v-if="sales.salesId > 0" style="color:#000;">Is Exchange</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
+							<th style="color:#000;">Color</th>
+							<th style="color:#000;">Size</th>
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
@@ -235,9 +235,13 @@
 					<tbody style="display:none;" v-bind:style="{display: cart.length > 0 ? '' : 'none'}">
 						<tr v-for="(product, sl) in cart">
 							<td>{{ sl + 1 }}</td>
-							<td>{{ product.productCode }}</td>
+							<td v-if="sales.salesId > 0">
+								<input type="checkbox" @change="exchangeChange" :checked="product.is_exchange == 'true'" v-model="product.is_exchange" true-value="true" false-value="false" />
+							</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
+							<td>{{ product.color }}</td>
+							<td>{{ product.size }}</td>
 							<td>{{ product.quantity }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
@@ -245,17 +249,43 @@
 						</tr>
 
 						<tr>
-							<td colspan="8"></td>
+							<td colspan="9"></td>
 						</tr>
 
 						<tr style="font-weight: bold;">
-							<td colspan="5">Note</td>
+							<td colspan="7">Note</td>
 							<td colspan="3">Total</td>
 						</tr>
 
 						<tr>
-							<td colspan="5"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
+							<td colspan="7"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
 							<td colspan="3" style="padding-top: 15px;font-size:18px;">{{ sales.total }}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table v-if="exchanges.length > 0" class="table table-bordered" style="color:#000;margin-bottom: 5px;">
+					<caption>Already Exchange Product</caption>
+					<thead>
+						<tr>
+							<th style="width:7%;color:#000;">Sl</th>
+							<th style="width:20%;color:#000;">Product Name</th>
+							<th style="color:#000;">Color</th>
+							<th style="color:#000;">Size</th>
+							<th style="width:5%;color:#000;">Pcs</th>
+							<th style="width:8%;color:#000;">Rate</th>
+							<th style="width:15%;color:#000;">Total Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="(product, sl) in exchanges">
+							<td>{{sl + 1}}</td>
+							<td>{{product.Product_Name}}</td>
+							<td>{{product.color_name}}</td>
+							<td>{{product.size_name}}</td>
+							<td>{{product.quantity}}</td>
+							<td>{{product.rate}}</td>
+							<td>{{product.total}}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -348,6 +378,38 @@
 										</td>
 									</tr>
 
+									<tr v-if="sales.salesId > 0">
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Exchange Total</label>
+												<div class="col-xs-12">
+													<input type="number" id="total" class="form-control" v-model="sales.exchangeTotal" readonly />
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr v-if="sales.salesId > 0 && parseFloat(sales.exchangeTotal) < parseFloat(sales.total)">
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Pay Exchange Amount</label>
+												<div class="col-xs-12">
+													<input type="number" id="takeAmount" class="form-control" v-model="sales.takeAmount" />
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr v-if="sales.salesId > 0 && parseFloat(sales.exchangeTotal) > parseFloat(sales.total)">
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Return Amount</label>
+												<div class="col-xs-12">
+													<input type="number" id="returnAmount" class="form-control" v-model="sales.returnAmount" />
+												</div>
+											</div>
+										</td>
+									</tr>
+
 									<tr>
 										<td>
 											<div class="form-group">
@@ -358,6 +420,7 @@
 											</div>
 										</td>
 									</tr>
+
 									<tr>
 										<td>
 											<div class="form-group">
@@ -463,7 +526,10 @@
 					previousDue: 0.00,
 					due: 0.00,
 					isService: '<?php echo $isService; ?>',
-					note: ''
+					note: '',
+					exchangeTotal: 0,
+					returnAmount: 0,
+					takeAmount: 0,
 				},
 				vatPercent: 0,
 				discountPercent: 0,
@@ -514,6 +580,7 @@
 				productStock: '',
 				saleOnProgress: false,
 				sales_due_on_update: 0,
+				exchanges: [],
 				userType: '<?php echo $this->session->userdata("accountType"); ?>'
 			}
 		},
@@ -578,6 +645,7 @@
 					} else {
 						this.products = res.data;
 					}
+					this.exchangeProducts = res.data;
 				})
 			},
 			productTotal() {
@@ -714,7 +782,8 @@
 					vat: this.selectedProduct.vat,
 					quantity: this.selectedProduct.quantity,
 					total: this.selectedProduct.total,
-					purchaseRate: this.selectedProduct.Product_Purchase_Rate
+					purchaseRate: this.selectedProduct.Product_Purchase_Rate,
+					is_exchange: 'false'
 				}
 
 				if (product.productId == '') {
@@ -767,10 +836,19 @@
 				this.productStock = '';
 				this.productStockText = '';
 			},
+			exchangeChange() {
+				this.calculateTotal();
+			},
 			calculateTotal() {
 				this.sales.subTotal = this.cart.reduce((prev, curr) => {
 					return prev + parseFloat(curr.total)
 				}, 0).toFixed(2);
+				let is_exchange = this.cart.filter(exchange => exchange.is_exchange == 'true');
+				this.sales.exchangeTotal = is_exchange.reduce((pre, acc) => {
+					return pre + +parseFloat(acc.total)
+				}, 0).toFixed(2);
+				this.sales.subTotal = (this.sales.subTotal - this.sales.exchangeTotal).toFixed(2);
+
 				this.sales.vat = this.cart.reduce((prev, curr) => {
 					return +prev + +(curr.total * (curr.vat / 100))
 				}, 0);
@@ -788,6 +866,16 @@
 				} else {
 					this.sales.due = (parseFloat(this.sales.total) - parseFloat(this.sales.cashPaid) - parseFloat(
 						this.sales.bankPaid)).toFixed(2);
+				}
+
+				if (this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) < parseFloat(this.sales.total)) {
+					this.sales.takeAmount = (parseFloat(this.sales.total) - parseFloat(this.sales.cashPaid) - parseFloat(
+						this.sales.bankPaid)).toFixed(2)
+					this.sales.returnAmount = 0;
+				}
+				if (this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) > parseFloat(this.sales.total)) {
+					this.sales.returnAmount = (parseFloat(this.sales.exchangeTotal) - parseFloat(this.sales.total)).toFixed(2)
+					this.sales.takeAmount = 0;
 				}
 			},
 			async saveSales() {
@@ -809,9 +897,14 @@
 					alert('Payment amount and total amount is not equal');
 					return;
 				}
+
+				if ((parseFloat(this.sales.exchangeTotal) >= parseFloat(this.sales.subTotal)) && this.sales.salesId > 0 && this.selectedCustomer.Customer_Type == 'G') {
+					alert("Sales must be grater than Or Equal exchange Total")
+					return
+				}
+
 				this.sales.account_id = parseFloat(this.sales.bankPaid) > 0 ? this.account.account_id : ''
 				this.sales.paid = parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
-				this.saleOnProgress = true;
 
 				await this.getCustomerDue();
 
@@ -844,6 +937,9 @@
 				if (this.selectedCustomer.Customer_Type == 'G') {
 					data.customer = this.selectedCustomer;
 				}
+
+				this.saleOnProgress = true;
+
 				axios.post(url, data).then(async res => {
 					let r = res.data;
 					if (r.success) {
@@ -884,6 +980,8 @@
 					this.sales.account_id = sales.account_id;
 					this.sales.previousDue = sales.SaleMaster_Previous_Due;
 					this.sales.due = sales.SaleMaster_DueAmount;
+					this.sales.takeAmount = sales.takeAmount;
+					this.sales.returnAmount = sales.returnAmount;
 					this.sales.note = sales.SaleMaster_Description;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
@@ -921,6 +1019,8 @@
 							productCode: product.Product_Code,
 							productId: product.Product_IDNo,
 							colorId: product.Product_colorId,
+							color: product.color_name,
+							size: product.size_name,
 							sizeId: product.Product_sizeId,
 							categoryName: product.ProductCategory_Name,
 							name: product.Product_Name,
@@ -929,15 +1029,17 @@
 							quantity: product.SaleDetails_TotalQuantity,
 							total: product.SaleDetails_TotalAmount,
 							purchaseRate: product.Purchase_Rate,
+							is_exchange: product.is_exchange
 						}
-
 						this.cart.push(cartProduct);
 					})
+
+					this.exchanges = r.exchanges
 
 					let gCustomerInd = this.customers.findIndex(c => c.Customer_Type == 'G');
 					this.customers.splice(gCustomerInd, 1);
 				})
-			}
+			},
 		},
 	})
 </script>

@@ -59,6 +59,35 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 </tr>
                             </tbody>
                         </table>
+                        <table _a584de style="margin-top: 15px;dispaly:none" :style="{display: exchanges.length  > 0 ? '' : 'none'}">
+                            <thead>
+                                <tr>
+                                    <td colspan="9">Product Exchange Information</td>
+                                </tr>
+                                <tr>
+                                    <td>Sl.</td>
+                                    <td>Description</td>
+                                    <td>Color</td>
+                                    <td>Size</td>
+                                    <td>Qnty</td>
+                                    <td>Unit</td>
+                                    <td>Unit Price</td>
+                                    <td>Total</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(product, sl) in exchanges">
+                                    <td>{{ sl + 1 }}</td>
+                                    <td>{{ product.Product_Name }}</td>
+                                    <td>{{ product.color_name }}</td>
+                                    <td>{{ product.size_name }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>{{ product.Unit_Name }}</td>
+                                    <td>{{ product.rate }}</td>
+                                    <td align="right" style="font-weight:bold">{{ product.total }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="row">
@@ -152,6 +181,7 @@ const salesInvoice = Vue.component("sales-invoice", {
         AddBy: null,
       },
       cart: [],
+      exchanges: [],
       style: null,
       companyProfile: null,
       currentBranch: null,
@@ -172,6 +202,7 @@ const salesInvoice = Vue.component("sales-invoice", {
       axios.post("/get_sales", { salesId: this.sales_id }).then((res) => {
         this.sales = res.data.sales[0];
         this.cart = res.data.saleDetails;
+        this.exchanges = res.data.exchanges;
       });
     },
     getCurrentBranch() {
