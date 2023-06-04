@@ -8,9 +8,9 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 
-	// 'username' => 'dewbxcak_admin4',
-	// 'password' => '(h-BfA?6WM)Z',
-	// 'database' => 'dewbxcak_mother',
+	// 'username' => 'agr5conventio_splayd',
+	// 'password' => '1pBq8Y6GeB@]',
+	// 'database' => 'agr5conventio_splayd',
 
 	'username' => 'root',
 	'password' => '',
