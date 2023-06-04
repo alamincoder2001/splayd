@@ -467,6 +467,9 @@ class Sales extends CI_Controller
                 'account_id'                     => $data->sales->account_id,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
+                'exchange_total'                 => $data->sales->exchangeTotal,
+                'takeAmount'                     => $data->sales->takeAmount,
+                'returnAmount'                   => $data->sales->returnAmount,
                 'SaleMaster_Description'         => $data->sales->note,
                 "UpdateBy"                       => $this->session->userdata("FullName"),
                 'UpdateTime'                     => date("Y-m-d H:i:s"),
@@ -525,7 +528,7 @@ class Sales extends CI_Controller
                         'SaleDetails_Rate'          => $cartProduct->salesRate,
                         'SaleDetails_Tax'           => $cartProduct->vat,
                         'SaleDetails_TotalAmount'   => $cartProduct->total,
-                        'Status'                    => 'p',
+                        'Status'                    => 'a',
                         'AddBy'                     => $this->session->userdata("FullName"),
                         'AddTime'                   => date('Y-m-d H:i:s'),
                         'SaleDetails_BranchId'      => $this->session->userdata('BRANCHid')
@@ -538,18 +541,19 @@ class Sales extends CI_Controller
                         where product_id = ?
                         and branch_id = ?
                     ", [$cartProduct->quantity, $cartProduct->productId, $this->session->userdata('BRANCHid')]);
+                    
+                    // update color wise stock
+                    $this->db->query("
+                        update tbl_color_size 
+                        set stock = stock - ?
+                        where product_id = ?
+                        and color_id = ? 
+                        and size_id = ? 
+                        and branch_id = ?
+                    ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->colorId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
                 }
 
 
-                // update color wise stock
-                $this->db->query("
-                    update tbl_color_size 
-                    set stock = stock - ?
-                    where product_id = ?
-                    and color_id = ? 
-                    and size_id = ? 
-                    and branch_id = ?
-                ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->colorId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             $this->db->trans_commit();
