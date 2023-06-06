@@ -389,7 +389,7 @@
 										</td>
 									</tr>
 
-									<tr v-if="sales.salesId > 0 && parseFloat(sales.exchangeTotal) < parseFloat(sales.total)">
+									<tr v-if="sales.salesId > 0 && parseFloat(sales.returnAmount) < parseFloat(sales.takeAmount)">
 										<td>
 											<div class="form-group">
 												<label class="col-xs-12 control-label no-padding-right">Pay Exchange Amount</label>
@@ -399,7 +399,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr v-if="sales.salesId > 0 && parseFloat(sales.exchangeTotal) > parseFloat(sales.total)">
+									<tr v-if="sales.salesId > 0 && parseFloat(sales.returnAmount) > parseFloat(sales.takeAmount)">
 										<td>
 											<div class="form-group">
 												<label class="col-xs-12 control-label no-padding-right">Return Amount</label>
@@ -869,12 +869,16 @@
 				}
 
 				if (this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) < parseFloat(this.sales.total)) {
-					this.sales.takeAmount = (parseFloat(this.sales.total) - parseFloat(this.sales.cashPaid) - parseFloat(
-						this.sales.bankPaid)).toFixed(2)
+					this.sales.takeAmount = (parseFloat(this.sales.total) - parseFloat(this.sales.paid)).toFixed(2)
 					this.sales.returnAmount = 0;
 				}
 				if (this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) > parseFloat(this.sales.total)) {
 					this.sales.returnAmount = (parseFloat(this.sales.exchangeTotal) - parseFloat(this.sales.total)).toFixed(2)
+					this.sales.takeAmount = 0;
+				}
+
+				if (Math.sign(parseFloat(this.sales.takeAmount)) == -1) {
+					this.sales.returnAmount = this.sales.takeAmount.replace('-', '');
 					this.sales.takeAmount = 0;
 				}
 			},
@@ -893,14 +897,11 @@
 					return;
 				}
 
-				if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) != parseFloat(this.sales.total))) {
-					alert('Payment amount and total amount is not equal');
-					return;
-				}
-
-				if ((parseFloat(this.sales.exchangeTotal) >= parseFloat(this.sales.subTotal)) && this.sales.salesId > 0 && this.selectedCustomer.Customer_Type == 'G') {
-					alert("Sales must be grater than Or Equal exchange Total")
-					return
+				if (this.sales.salesId == 0) {
+					if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) != parseFloat(this.sales.total))) {
+						alert('Payment amount and total amount is not equal');
+						return;
+					}
 				}
 
 				this.sales.account_id = parseFloat(this.sales.bankPaid) > 0 ? this.account.account_id : ''
