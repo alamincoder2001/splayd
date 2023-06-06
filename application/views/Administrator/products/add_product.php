@@ -124,12 +124,6 @@
 				</div>
 				<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 			</div>
-			<div class="form-group clearfix">
-				<label class="control-label col-md-4">Per Unit Convert:</label>
-				<div class="col-md-7">
-					<input type="number" min="0" step="0.01" class="form-control" v-model="product.per_unit_convert">
-				</div>
-			</div>
 			<div class="information">
 				<div class="col-sm-12 color_heading"> <strong>Product Size & Color</strong> <button class="btn btn-colorAdd" type="button" data-toggle="modal" data-target="#myModal">+Add</button></div>
 				<div class="table-responsive" style="padding: 5px 3px 0px 3px;">
@@ -219,7 +213,6 @@
 						<tr>
 							<td>{{ row.Product_Code }}</td>
 							<td>{{ row.Product_Name }}</td>
-							<!-- <td>{{ row.color_name }}</td> -->
 							<td>{{ row.ProductCategory_Name }}</td>
 							<td>{{ row.Product_Purchase_Rate }}</td>
 							<td>{{ row.Product_SellingPrice }}</td>
