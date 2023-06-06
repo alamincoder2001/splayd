@@ -182,6 +182,12 @@ class Model_Table extends CI_Model{
                 " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
             ) as received_sales,
             (
+                select ifnull(sum(sm.takeAmount), 0) from tbl_salesmaster sm
+                where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
+                and sm.Status = 'a' and sm.takeAmount > 0
+                " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
+            ) as pay_exchange_sales,
+            (
                 select ifnull(sum(cp.CPayment_amount), 0) from tbl_customer_payment cp
                 where cp.CPayment_TransactionType = 'CR'
                 and cp.CPayment_status = 'a'
@@ -240,6 +246,12 @@ class Model_Table extends CI_Model{
             ) as sale_asset,
 
             /* paid */
+            (
+                select ifnull(sum(sm.returnAmount), 0) from tbl_salesmaster sm
+                where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
+                and sm.Status = 'a' and sm.returnAmount > 0
+                " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
+            ) as return_sales,
             (
                 select ifnull(sum(pm.PurchaseMaster_cashPaid), 0) from tbl_purchasemaster pm
                 where pm.status = 'a' and pm.PurchaseMaster_cashPaid > 0
@@ -305,10 +317,10 @@ class Model_Table extends CI_Model{
             ) as buy_asset,
             /* total */
             (
-                select received_sales + received_customer + received_supplier + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received + sale_asset
+                select pay_exchange_sales + received_sales + received_customer + received_supplier + received_cash + bank_withdraw + loan_received + loan_initial_balance + invest_received + sale_asset
             ) as total_in,
             (
-                select paid_purchase + paid_customer + paid_supplier + paid_cash + bank_deposit + employee_payment + loan_payment + invest_payment + buy_asset
+                select return_sales + paid_purchase + paid_customer + paid_supplier + paid_cash + bank_deposit + employee_payment + loan_payment + invest_payment + buy_asset
             ) as total_out,
             (
                 select total_in - total_out
