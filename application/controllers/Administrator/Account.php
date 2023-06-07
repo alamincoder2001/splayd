@@ -1255,7 +1255,7 @@ class Account extends CI_Controller {
                     concat('Product Sales- ', c.Customer_Name, ' (Invoice: ', sm.SaleMaster_InvoiceNo, ')') as description, 
                     sm.account_id,
                     sm.SaleMaster_SaleDate as transaction_date,
-                    'withdraw' as transaction_type,
+                    'deposit' as transaction_type,
                     sm.SaleMaster_bankPaid as deposit,
                     0.00 as withdraw,
                     sm.SaleMaster_Description as note,
