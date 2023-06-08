@@ -365,7 +365,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                             <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
                             <style>
                                 body, table{
-                                    font-size:11px;
+                                    font-size:10px;
                                 }
                             </style>
                         </head>
