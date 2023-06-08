@@ -212,6 +212,8 @@
 							<th style="width:4%;color:#000;">SL</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:13%;color:#000;">Category</th>
+							<th style="width:13%;color:#000;">Color</th>
+							<th style="width:13%;color:#000;">Size</th>
 							<th style="width:12%;color:#000;">Purchase Rate</th>
 							<th style="width:5%;color:#000;">Quantity</th>
 							<th style="width:13%;color:#000;">Total Amount</th>
@@ -223,23 +225,27 @@
 							<td>{{ sl + 1}}</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
+							<td>{{ product.color }}</td>
+							<td>{{ product.size }}</td>
 							<td>{{ product.purchaseRate }}</td>
-							<td>{{ product.quantity }}</td>
+							<td>
+								<input type="number" min="0" step="0.01" v-model="product.quantity" style="width: 70px;" @input="onChangeQty(sl)"/>
+							</td>
 							<td>{{ product.total }}</td>
 							<td><a href="" v-on:click.prevent="removeFromCart(sl)"><i class="fa fa-trash"></i></a></td>
 						</tr>
 
 						<tr>
-							<td colspan="7"></td>
+							<td colspan="9"></td>
 						</tr>
 
 						<tr style="font-weight: bold;">
-							<td colspan="4">Note</td>
+							<td colspan="6">Note</td>
 							<td colspan="3">Total</td>
 						</tr>
 
 						<tr>
-							<td colspan="4"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="purchase.note"></textarea></td>
+							<td colspan="6"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="purchase.note"></textarea></td>
 							<td colspan="3" style="padding-top: 15px;font-size:18px;">{{ purchase.total }}</td>
 						</tr>
 					</tbody>
@@ -632,6 +638,7 @@
 					colorId: this.selectedColor ? this.selectedColor.color_id : '',
 					color: this.selectedColor ? this.selectedColor.color_name : '',
 					sizeId: this.selectedSize ? this.selectedSize.size_id : '',
+					size: this.selectedSize ? this.selectedSize.size_name: '',
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					purchaseRate: this.selectedProduct.Product_Purchase_Rate,
 					salesRate: this.selectedProduct.Product_SellingPrice,
@@ -670,6 +677,13 @@
 				}
 				this.selectedColor = null;
 				this.selectedSize = null;
+			},
+			onChangeQty(sl){
+				this.cart.map(p => {
+					p.total = parseFloat(p.purchaseRate) * p.quantity;
+					return p;
+				})
+				this.calculateTotal();
 			},
 			calculateTotal() {
 				this.purchase.subTotal = this.cart.reduce((prev, curr) => {
@@ -802,7 +816,9 @@
 							productId: product.Product_IDNo,
 							name: product.Product_Name,
 							colorId: product.Product_colorId,
+							color: product.color_name,
 							sizeId: product.Product_sizeId,
+							size: product.size_name,
 							categoryId: product.ProductCategory_ID,
 							categoryName: product.ProductCategory_Name,
 							purchaseRate: product.PurchaseDetails_Rate,

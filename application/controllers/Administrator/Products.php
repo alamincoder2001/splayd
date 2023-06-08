@@ -370,7 +370,7 @@ class Products extends CI_Controller {
                 ) as transferred_to_quantity,
                         
                 (select (purchased_quantity + sales_returned_quantity + transferred_to_quantity) - (sold_quantity + purchase_returned_quantity + damaged_quantity + transferred_from_quantity)) as current_quantity,
-                (select p.Product_Purchase_Rate * current_quantity) as stock_value
+                (select p.Product_SellingPrice * current_quantity) as stock_value
             from tbl_product p
             left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
             left join tbl_brand b on b.brand_SiNo = p.brand
@@ -859,10 +859,6 @@ class Products extends CI_Controller {
 
     public function getProductColor() {
         $data = json_decode($this->input->raw_input_stream);
-        // $clauses = "";
-        // if(isset($data->colorId) && $data->colorId != null) {
-        //     $clauses .= " and pc.color_id = '$data->colorId'";
-        // }
 
         $colors = $this->db->query("
             select 

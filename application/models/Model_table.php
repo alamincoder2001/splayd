@@ -576,7 +576,8 @@ class Model_Table extends CI_Model{
                     p.Product_Code,
                     p.Product_ReOrederLevel,
                     p.Product_Purchase_Rate,
-                    (select (p.Product_Purchase_Rate * current_quantity)) as stock_value,
+                    p.Product_SellingPrice,
+                    (select (p.Product_SellingPrice * current_quantity)) as stock_value,
                     pc.ProductCategory_Name,
                     b.brand_name,
                     u.Unit_Name

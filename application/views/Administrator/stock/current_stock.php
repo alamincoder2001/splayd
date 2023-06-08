@@ -49,13 +49,19 @@
 				</div>
 			</div>
 	
-			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'product'">
+			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'product' || selectedSearchType.value == 'sizeColor'">
 				<div class="col-sm-2" style="margin-left:15px;">
 					<v-select v-bind:options="products" v-model="selectedProduct" label="display_text"></v-select>
 				</div>
 			</div>
 
 			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'brand'">
+				<div class="col-sm-2" style="margin-left:15px;">
+					<v-select v-bind:options="brands" v-model="selectedBrand" label="brand_name"></v-select>
+				</div>
+			</div>
+
+			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'sizeColor'">
 				<div class="col-sm-2" style="margin-left:15px;">
 					<v-select v-bind:options="brands" v-model="selectedBrand" label="brand_name"></v-select>
 				</div>
@@ -99,7 +105,7 @@
 							<td>{{ product.Product_Name }}</td>
 							<td>{{ product.ProductCategory_Name }}</td>
 							<td>{{ product.current_quantity }} {{ product.Unit_Name }}</td>
-							<td>{{ product.Product_Purchase_Rate | decimal }}</td>
+							<td>{{ product.Product_SellingPrice | decimal }}</td>
 							<td>{{ product.stock_value | decimal }}</td>
 						</tr>
 					</tbody>
@@ -145,7 +151,7 @@
 							<td>{{ product.transferred_to_quantity}}</td>
 							<td>{{ product.transferred_from_quantity}}</td>
 							<td>{{ product.current_quantity }} {{ product.Unit_Name }}</td>
-							<td>{{ product.Product_Purchase_Rate | decimal }}</td>
+							<td>{{ product.Product_SellingPrice | decimal }}</td>
 							<td>{{ product.stock_value | decimal }}</td>
 						</tr>
 					</tbody>
@@ -178,7 +184,7 @@
 					{text: 'Total Stock', value: 'total'},
 					{text: 'Category Wise Stock', value: 'category'},
 					{text: 'Product Wise Stock', value: 'product'},
-					//{text: 'Brand Wise Stock', value: 'brand'}
+					{text: 'ColorSize Wise Stock', value: 'sizeColor'}
 				],
 				selectedSearchType: {
 					text: 'select',
@@ -261,6 +267,9 @@
 					this.getBrands();
 				} else if(this.selectedSearchType.value == 'product' && this.products.length == 0){
 					this.getProducts();
+				}else if(this.selectedSearchType.value == 'sizeColor'){
+					this.getProducts();
+					this.getProductColors();
 				}
 			},
 			getCategories(){
@@ -277,6 +286,22 @@
 				axios.get('/get_brands').then(res => {
 					this.brands = res.data;
 				})
+			},
+			getProductColors() {
+				axios.post('/get_product_color', {
+					productId: this.selectedProduct.Product_SlNo
+				}).then(res => {
+					this.colors = res.data;
+				})
+			},
+			getProductSizes() {
+				axios.post('/get_product_size', {
+						productId: this.selectedProduct.Product_SlNo,
+						colorId: this.selectedColor.color_id
+					})
+					.then(res => {
+						this.sizes = res.data;
+					})
 			},
 			async print(){
 				let reportContent = `
