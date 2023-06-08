@@ -680,7 +680,7 @@
 			},
 			onChangeQty(sl){
 				this.cart.map(p => {
-					p.total = parseFloat(p.purchaseRate) * p.quantity;
+					p.total = (parseFloat(p.purchaseRate) * p.quantity).toFixed(2)
 					return p;
 				})
 				this.calculateTotal();
