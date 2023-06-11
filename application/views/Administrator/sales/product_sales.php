@@ -448,10 +448,32 @@
 									<tr v-if="sales.bankPaid > 0">
 										<td>
 											<div class="form-group">
-												<label class="col-sm-12 control-label no-padding-right">Bank
+												<label class="col-xs-12 control-label no-padding-right">Bank
 													Account</label>
-												<div class="col-sm-12">
+												<div class="col-xs-12">
 													<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr v-if="sales.bankPaid > 0">
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Last 4digit</label>
+												<div class="col-xs-12">
+													<input type="number" class="form-control" id="bankDigit" v-model="sales.bankDigit" />
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr v-if="sales.bankPaid <= 0">
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Return</label>
+												<div class="col-xs-12">
+													<input type="number" class="form-control" id="returnCash" v-model="sales.returnCash" />
 												</div>
 											</div>
 										</td>
@@ -530,6 +552,8 @@
 					exchangeTotal: 0,
 					returnAmount: 0,
 					takeAmount: 0,
+					bankDigit: '',
+					returnCash: 0,
 				},
 				vatPercent: 0,
 				discountPercent: 0,
@@ -881,6 +905,13 @@
 					this.sales.returnAmount = this.sales.takeAmount.replace('-', '');
 					this.sales.takeAmount = 0;
 				}
+
+				if (this.sales.bankPaid <= 0) {
+					this.sales.returnCash = (parseFloat(this.sales.cashPaid) - parseFloat(this.sales.total)).toFixed(2);
+					this.sales.due = 0;
+				}else{
+					this.sales.returnCash = 0;
+				}
 			},
 			async saveSales() {
 				if (this.selectedCustomer.Customer_SlNo == '') {
@@ -898,10 +929,19 @@
 				}
 
 				if (this.sales.salesId == 0) {
-					if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) != parseFloat(this.sales.total))) {
+					if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid))-parseFloat(this.sales.returnCash) != parseFloat(this.sales.total))) {
 						alert('Payment amount and total amount is not equal');
 						return;
 					}
+				}
+
+				if ((this.sales.bankDigit == '' || this.sales.bankDigit == null) && this.sales.bankPaid > 0) {
+					alert("Bank digit number empty");
+					return
+				}
+				if (this.sales.bankDigit.toString().length <= 3 && this.sales.bankPaid > 0) {
+					alert("Must be 4digit");
+					return
 				}
 
 				this.sales.account_id = parseFloat(this.sales.bankPaid) > 0 ? this.account.account_id : ''
@@ -929,6 +969,7 @@
 
 				this.sales.customerId = this.selectedCustomer.Customer_SlNo;
 				this.sales.salesFrom = this.selectedBranch.brunch_id;
+				this.sales.paid = (this.sales.paid - this.sales.returnCash);
 
 				let data = {
 					sales: this.sales,
@@ -962,28 +1003,30 @@
 				await axios.post('/get_sales', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r = res.data;
-					let sales = r.sales[0];
-					this.sales.salesBy = sales.AddBy;
-					this.sales.salesFrom = sales.SaleMaster_branchid;
-					this.sales.salesDate = sales.SaleMaster_SaleDate;
-					this.sales.salesType = sales.SaleMaster_SaleType;
-					this.sales.customerId = sales.SalseCustomer_IDNo;
-					this.sales.employeeId = sales.Employee_SlNo;
-					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
-					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
-					this.sales.vat = sales.SaleMaster_TaxAmount;
-					this.sales.transportCost = sales.SaleMaster_Freight;
-					this.sales.total = sales.SaleMaster_TotalSaleAmount;
-					this.sales.paid = sales.SaleMaster_PaidAmount;
-					this.sales.cashPaid = sales.SaleMaster_cashPaid;
-					this.sales.bankPaid = sales.SaleMaster_bankPaid;
-					this.sales.account_id = sales.account_id;
-					this.sales.previousDue = sales.SaleMaster_Previous_Due;
-					this.sales.due = sales.SaleMaster_DueAmount;
-					this.sales.takeAmount = sales.takeAmount;
-					this.sales.returnAmount = sales.returnAmount;
-					this.sales.note = sales.SaleMaster_Description;
+					let r                        = res.data;
+					let sales                    = r.sales[0];
+					    this.sales.salesBy       = sales.AddBy;
+					    this.sales.salesFrom     = sales.SaleMaster_branchid;
+					    this.sales.salesDate     = sales.SaleMaster_SaleDate;
+					    this.sales.salesType     = sales.SaleMaster_SaleType;
+					    this.sales.customerId    = sales.SalseCustomer_IDNo;
+					    this.sales.employeeId    = sales.Employee_SlNo;
+					    this.sales.subTotal      = sales.SaleMaster_SubTotalAmount;
+					    this.sales.discount      = sales.SaleMaster_TotalDiscountAmount;
+					    this.sales.vat           = sales.SaleMaster_TaxAmount;
+					    this.sales.transportCost = sales.SaleMaster_Freight;
+					    this.sales.total         = sales.SaleMaster_TotalSaleAmount;
+					    this.sales.paid          = sales.SaleMaster_PaidAmount;
+					    this.sales.cashPaid      = sales.SaleMaster_cashPaid;
+					    this.sales.bankPaid      = sales.SaleMaster_bankPaid;
+					    this.sales.account_id    = sales.account_id;
+					    this.sales.previousDue   = sales.SaleMaster_Previous_Due;
+					    this.sales.due           = sales.SaleMaster_DueAmount;
+					    this.sales.takeAmount    = sales.takeAmount;
+					    this.sales.returnAmount  = sales.returnAmount;
+					    this.sales.bankDigit     = sales.bankDigit;
+					    this.sales.note          = sales.SaleMaster_Description;
+					    this.sales.returnCash    = 0;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;

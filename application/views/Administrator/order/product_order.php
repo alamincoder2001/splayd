@@ -447,10 +447,21 @@
 									<tr v-if="sales.bankPaid > 0">
 										<td>
 											<div class="form-group">
-												<label class="col-sm-12 control-label no-padding-right">Bank
+												<label class="col-xs-12 control-label no-padding-right">Bank
 													Account</label>
-												<div class="col-sm-12">
+												<div class="col-xs-12">
 													<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr v-if="sales.bankPaid > 0">
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 control-label no-padding-right">Last 4digit</label>
+												<div class="col-xs-12">
+													<input type="number" class="form-control" id="bankDigit" v-model="sales.bankDigit" />
 												</div>
 											</div>
 										</td>
@@ -529,6 +540,7 @@
 					exchangeTotal: 0,
 					returnAmount: 0,
 					takeAmount: 0,
+					bankDigit: '',
 				},
 				vatPercent: 0,
 				discountPercent: 0,
@@ -626,6 +638,14 @@
 						Customer_Code: '',
 						Customer_Name: '',
 						display_name: 'General Customer',
+						Customer_Mobile: '',
+						Customer_Address: '',
+						Customer_Type: 'G'
+					}, {
+						Customer_SlNo: 'C01',
+						Customer_Code: '',
+						Customer_Name: '',
+						display_name: 'New Customer',
 						Customer_Mobile: '',
 						Customer_Address: '',
 						Customer_Type: 'G'
@@ -897,10 +917,14 @@
 					return;
 				}
 
-				// if ((parseFloat(this.sales.exchangeTotal) >= parseFloat(this.sales.subTotal)) && this.sales.salesId > 0) {
-				// 	alert("Order must be grater than Or Equal exchange Total")
-				// 	return
-				// }
+				if ((this.sales.bankDigit == '' || this.sales.bankDigit == null) && this.sales.bankPaid > 0) {
+					alert("Bank digit number empty");
+					return
+				}
+				if (this.sales.bankDigit.toString().length <= 3 && this.sales.bankPaid > 0) {
+					alert("Must be 4digit");
+					return
+				}
 
 				this.sales.account_id = parseFloat(this.sales.bankPaid) > 0 ? this.account.account_id : ''
 				this.sales.paid = parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
@@ -960,29 +984,29 @@
 				await axios.post('/get_orders', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r                        = res.data;
-					let sales                    = r.sales[0];
-					    this.sales.salesBy       = sales.AddBy;
-					    this.sales.salesFrom     = sales.SaleMaster_branchid;
-					    this.sales.salesDate     = sales.SaleMaster_SaleDate;
-					    this.sales.salesType     = sales.SaleMaster_SaleType;
-					    this.sales.customerId    = sales.SalseCustomer_IDNo;
-					    this.sales.employeeId    = sales.Employee_SlNo;
-					    this.sales.subTotal      = sales.SaleMaster_SubTotalAmount;
-					    this.sales.discount      = sales.SaleMaster_TotalDiscountAmount;
-					    this.sales.vat           = sales.SaleMaster_TaxAmount;
-					    this.sales.transportCost = sales.SaleMaster_Freight;
-					    this.sales.total         = sales.SaleMaster_TotalSaleAmount;
-					    this.sales.paid          = sales.SaleMaster_PaidAmount;
-					    this.sales.cashPaid      = sales.SaleMaster_cashPaid;
-					    this.sales.bankPaid      = sales.SaleMaster_bankPaid;
-					    this.sales.account_id    = sales.account_id;
-					    this.sales.previousDue   = sales.SaleMaster_Previous_Due;
-					    this.sales.due           = sales.SaleMaster_DueAmount;
-					    this.sales.takeAmount    = sales.takeAmount;
-					    this.sales.returnAmount  = sales.returnAmount;
-					    this.sales.note          = sales.SaleMaster_Description;
-					    this.sales.Status        = sales.Status
+					let r = res.data;
+					let sales = r.sales[0];
+					this.sales.salesBy = sales.AddBy;
+					this.sales.salesFrom = sales.SaleMaster_branchid;
+					this.sales.salesDate = sales.SaleMaster_SaleDate;
+					this.sales.salesType = sales.SaleMaster_SaleType;
+					this.sales.customerId = sales.SalseCustomer_IDNo;
+					this.sales.employeeId = sales.Employee_SlNo;
+					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
+					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
+					this.sales.vat = sales.SaleMaster_TaxAmount;
+					this.sales.transportCost = sales.SaleMaster_Freight;
+					this.sales.total = sales.SaleMaster_TotalSaleAmount;
+					this.sales.paid = sales.SaleMaster_PaidAmount;
+					this.sales.cashPaid = sales.SaleMaster_cashPaid;
+					this.sales.bankPaid = sales.SaleMaster_bankPaid;
+					this.sales.account_id = sales.account_id;
+					this.sales.previousDue = sales.SaleMaster_Previous_Due;
+					this.sales.due = sales.SaleMaster_DueAmount;
+					this.sales.takeAmount = sales.takeAmount;
+					this.sales.returnAmount = sales.returnAmount;
+					this.sales.note = sales.SaleMaster_Description;
+					this.sales.Status = sales.Status
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;

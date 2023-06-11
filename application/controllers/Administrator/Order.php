@@ -50,15 +50,32 @@ class Order extends CI_Controller
             }
 
             $customerId = $data->sales->customerId;
-            if (isset($data->customer)) {
+            if (isset($data->customer) && $data->customer->display_name != 'New Customer') {
                 $customer = (array)$data->customer;
                 unset($customer['Customer_SlNo']);
                 unset($customer['display_name']);
-                $customer['Customer_Code'] = $this->mt->generateCustomerCode();
-                $customer['status'] = 'a';
-                $customer['AddBy'] = $this->session->userdata("FullName");
-                $customer['AddTime'] = date("Y-m-d H:i:s");
+                $customer['Customer_Code']     = $this->mt->generateCustomerCode();
+                $customer['status']            = 'a';
+                $customer['AddBy']             = $this->session->userdata("FullName");
+                $customer['AddTime']           = date("Y-m-d H:i:s");
                 $customer['Customer_brunchid'] = $this->session->userdata("BRANCHid");
+
+                $this->db->insert('tbl_customer', $customer);
+                $customerId = $this->db->insert_id();
+            } 
+            if(isset($data->customer) && $data->customer->display_name == 'New Customer') {
+                $customer = (array)$data->customer;
+                unset($customer['Customer_SlNo']);
+                unset($customer['display_name']);
+                unset($customer['Customer_Type']);
+                $customer['Customer_Code']         = $this->mt->generateCustomerCode();
+                $customer['area_ID']               = 1;
+                $customer['Customer_Credit_Limit'] = 100000;
+                $customer['status']                = 'a';
+                $customer['Customer_Type']         = $data->sales->salesType;
+                $customer['AddBy']                 = $this->session->userdata("FullName");
+                $customer['AddTime']               = date("Y-m-d H:i:s");
+                $customer['Customer_brunchid']     = $this->session->userdata("BRANCHid");
 
                 $this->db->insert('tbl_customer', $customer);
                 $customerId = $this->db->insert_id();
@@ -82,6 +99,7 @@ class Order extends CI_Controller
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
                 'SaleMaster_Description'         => $data->sales->note,
+                'bankDigit'                      => $data->sales->bankDigit,
                 'Status'                         => 'p',
                 'is_order'                       => 'true',
                 'is_service'                     => $data->sales->isService,
@@ -185,6 +203,7 @@ class Order extends CI_Controller
                 'exchange_total'                 => $data->sales->exchangeTotal,
                 'takeAmount'                     => $data->sales->takeAmount,
                 'returnAmount'                   => $data->sales->returnAmount,
+                'bankDigit'                      => $data->sales->bankDigit,
                 'is_order'                       => 'true',
                 'is_service'                     => $data->sales->isService,
                 "AddBy"                          => $this->session->userdata("FullName"),

@@ -171,11 +171,13 @@
 									<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
 									<?php if ($this->session->userdata('accountType') != 'u') { ?>
 										<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-										<a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
-											<i title="Order Sales Processing" v-if="sale.Status == 'p'" class="fa fa-spinner"></i>
-											<i title="Order Sales Delivered" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
-										</a>
 										<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+										<select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
+											<option :disabled="sale.Status != 'p'" value="p">Pending</option>
+											<option value="process">Processing</option>
+											<option value="a">Delivered</option>
+											<option value="cancel" style="color: red;">Cancel</option>
+										</select>
 									<?php } ?>
 								</td>
 							</tr>
@@ -239,11 +241,13 @@
 								<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-									<a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
-										<i title="Order Sales Processing" v-if="sale.Status == 'p'" class="fa fa-spinner"></i>
-										<i title="Order Sales Delivered" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
-									</a>
 									<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+									<select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
+										<option :disabled="sale.Status != 'p'" value="p">Pending</option>
+										<option value="process">Processing</option>
+										<option value="a">Delivered</option>
+										<option value="cancel" style="color: red;">Cancel</option>
+									</select>
 								<?php } ?>
 							</td>
 						</tr>
@@ -522,15 +526,12 @@
 				if (deleteConf == false) {
 					return;
 				}
+
 				let filter = {
-					saleId: sale.SaleMaster_SlNo
+					saleId: sale.SaleMaster_SlNo,
+					Status: sale.Status
 				}
-				if (sale.Status == 'p') {
-					filter.Status = 'process'
-				}
-				if (sale.Status == 'process') {
-					filter.Status = 'a'
-				}
+
 				axios.post('/order_status_change', filter)
 					.then(res => {
 						let r = res.data;

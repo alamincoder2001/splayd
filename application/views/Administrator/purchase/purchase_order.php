@@ -229,7 +229,7 @@
 							<td>{{ product.size }}</td>
 							<td>{{ product.purchaseRate }}</td>
 							<td>
-								<input type="number" min="0" step="0.01" v-model="product.quantity" style="width: 70px;" @input="onChangeQty(sl)"/>
+								<input type="number" min="0" step="1" v-model="product.quantity" style="width: 70px;" @input="onChangeQty(sl)"/>
 							</td>
 							<td>{{ product.total }}</td>
 							<td><a href="" v-on:click.prevent="removeFromCart(sl)"><i class="fa fa-trash"></i></a></td>

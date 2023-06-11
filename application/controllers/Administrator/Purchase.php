@@ -1180,7 +1180,8 @@ class Purchase extends CI_Controller
                 pm.PurchaseMaster_InvoiceNo,
                 pm.PurchaseMaster_OrderDate,
                 s.Supplier_Code,
-                s.Supplier_Name
+                s.Supplier_Name,
+                pm.PurchaseMaster_SlNo
             from tbl_purchasedetails pd
             join tbl_product p on p.Product_SlNo = pd.Product_IDNo
             join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
