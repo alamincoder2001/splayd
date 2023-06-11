@@ -129,6 +129,12 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 						<li>
 							<a class="top-a-btn" href="<?php echo base_url(); ?>delivered_order">Delivered Order Sales</a>
 						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>cancel_order">Cancel Order Sales</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>orderrecord">Order Sales Record</a>
+						</li>
 					</ul>
 				</div>
 			</div>

@@ -112,24 +112,24 @@
 								</div>
 							</div>
 
-							<div class="form-group" style="display:none;" v-bind:style="{display: selectedCustomer.Customer_Type == 'G' ? '' : 'none'}">
+							<div class="form-group" style="display:none;" v-bind:style="{display: selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'New' ? '' : 'none'}">
 								<label class="col-xs-4 control-label no-padding-right"> Name </label>
 								<div class="col-xs-8">
-									<input type="text" id="customerName" placeholder="Customer Name" class="form-control" v-model="selectedCustomer.Customer_Name" v-bind:disabled="selectedCustomer.Customer_Type == 'G' ? false : true" />
+									<input type="text" id="customerName" placeholder="Customer Name" class="form-control" v-model="selectedCustomer.Customer_Name" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'New' ? false : true" />
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label class="col-xs-4 control-label no-padding-right"> Mobile No </label>
 								<div class="col-xs-8">
-									<input type="text" id="mobileNo" placeholder="Mobile No" class="form-control" v-model="selectedCustomer.Customer_Mobile" v-bind:disabled="selectedCustomer.Customer_Type == 'G' ? false : true" />
+									<input type="text" id="mobileNo" placeholder="Mobile No" class="form-control" v-model="selectedCustomer.Customer_Mobile" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'New' ? false : true" />
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label class="col-xs-4 control-label no-padding-right"> Address </label>
 								<div class="col-xs-8">
-									<textarea id="address" placeholder="Address" class="form-control" v-model="selectedCustomer.Customer_Address" v-bind:disabled="selectedCustomer.Customer_Type == 'G' ? false : true"></textarea>
+									<textarea id="address" placeholder="Address" class="form-control" v-model="selectedCustomer.Customer_Address" v-bind:disabled="selectedCustomer.Customer_Type == 'G' || selectedCustomer.Customer_Type == 'New' ? false : true"></textarea>
 								</div>
 							</div>
 						</div>
@@ -648,7 +648,7 @@
 						display_name: 'New Customer',
 						Customer_Mobile: '',
 						Customer_Address: '',
-						Customer_Type: 'G'
+						Customer_Type: 'New'
 					})
 				})
 			},

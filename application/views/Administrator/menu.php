@@ -690,11 +690,31 @@ if ($module == 'dashboard' or $module == '') {
 						</li>
 					<?php endif; ?>
 
-					<?php if (array_search("delivery_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+					<?php if (array_search("delivered_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
 						<li class="">
 							<a href="<?php echo base_url(); ?>delivered_order">
 								<i class="menu-icon fa fa-caret-right"></i>
 								Order Delivery List
+							</a>
+							<b class="arrow"></b>
+						</li>
+					<?php endif; ?>
+
+					<?php if (array_search("cancel_order", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+						<li class="">
+							<a href="<?php echo base_url(); ?>cancel_order">
+								<i class="menu-icon fa fa-caret-right"></i>
+								Order Cancel List
+							</a>
+							<b class="arrow"></b>
+						</li>
+					<?php endif; ?>
+					
+					<?php if (array_search("orderrecord", $access) > -1 || isset($CheckSuperAdmin) || isset($CheckAdmin)) : ?>
+						<li class="">
+							<a href="<?php echo base_url(); ?>orderrecord">
+								<i class="menu-icon fa fa-caret-right"></i>
+								Order Sales Record
 							</a>
 							<b class="arrow"></b>
 						</li>

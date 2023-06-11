@@ -242,7 +242,7 @@
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
 									<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
-									<select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
+									<select style="border: 1px dashed;height:auto;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
 										<option :disabled="sale.Status != 'p'" value="p">Pending</option>
 										<option value="process">Processing</option>
 										<option value="a">Delivered</option>
@@ -457,7 +457,7 @@
 							}
 						} else {
 							if (this.EmployeeID == '') {
-								this.sales = res.data.sales;
+								this.sales = res.data.sales.filter(sale => sale.Status != 'cancel');
 							} else {
 								this.sales = res.data.sales.filter(item => item.employee_id == this.EmployeeID);
 							}

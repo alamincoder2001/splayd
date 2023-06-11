@@ -596,6 +596,15 @@ class Order extends CI_Controller
                         exit;
                     }
                 }
+
+                // update salesmaster
+                $updateSale = array(
+                    'SaleMaster_cashPaid' => $sale->SaleMaster_cashPaid + $sale->SaleMaster_DueAmount,
+                    'SaleMaster_PaidAmount' => $sale->SaleMaster_PaidAmount + $sale->SaleMaster_DueAmount,
+                    'SaleMaster_DueAmount' => 0
+                );
+                $this->db->where('SaleMaster_SlNo', $sale->SaleMaster_SlNo);
+                $this->db->update('tbl_salesmaster', $updateSale);
             }
 
             /*deliver order Details*/
@@ -626,10 +635,13 @@ class Order extends CI_Controller
                 }
             }
             if ($data->Status == 'process') {
-                $res = ['success' => true, 'message' => 'Order Processing success'];
+                $res = ['success' => true, 'message' => 'Order processing success'];
+            }
+            if ($data->Status == 'cancel') {
+                $res = ['success' => true, 'message' => 'Order cancel success'];
             }
             if ($data->Status == 'a') {
-                $res = ['success' => true, 'message' => 'Order Delivery success'];
+                $res = ['success' => true, 'message' => 'Order delivery success'];
             }
         } catch (Exception $ex) {
             $res = ['success' => false, 'message' => $ex->getMessage()];
@@ -668,6 +680,17 @@ class Order extends CI_Controller
         }
         $data['title'] = "Delivery Order Record";
         $data['content'] = $this->load->view('Administrator/order/order_delivery_record', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function CancelOrder()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Delivery Cancel Record";
+        $data['content'] = $this->load->view('Administrator/order/order_cancel_record', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }
 

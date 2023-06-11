@@ -588,6 +588,7 @@ $route['order_status_change']        = 'Administrator/Order/OrderStatusChange';
 $route['pending_order']    = 'Administrator/Order/PendingOrder';
 $route['processing_order'] = 'Administrator/Order/ProcessingOrder';
 $route['delivered_order']  = 'Administrator/Order/DeleveredOrder';
+$route['cancel_order']     = 'Administrator/Order/CancelOrder';
 $route['get_all_order']    = 'Administrator/Order/getAllOrder';
 
 

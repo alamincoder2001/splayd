@@ -37,29 +37,29 @@
         overflow-y: auto;
     }
 
-    #orderPending label {
+    #orderDelivery label {
         font-size: 13px;
         margin-top: 3px;
     }
 
-    #orderPending select {
+    #orderDelivery select {
         border-radius: 3px;
         padding: 0px;
         font-size: 13px;
     }
 
-    #orderPending .form-group {
+    #orderDelivery .form-group {
         margin-right: 10px;
     }
 </style>
-<div id="orderPending">
+<div id="orderDelivery">
     <div class="row" style="margin-top: 15px;">
         <div class="col-md-12" style="margin-bottom: 10px;">
             <a href="" @click.prevent="print"><i class="fa fa-print"></i> Print</a>
         </div>
         <div class="col-md-12">
             <div class="table-responsive" id="reportContent">
-                <table class="table table-bordered table-condensed" id="orderPendingTable">
+                <table class="table table-bordered table-condensed" id="orderDeliveryTable">
                     <thead>
                         <tr>
                             <th>Invoice No.</th>
@@ -75,11 +75,10 @@
                             <th>Paid</th>
                             <th>Due</th>
                             <th>Note</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(sale, sl) in orders" :style="{background: sale.Status == 'a' ? '' : '#F7CB73'}">
+                        <tr v-for="(sale, sl) in orders">
                             <td>{{ sale.SaleMaster_InvoiceNo }}</td>
                             <td>{{ sale.SaleMaster_SaleDate }}</td>
                             <td>{{ sale.Customer_Name }}</td>
@@ -93,15 +92,6 @@
                             <td style="text-align:right;">{{ sale.SaleMaster_PaidAmount }}</td>
                             <td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
-                            <td style="text-align:center;">
-                                <?php if ($this->session->userdata('accountType') != 'u') { ?>
-                                    <select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
-                                        <option value="p">Pending</option>
-                                        <option value="process">Processing</option>
-                                        <option value="cancel" style="color: red;">Cancel</option>
-                                    </select>
-                                <?php } ?>
-                            </td>
                         </tr>
                         <tr v-if="orders.length == 0">
                             <td colspan="14">No Found Data</td>
@@ -121,7 +111,7 @@
 <script>
     Vue.component('v-select', VueSelect.VueSelect);
     new Vue({
-        el: '#orderPending',
+        el: '#orderDelivery',
         data() {
             return {
                 orders: []
@@ -133,35 +123,15 @@
         methods: {
             getOrders() {
                 axios.get('/get_all_order').then(res => {
-                    this.orders = res.data.filter(order => order.Status == 'p');
+                    this.orders = res.data.filter(order => order.Status == 'cancel');
                 })
-            },
-            OrderStatusChange(sale) {
-                let deleteConf = confirm('Are you sure? you want to confirm this order?');
-                if (deleteConf == false) {
-                    return;
-                }
-                let filter = {
-                    saleId: sale.SaleMaster_SlNo
-                }
-                
-                filter.Status = 'process'
-
-                axios.post('/order_status_change', filter)
-                    .then(res => {
-                        let r = res.data;
-                        alert(r.message);
-                        if (r.success) {
-                            this.getOrders();
-                        }
-                    })
             },
             async print() {
                 let reportContent = `
 					<div class="container">
                         <div class="row">
                             <div class="col-xs-12">
-                                <h3 style="text-align:center">Order Pending List</h3>
+                                <h3 style="text-align:center">Order Cancel List</h3>
                             </div>
                         </div>
 						<div class="row">
