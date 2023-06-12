@@ -227,7 +227,7 @@
 							<td>{{ product.categoryName }}</td>
 							<td>{{ product.color }}</td>
 							<td>{{ product.size }}</td>
-							<td>{{ product.purchaseRate }}</td>
+							<td>{{product.purchaseRate}}</td>
 							<td>
 								<input type="number" min="0" step="1" v-model="product.quantity" style="width: 70px;" @input="onChangeQty(sl)"/>
 							</td>
@@ -680,18 +680,19 @@
 			},
 			onChangeQty(sl){
 				this.cart.map(p => {
-					p.total = (parseFloat(p.purchaseRate) * p.quantity).toFixed(2)
+					p.total = parseFloat(parseFloat(p.quantity) * parseFloat(p.purchaseRate)).toFixed(2)
 					return p;
 				})
 				this.calculateTotal();
 			},
 			calculateTotal() {
 				this.purchase.subTotal = this.cart.reduce((prev, curr) => {
-					return prev + parseFloat(curr.total);
+					return prev + +parseFloat(curr.total)
 				}, 0).toFixed(2);
-				this.purchase.vat = ((this.purchase.subTotal * parseFloat(this.vatPercent)) / 100).toFixed(2);
+				let vat = (this.purchase.subTotal * parseFloat(this.vatPercent)) / 100;
+				this.purchase.vat =  isNaN(vat) ? 0 : vat.toFixed(2);
 
-				this.purchase.total = ((parseFloat(this.purchase.subTotal) + parseFloat(this.purchase.vat) + parseFloat(this.purchase.freight)) - parseFloat(this.purchase.discount)).toFixed(2);
+				this.purchase.total = parseFloat((parseFloat(this.purchase.subTotal) + parseFloat(this.purchase.vat) + parseFloat(this.purchase.freight)) - parseFloat(this.purchase.discount)).toFixed(2);
 				if (this.selectedSupplier.Supplier_Type == 'G') {
 					this.purchase.paid = this.purchase.total;
 					this.purchase.due = 0;
@@ -780,22 +781,22 @@
 					this.selectedSupplier.Supplier_Type = purchase.Supplier_Type;
 					this.selectedSupplier.display_name = purchase.Supplier_Type == 'G' ? 'General Supplier' : `${purchase.Supplier_Code} - ${purchase.Supplier_Name}`;
 
-					this.purchase.invoice = purchase.PurchaseMaster_InvoiceNo;
-					this.purchase.purchaseFor = purchase.PurchaseMaster_PurchaseFor;
+					this.purchase.invoice      = purchase.PurchaseMaster_InvoiceNo;
+					this.purchase.purchaseFor  = purchase.PurchaseMaster_PurchaseFor;
 					this.purchase.purchaseDate = purchase.PurchaseMaster_OrderDate;
-					this.purchase.supplierId = purchase.Supplier_SlNo;
-					this.purchase.subTotal = purchase.PurchaseMaster_SubTotalAmount;
-					this.purchase.vat = purchase.PurchaseMaster_Tax;
-					this.purchase.discount = purchase.PurchaseMaster_DiscountAmount;
-					this.purchase.freight = purchase.PurchaseMaster_Freight;
-					this.purchase.total = purchase.PurchaseMaster_TotalAmount;
-					this.purchase.paid = purchase.PurchaseMaster_PaidAmount;
-					this.purchase.cashPaid = purchase.PurchaseMaster_cashPaid;
-					this.purchase.bankPaid = purchase.PurchaseMaster_bankPaid;
-					this.purchase.account_id = purchase.account_id;
-					this.purchase.due = purchase.PurchaseMaster_DueAmount;
-					this.purchase.previousDue = purchase.previous_due;
-					this.purchase.note = purchase.PurchaseMaster_Description;
+					this.purchase.supplierId   = purchase.Supplier_SlNo;
+					this.purchase.subTotal     = purchase.PurchaseMaster_SubTotalAmount;
+					this.purchase.vat          = purchase.PurchaseMaster_Tax;
+					this.purchase.discount     = purchase.PurchaseMaster_DiscountAmount;
+					this.purchase.freight      = purchase.PurchaseMaster_Freight;
+					this.purchase.total        = purchase.PurchaseMaster_TotalAmount;
+					this.purchase.paid         = purchase.PurchaseMaster_PaidAmount;
+					this.purchase.cashPaid     = purchase.PurchaseMaster_cashPaid;
+					this.purchase.bankPaid     = purchase.PurchaseMaster_bankPaid;
+					this.purchase.account_id   = purchase.account_id;
+					this.purchase.due          = purchase.PurchaseMaster_DueAmount;
+					this.purchase.previousDue  = purchase.previous_due;
+					this.purchase.note         = purchase.PurchaseMaster_Description;
 
 					if (purchase.account_id != 0 && purchase.account_id != null) {
 						this.account = {

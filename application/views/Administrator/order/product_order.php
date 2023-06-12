@@ -957,7 +957,7 @@
 					cart: this.cart
 				}
 
-				if (this.selectedCustomer.Customer_Type == 'G') {
+				if (this.selectedCustomer.Customer_Type == 'G' || this.selectedCustomer.Customer_Type == 'New') {
 					data.customer = this.selectedCustomer;
 				}
 

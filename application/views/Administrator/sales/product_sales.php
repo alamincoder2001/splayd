@@ -939,8 +939,8 @@
 					alert("Bank digit number empty");
 					return
 				}
-				if (this.sales.bankDigit.toString().length <= 3 && this.sales.bankPaid > 0) {
-					alert("Must be 4digit");
+				if (this.sales.bankDigit.toString().length <= 1 && this.sales.bankPaid > 0) {
+					alert("Must be 2digit");
 					return
 				}
 

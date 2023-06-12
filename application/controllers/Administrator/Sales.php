@@ -406,7 +406,7 @@ class Sales extends CI_Controller
             left join tbl_brunch br on br.brunch_id = sm.SaleMaster_branchid
             left join tbl_bank_accounts a on a.account_id = sm.account_id
             where sm.SaleMaster_branchid = '$branchId'
-            and sm.Status = 'a'
+            and sm.Status = 'a' and sm.is_order = 'false'
             $clauses
             order by sm.SaleMaster_SlNo desc
         ")->result();

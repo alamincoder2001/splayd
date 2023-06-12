@@ -95,9 +95,11 @@
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
                             <td style="text-align:center;">
                                 <?php if ($this->session->userdata('accountType') != 'u') { ?>
-                                    <a href="" :style='{display: sale.Status=="a"?"none":""}' @click.prevent="OrderStatusChange(sale)">
-                                        <i title="Order Sales Delivery" v-if="sale.Status == 'process'" class="fa fa-truck"></i>
-                                    </a>
+                                    <select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
+                                        <option value="process">Processing</option>
+                                        <option value="a">Delivery</option>
+                                        <option value="cancel" style="color: red;">Cancel</option>
+                                    </select>
                                 <?php } ?>
                             </td>
                         </tr>
@@ -140,9 +142,9 @@
                     return;
                 }
                 let filter = {
-                    saleId: sale.SaleMaster_SlNo
+                    saleId: sale.SaleMaster_SlNo,
+                    Status: sale.Status
                 }
-                filter.Status = 'a'
                 axios.post('/order_status_change', filter)
                     .then(res => {
                         let r = res.data;
