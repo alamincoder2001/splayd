@@ -47,8 +47,7 @@
 				<label class="control-label col-sm-2" for="text">Product ID</label>
 				<div class="col-sm-2"> 
 					<input type="text" name="pID" class="form-control mytext" placeholder="Product ID ..." value="<?php echo $product->Product_Code; ?>" />
-				</div>
-				
+				</div>				
 				<label class="control-label col-sm-2" for="text">Product Name</label>
 				<div class="col-sm-2"> 
 					<input type="text" name="pname" class="form-control mytext" placeholder="Product name ..." value="<?php echo $product->Product_Name; ?>" /> 
@@ -65,7 +64,7 @@
 				<div class="col-sm-2">
 					<input type="text" name="article" class="form-control mytext" placeholder="Article ..." />
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-2" style="display:flex;">
 				   <input type="submit" name="submit" value="Generate" class="btn btn-primary" />
 				   <input name="print" type="button" value="Print" id="printButton2" onClick="printpage()" class="btn btn-success" style="width:100px;"/>
 				</div>
@@ -76,6 +75,9 @@
 				<div class="col-sm-2"> 
 				  <input type="text" name="qty" class="form-control mytext" placeholder="Product quantity ...">
 				</div>
+
+				<input type="hidden" name="color" value="<?php echo $product->color_name; ?>">
+				<input type="hidden" name="size" value="<?php echo $product->size_name; ?>">
 				
 				<label  style="display: none;" class="control-label col-sm-2" for="date">Date</label>
 				<div class="col-sm-2" style="display: none;"> 
@@ -100,6 +102,8 @@
                         $date = $_POST['date'];
                         $pname = $_POST['pname'];
                         $Price = $_POST['Price'];
+                        $Color = $_POST['color'];
+                        $Size = $_POST['size'];
                     for ($i=0; $i < $qty; $i++) { 
 
                     if(isset($kode)): echo $kode; endif;
@@ -118,10 +122,12 @@
 
 
 						<div style="padding: 2px; float: left; height: 102.5px; width: 135px; border: 1px solid #ddd;">
-							<div style="width: 135px; text-align: center; float: right;">
+							<div style="width: 135px; text-align: center; float: right;position:relative;">
 								<span class="article" style="font-size: 12px;"><?php echo $article; ?></span>
-								<span  style="font-size: 12px; text-align: center;"><?php echo $pname; ?></span>
-								<img src='<?php echo site_url();?>GenerateBarcode/<?php echo $PID;?>' style="height: 50px; width: 100px;" /><br>
+								<p  style="font-size: 10px;text-align: center;margin: 0;font-weight: 700;"><?php echo $pname; ?></p>
+								<img src='<?php echo site_url();?>GenerateBarcode/<?php echo $PID;?>' style="height: 50px;width: 100px;margin-left: -15px;" /><br>
+								<p  style="font-size: 10px;margin: 0;writing-mode: vertical-lr;float: left;text-align: center;margin-left: -14px;margin-top: -30px;font-weight: 700;"><?php echo $Size; ?></p>
+								<p  style="font-size: 10px;writing-mode: vertical-rl;position: absolute;top: 0;right: 1px; text-align: center;font-weight: 700;height: 102.5px;margin:0;"><?php echo $Color; ?></p>
 								<span style=" margin-top: 5px; text-align: center;"><?php echo $this->session->userdata('Currency_Name') . ' ' . $Price;?></span>
 							</div>
 						</div>

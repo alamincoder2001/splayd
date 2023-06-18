@@ -641,9 +641,14 @@ class Products extends CI_Controller
         $this->load->view('Administrator/products/barcode_fancybox', $data);
     }
 
-    public function barcodeGenerate($Product_SlNo)
+    // public function barcodeGenerate($Product_SlNo)
+    // {
+    //     $data['product'] = $this->Billing_model->select_Product_by_id($Product_SlNo);
+    //     $this->load->view('Administrator/products/barcode/barcode', $data);
+    // }
+    public function barcodeGenerate($colorsizeId)
     {
-        $data['product'] = $this->Billing_model->select_Product_by_id($Product_SlNo);
+        $data['product'] = $this->Billing_model->select_Product_by_id($colorsizeId);
         $this->load->view('Administrator/products/barcode/barcode', $data);
     }
 

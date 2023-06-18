@@ -134,7 +134,7 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 			<div style="display: flex;margin-left:0;">
 				<div class="extra-menu-part" style="position:relative;margin-left:5px">
 					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-						Order Sales Module
+						Order Sales
 						<i class="ace-icon fa fa-caret-down"></i>
 					</a>
 
@@ -156,6 +156,66 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 						</li>
 						<li>
 							<a class="top-a-btn" href="<?php echo base_url(); ?>orderrecord">Order Sales Record</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div style="display: flex;margin-left:0;">
+				<div class="extra-menu-part" style="position:relative;margin-left:5px">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+						Pos Sales
+						<i class="ace-icon fa fa-caret-down"></i>
+					</a>
+
+					<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>sales/product">Sales Entry</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>salesrecord">Sales Record</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>salesReturn">Sales Return</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>currentStock">Stock</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div style="display: flex;margin-left:0;">
+				<div class="extra-menu-part" style="position:relative;margin-left:5px">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+						Account
+						<i class="ace-icon fa fa-caret-down"></i>
+					</a>
+
+					<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>cashTransaction">Cash Transaction</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>salesrecord">Cash View</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>salesReturn">Cash Statement</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div style="display: flex;margin-left:0;">
+				<div class="extra-menu-part" style="position:relative;margin-left:5px">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+						Product
+						<i class="ace-icon fa fa-caret-down"></i>
+					</a>
+
+					<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>product">Product Entry</a>
+						</li>
+						<li>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>productlist">Product List</a>
 						</li>
 					</ul>
 				</div>
