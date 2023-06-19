@@ -51,8 +51,56 @@
     #orderDelivery .form-group {
         margin-right: 10px;
     }
+
+    .statusPendingBtn {
+        background: #ff9191;
+        border: 0;
+        border-bottom-left-radius: 15px;
+        padding: 3px 10px;
+        border-top-right-radius: 15px;
+        color: white;
+    }
+
+    .statusReceivedBtn {
+        background: #23700a;
+        border: 0;
+        border-bottom-left-radius: 15px;
+        padding: 3px 10px;
+        border-top-right-radius: 15px;
+        color: white;
+    }
 </style>
 <div id="orderDelivery">
+    <div class="row" style="border-bottom: 1px solid #ccc;padding: 3px 0;">
+        <div class="col-md-12">
+            <form class="form-inline" id="searchForm" @submit.prevent="getSearchResult">
+                <div class="form-group">
+                    <label>Search Type</label>
+                    <select class="form-control" v-model="searchType">
+                        <option value="">All</option>
+                        <option value="customer">By Customer</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="display:none;" v-bind:style="{display: searchType == 'customer' && customers.length > 0 ? '' : 'none'}">
+                    <label>Customer</label>
+                    <v-select v-bind:options="customers" v-model="selectedCustomer" label="display_name"></v-select>
+                </div>
+
+                <div class="form-group">
+                    <input type="date" class="form-control" v-model="dateFrom">
+                </div>
+
+                <div class="form-group">
+                    <input type="date" class="form-control" v-model="dateTo">
+                </div>
+
+                <div class="form-group" style="margin-top: -5px;">
+                    <input type="submit" value="Search">
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="row" style="margin-top: 15px;">
         <div class="col-md-12" style="margin-bottom: 10px;">
             <a href="" @click.prevent="print"><i class="fa fa-print"></i> Print</a>
@@ -75,6 +123,7 @@
                             <th>Paid</th>
                             <th>Due</th>
                             <th>Note</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,6 +141,9 @@
                             <td style="text-align:right;">{{ sale.SaleMaster_PaidAmount }}</td>
                             <td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
+                            <th>
+                                <button @click="StatusChange(sale.SaleMaster_SlNo, sale.delivery_status)" :disabled="sale.delivery_status == 'a'? true:false" :class="sale.delivery_status == 'p'? 'statusPendingBtn' :'statusReceivedBtn'">{{sale.delivery_status == 'p' ? 'Pending': 'Received'}}</button>
+                            </th>
                         </tr>
                         <tr v-if="orders.length == 0">
                             <td colspan="14">No Found Data</td>
@@ -114,17 +166,66 @@
         el: '#orderDelivery',
         data() {
             return {
-                orders: []
+                searchType: '',
+                dateFrom: moment().format('YYYY-MM-DD'),
+                dateTo: moment().format('YYYY-MM-DD'),
+                orders: [],
+                customers: [],
+                selectedCustomer: null,
             }
         },
         created() {
             this.getOrders();
+            this.getCustomers();
         },
         methods: {
+            getCustomers() {
+                axios.get('/get_customers').then(res => {
+                    this.customers = res.data;
+                })
+            },
+
+            getSearchResult(){
+                if (this.searchType != 'customer') {
+                    this.selectedCustomer = null;
+                }
+                let filter = {
+                    dateFrom: this.dateFrom,
+                    dateTo: this.dateTo,
+                    customerId: this.selectedCustomer == null ? '': this.selectedCustomer.Customer_SlNo
+                }
+
+                axios.post('/get_all_order_filter', filter).then(res => {
+                    this.orders = res.data;
+                })
+            },
+            
             getOrders() {
                 axios.get('/get_all_order').then(res => {
                     this.orders = res.data.filter(order => order.Status == 'a');
                 })
+            },
+
+            StatusChange(id, status) {
+                if (status == 'a') {
+                    return
+                }
+                let deleteConf = confirm('Are you sure? you want to confirm this order?');
+                if (deleteConf == false) {
+                    return;
+                }
+                let filter = {
+                    saleId: id,
+                    delivery_status: 'a'
+                }
+                axios.post('/order_delivery_status_change', filter)
+                    .then(res => {
+                        let r = res.data;
+                        alert(r.message);
+                        if (r.success) {
+                            this.getOrders();
+                        }
+                    })
             },
             async print() {
                 let reportContent = `

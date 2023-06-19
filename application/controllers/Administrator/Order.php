@@ -62,8 +62,8 @@ class Order extends CI_Controller
 
                 $this->db->insert('tbl_customer', $customer);
                 $customerId = $this->db->insert_id();
-            } 
-            if(isset($data->customer) && $data->customer->display_name == 'New Customer') {
+            }
+            if (isset($data->customer) && $data->customer->display_name == 'New Customer') {
                 $customer = (array)$data->customer;
                 unset($customer['Customer_SlNo']);
                 unset($customer['display_name']);
@@ -599,9 +599,10 @@ class Order extends CI_Controller
 
                 // update salesmaster
                 $updateSale = array(
-                    'SaleMaster_cashPaid' => $sale->SaleMaster_cashPaid + $sale->SaleMaster_DueAmount,
+                    'SaleMaster_bankPaid' => $sale->SaleMaster_bankPaid + $sale->SaleMaster_DueAmount,
                     'SaleMaster_PaidAmount' => $sale->SaleMaster_PaidAmount + $sale->SaleMaster_DueAmount,
-                    'SaleMaster_DueAmount' => 0
+                    'SaleMaster_DueAmount' => 0,
+                    'account_id' => 1
                 );
                 $this->db->where('SaleMaster_SlNo', $sale->SaleMaster_SlNo);
                 $this->db->update('tbl_salesmaster', $updateSale);
@@ -647,6 +648,42 @@ class Order extends CI_Controller
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
 
+        echo json_encode($res);
+    }
+
+    public function deliveryStatusChange()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        // update salesmaster
+        $updateSale = array(
+            'delivery_status' => $data->delivery_status
+        );
+        $this->db->where('SaleMaster_SlNo', $data->saleId);
+        $this->db->update('tbl_salesmaster', $updateSale);
+        $res = ['success' => true, 'message' => 'Order delivery success'];
+        echo json_encode($res);
+    }
+    public function getAllOrderFilter()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $clauses = "";
+        if (isset($data->customerId) && $data->customerId != '') {
+            $clauses .=" and sm.SalseCustomer_IDNo = '$data->customerId'";
+        }
+        if (isset($data->dateFrom) && $data->dateFrom != '') {
+            $clauses .=" and sm.SaleMaster_SaleDate between '$data->dateFrom' and '$data->dateTo'";
+        }
+
+        $res = $this->db->query("SELECT
+                                sm.*,
+                                c.Customer_Name,
+                                em.Employee_Name
+                            FROM tbl_salesmaster sm
+                            LEFT JOIN tbl_customer c ON c.Customer_SlNo = sm.SalseCustomer_IDNo
+                            LEFT JOIN tbl_employee em ON em.Employee_SlNo = sm.employee_id
+                            WHERE sm.Status = 'a'
+                            AND sm.is_order = 'true'
+                            AND sm.SaleMaster_branchid = '$this->sbrunch' $clauses")->result();
         echo json_encode($res);
     }
 

@@ -572,24 +572,26 @@ $route['get_product_color_stock'] = 'Administrator/Products/getProductColorStock
 $route['get_product_size_stock']  = 'Administrator/Products/getProductColorSize';
 
 // Order module 
-$route['order_entry']                = 'Administrator/Order/index';
-$route['add_order']                  = 'Administrator/Order/addOrder';
-$route['update_order']               = 'Administrator/Order/updateOrder';
-$route['order/(:any)/(:any)']        = 'Administrator/Order/OrderEdit/$1/$2';
-$route['orderinvoice']               = 'Administrator/Order/order_invoice';
-$route['get_orders']                 = 'Administrator/Order/getOrders';
-$route['order_invoice_print/(:any)'] = 'Administrator/Order/orderInvoicePrint/$1';
-$route['orderrecord']                = 'Administrator/Order/order_record';
-$route['get_order_record']           = 'Administrator/Order/getOrderRecord';
-$route['get_orderdetails']           = 'Administrator/Order/getOrderDetails';
-$route['delete_order']               = 'Administrator/Order/deleteOrder';
-$route['order_status_change']        = 'Administrator/Order/OrderStatusChange';
+$route['order_entry']                  = 'Administrator/Order/index';
+$route['add_order']                    = 'Administrator/Order/addOrder';
+$route['update_order']                 = 'Administrator/Order/updateOrder';
+$route['order/(:any)/(:any)']          = 'Administrator/Order/OrderEdit/$1/$2';
+$route['orderinvoice']                 = 'Administrator/Order/order_invoice';
+$route['get_orders']                   = 'Administrator/Order/getOrders';
+$route['order_invoice_print/(:any)']   = 'Administrator/Order/orderInvoicePrint/$1';
+$route['orderrecord']                  = 'Administrator/Order/order_record';
+$route['get_order_record']             = 'Administrator/Order/getOrderRecord';
+$route['get_orderdetails']             = 'Administrator/Order/getOrderDetails';
+$route['delete_order']                 = 'Administrator/Order/deleteOrder';
+$route['order_status_change']          = 'Administrator/Order/OrderStatusChange';
+$route['order_delivery_status_change'] = 'Administrator/Order/deliveryStatusChange';
 //view file route
-$route['pending_order']    = 'Administrator/Order/PendingOrder';
-$route['processing_order'] = 'Administrator/Order/ProcessingOrder';
-$route['delivered_order']  = 'Administrator/Order/DeleveredOrder';
-$route['cancel_order']     = 'Administrator/Order/CancelOrder';
-$route['get_all_order']    = 'Administrator/Order/getAllOrder';
+$route['pending_order']        = 'Administrator/Order/PendingOrder';
+$route['processing_order']     = 'Administrator/Order/ProcessingOrder';
+$route['delivered_order']      = 'Administrator/Order/DeleveredOrder';
+$route['cancel_order']         = 'Administrator/Order/CancelOrder';
+$route['get_all_order']        = 'Administrator/Order/getAllOrder';
+$route['get_all_order_filter'] = 'Administrator/Order/getAllOrderFilter';
 
 
 $route['get_sizewise_stock']    = 'Administrator/Products/getSizeWiseStock';
