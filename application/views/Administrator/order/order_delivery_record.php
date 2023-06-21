@@ -113,6 +113,7 @@
                             <th>Invoice No.</th>
                             <th>Date</th>
                             <th>Customer Name</th>
+                            <th>Customer Mobile</th>
                             <th>Employee Name</th>
                             <th>Saved By</th>
                             <th>Sub Total</th>
@@ -131,6 +132,7 @@
                             <td>{{ sale.SaleMaster_InvoiceNo }}</td>
                             <td>{{ sale.SaleMaster_SaleDate }}</td>
                             <td>{{ sale.Customer_Name }}</td>
+                            <td>{{ sale.Customer_Mobile }}</td>
                             <td>{{ sale.Employee_Name }}</td>
                             <td>{{ sale.AddBy }}</td>
                             <td style="text-align:right;">{{ sale.SaleMaster_SubTotalAmount }}</td>
