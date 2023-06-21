@@ -195,10 +195,10 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 							<a class="top-a-btn" href="<?php echo base_url(); ?>cashTransaction">Cash Transaction</a>
 						</li>
 						<li>
-							<a class="top-a-btn" href="<?php echo base_url(); ?>salesrecord">Cash View</a>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>cash_view">Cash View</a>
 						</li>
 						<li>
-							<a class="top-a-btn" href="<?php echo base_url(); ?>salesReturn">Cash Statement</a>
+							<a class="top-a-btn" href="<?php echo base_url(); ?>cashStatment">Cash Statement</a>
 						</li>
 					</ul>
 				</div>

@@ -126,7 +126,7 @@
 								<span class="article" style="font-size: 12px;"><?php echo $article; ?></span>
 								<p  style="font-size: 10px;text-align: center;margin: 0;font-weight: 700;"><?php echo $pname; ?></p>
 								<img src='<?php echo site_url();?>GenerateBarcode/<?php echo $PID;?>' style="height: 50px;width: 100px;margin-left: -15px;" /><br>
-								<p  style="font-size: 10px;margin: 0;writing-mode: vertical-lr;float: left;text-align: center;margin-left: -14px;margin-top: -30px;font-weight: 700;"><?php echo $Size; ?></p>
+								<p  style="font-size: 10px;margin: 0;writing-mode: vertical-lr;float: left;text-align: center;margin-left: -14px;margin-top: -30px;font-weight: 700;">Size: <?php echo $Size; ?></p>
 								<p  style="font-size: 10px;writing-mode: vertical-rl;position: absolute;top: 0;right: 1px; text-align: center;font-weight: 700;height: 102.5px;margin:0;"><?php echo $Color; ?></p>
 								<span style=" margin-top: 5px; text-align: center;"><?php echo $this->session->userdata('Currency_Name') . ' ' . $Price;?></span>
 							</div>
