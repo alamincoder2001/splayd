@@ -16,13 +16,13 @@ const salesInvoice = Vue.component("sales-invoice", {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-7">
+                    <div class="col-xs-7" style="font-size:15px;">
                         <strong>Customer Id:</strong> {{ sales.Customer_Code }}<br>
                         <strong>Customer Name:</strong> {{ sales.Customer_Name }}<br>
                         <strong>Customer Address:</strong> {{ sales.Customer_Address }}<br>
                         <strong>Customer Mobile:</strong> {{ sales.Customer_Mobile }}
                     </div>
-                    <div class="col-xs-5 text-right">
+                    <div class="col-xs-5 text-right" style="font-size:15px;">
                         <strong>Sales by:</strong> {{ sales.AddBy }}<br>
                         <strong>Invoice No.:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
                         <strong>Sales Date:</strong> {{ sales.SaleMaster_SaleDate }} {{ sales.AddTime | formatDateTime('h:mm a') }}
@@ -92,7 +92,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <br>
+                        <!--
                         <table class="pull-left">
                             <tr>
                                 <td><strong>Previous Due:</strong></td>
@@ -113,6 +113,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td style="text-align:right">{{ (parseFloat(sales.SaleMaster_Previous_Due) + parseFloat(sales.SaleMaster_DueAmount == null ? 0.00 : sales.SaleMaster_DueAmount)).toFixed(2) }}</td>
                             </tr>
                         </table>
+                        -->
                     </div>
                     <div class="col-xs-6">
                         <table _t92sadbc2>
@@ -120,7 +121,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td><strong>Sub Total:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_SubTotalAmount }}</td>
                             </tr>
-                            <tr>
+                            <tr style="display:none;">
                                 <td><strong>VAT:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_TaxAmount }}</td>
                             </tr>
@@ -128,11 +129,11 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td><strong>Discount:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_TotalDiscountAmount }}</td>
                             </tr>
-                            <tr>
+                            <tr id="transport">
                                 <td><strong>Transport Cost:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_Freight }}</td>
                             </tr>
-                            <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
+                            <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
                             <tr>
                                 <td><strong>Total:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_TotalSaleAmount }}</td>
@@ -149,19 +150,26 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td><strong>Pay Amount:</strong></td>
                                 <td style="text-align:right">{{ sales.takeAmount }}</td>
                             </tr>
-                            <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
+                            <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
                             <tr>
-                                <td><strong>Due:</strong></td>
-                                <td style="text-align:right">{{ sales.SaleMaster_DueAmount }}</td>
+                                <td style="font-size:18px;"><strong>Due:</strong></td>
+                                <td style="text-align:right;font-size:18px;">{{ sales.SaleMaster_DueAmount }}</td>
                             </tr>
                         </table>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
+                <div class="col-xs-12">
+                        <!--
                         <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }}<br><br>
                         <strong>Note: </strong>
-                        <p style="white-space: pre-line">{{ sales.SaleMaster_Description }}</p>
+                        -->
+                        <p style="white-space: pre-line;font-size:15px;">
+                            NO REFUND. You can only <strong>exchange within 3days</strong>
+                        </p>
+                        <p style="text-align:center;">                            
+                            <img id="barcode" />
+                        </p>
                     </div>
                 </div>
             </div>
@@ -232,7 +240,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                 }
                 div[_d9283dsc]{
                     padding-bottom:25px;
-                    border-bottom: 1px solid #ccc;
+                    border-bottom: 1px solid black;
                     margin-bottom: 15px;
                 }
                 table[_a584de]{
@@ -244,13 +252,15 @@ const salesInvoice = Vue.component("sales-invoice", {
                 }
                 table[_a584de] td{
                     padding: 3px;
-                    border: 1px solid #ccc;
+                    border: 1px solid black;
+                    font-size: 15px;
                 }
                 table[_t92sadbc2]{
                     width: 100%;
                 }
                 table[_t92sadbc2] td{
                     padding: 2px;
+                    font-size: 15px;
                 }
             `;
       document.head.appendChild(this.style);
@@ -367,13 +377,18 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 body, table{
                                     font-size:11px;
                                 }
+                                @media print{
+                                    #transport{
+                                        display:none;
+                                    }
+                                }
                             </style>
                         </head>
                         <body>
                             <div style="text-align:center;">
-                                <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br>
-                                <strong style="font-size:18px;">${this.currentBranch.Company_Name}</strong><br>
-                                <p style="white-space:pre-line;">${this.currentBranch.Repot_Heading}</p>
+                                <!-- <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br> -->
+                                <strong style="font-size:20px;">${this.currentBranch.Company_Name}</strong><br>
+                                <p style="white-space:pre-line;font-size:15px;">${this.currentBranch.Repot_Heading}</p>
                             </div>
                             ${invoiceContent}
                         </body>

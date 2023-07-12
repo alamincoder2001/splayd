@@ -142,10 +142,9 @@
                     return;
                 }
                 let filter = {
-                    saleId: sale.SaleMaster_SlNo
+                    saleId: sale.SaleMaster_SlNo,
+                    Status: sale.Status
                 }
-                
-                filter.Status = 'process'
 
                 axios.post('/order_status_change', filter)
                     .then(res => {

@@ -1548,8 +1548,10 @@ class Sales extends CI_Controller
     }
     public function saleInvoicePrint($saleId)
     {
+        $invoice = $this->db->query("SELECT sm.SaleMaster_InvoiceNo FROM tbl_salesmaster sm WHERE sm.SaleMaster_SlNo = '$saleId'")->row()->SaleMaster_InvoiceNo;
         $data['title'] = "Sales Invoice";
         $data['salesId'] = $saleId;
+        $data['invoice'] = $invoice;
         $data['content'] = $this->load->view('Administrator/sales/sellAndreport', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }

@@ -8,13 +8,13 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 
-	'username' => 'agr5conventio_splayd',
-	'password' => '1pBq8Y6GeB@]',
-	'database' => 'agr5conventio_splayd',
+	// 'username' => 'agr5conventio_splayd',
+	// 'password' => '1pBq8Y6GeB@]',
+	// 'database' => 'agr5conventio_splayd',
 
-// 	'username' => 'root',
-// 	'password' => '',
-// 	'database' => 'splayd',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'splayd',
 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
