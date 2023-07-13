@@ -573,7 +573,6 @@ class Purchase extends CI_Controller
                 $purchaseDetails = array(
                     'PurchaseMaster_IDNo' => $purchaseId,
                     'Product_IDNo' => $product->productId,
-                    'Product_colorId' => $product->colorId,
                     'Product_sizeId' => $product->sizeId,
                     'PurchaseDetails_TotalQuantity' => $product->quantity,
                     'PurchaseDetails_Rate' => $product->purchaseRate,
@@ -610,10 +609,9 @@ class Purchase extends CI_Controller
                     update tbl_color_size 
                     set stock = stock + ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ",[$product->quantity, $product->productId, $product->colorId, $product->sizeId, $this->session->userdata('BRANCHid')]);
+                ",[$product->quantity, $product->productId, $product->sizeId, $this->session->userdata('BRANCHid')]);
 
                 // $this->db->query("update tbl_product set Product_Purchase_Rate = ?, Product_SellingPrice = ? where Product_SlNo = ?", [$product->purchaseRate, $product->salesRate, $product->productId]);
 
@@ -730,17 +728,15 @@ class Purchase extends CI_Controller
                     update tbl_color_size 
                     set stock = stock - ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_colorId, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             foreach($data->cartProducts as $product){
                 $purchaseDetails = array(
                     'PurchaseMaster_IDNo' => $purchaseId,
                     'Product_IDNo' => $product->productId,
-                    'Product_colorId' => $product->colorId,
                     'Product_sizeId' => $product->sizeId,
                     'PurchaseDetails_TotalQuantity' => $product->quantity,
                     'PurchaseDetails_Rate' => $product->purchaseRate,
@@ -778,10 +774,9 @@ class Purchase extends CI_Controller
                     update tbl_color_size 
                     set stock = stock + ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ",[$product->quantity, $product->productId, $product->colorId, $product->sizeId, $this->session->userdata('BRANCHid')]);
+                ",[$product->quantity, $product->productId, $product->sizeId, $this->session->userdata('BRANCHid')]);
 
                 $this->db->query("
                     update tbl_product set 

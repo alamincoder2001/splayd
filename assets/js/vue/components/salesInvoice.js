@@ -40,7 +40,6 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <tr>
                                     <td>Sl.</td>
                                     <td>Description</td>
-                                    <td>Color</td>
                                     <td>Size</td>
                                     <td>Qnty</td>
                                     <td>Unit Price</td>
@@ -51,7 +50,6 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <tr v-for="(product, sl) in cart">
                                     <td>{{ sl + 1 }}</td>
                                     <td>{{ product.Product_Name }}</td>
-                                    <td>{{ product.color_name }}</td>
                                     <td>{{ product.size_name }}</td>
                                     <td>{{ product.SaleDetails_TotalQuantity }}</td>
                                     <td>{{ product.SaleDetails_Rate }}</td>
@@ -62,12 +60,11 @@ const salesInvoice = Vue.component("sales-invoice", {
                         <table _a584de style="margin-top: 15px;dispaly:none" :style="{display: exchanges.length  > 0 ? '' : 'none'}">
                             <thead>
                                 <tr>
-                                    <td colspan="9">Product Exchange Information</td>
+                                    <td colspan="7">Product Exchange Information</td>
                                 </tr>
                                 <tr>
                                     <td>Sl.</td>
                                     <td>Description</td>
-                                    <td>Color</td>
                                     <td>Size</td>
                                     <td>Qnty</td>
                                     <td>Unit</td>
@@ -79,7 +76,6 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <tr v-for="(product, sl) in exchanges">
                                     <td>{{ sl + 1 }}</td>
                                     <td>{{ product.Product_Name }}</td>
-                                    <td>{{ product.color_name }}</td>
                                     <td>{{ product.size_name }}</td>
                                     <td>{{ product.quantity }}</td>
                                     <td>{{ product.Unit_Name }}</td>

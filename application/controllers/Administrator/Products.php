@@ -55,6 +55,9 @@ class Products extends CI_Controller
         try {
             $data = json_decode($this->input->raw_input_stream);
 
+            echo json_encode($data);
+            exit;
+
             $productNameCount = $this->db->query("select * from tbl_product where Product_Name = ?", $data->product->Product_Name)->num_rows();
             if ($productNameCount > 0) {
                 $res = ['success' => false, 'message' => 'Product name already exists'];
@@ -94,8 +97,7 @@ class Products extends CI_Controller
             foreach ($data->cart as $color) {
                 $colorDetails = array(
                     'product_id' => $productId,
-                    'color_id' => $color->colorId,
-                    'size_id' => $color->sizeId,
+                    'size_id' => $color->size_SiNo,
                     'status' => 'a',
                     'add_by' => $this->session->userdata("FullName"),
                     'add_time' => date('Y-m-d H:i:s'),
@@ -170,12 +172,11 @@ class Products extends CI_Controller
             $this->db->where('Product_SlNo', $productId)->update('tbl_product', $product);
 
             foreach ($data->cart as $color) {
-                $colorCount = $this->db->query("select * from tbl_color_size where product_id = ?  and color_id = ? and size_id = ?  and branch_id = ? ", [$productId, $color->colorId, $color->sizeId, $this->brunch])->num_rows();
+                $colorCount = $this->db->query("select * from tbl_color_size where product_id = ?  and size_id = ?  and branch_id = ? ", [$productId, $color->size_SiNo, $this->brunch])->num_rows();
                 if ($colorCount == 0) {
                     $colorDetails = array(
                         'product_id' => $productId,
-                        'color_id' => $color->colorId,
-                        'size_id' => $color->sizeId,
+                        'size_id' => $color->size_SiNo,
                         'status' => 'a',
                         'add_by' => $this->session->userdata("FullName"),
                         'add_time' => date('Y-m-d H:i:s'),
@@ -200,6 +201,7 @@ class Products extends CI_Controller
             $data = json_decode($this->input->raw_input_stream);
 
             $this->db->set(['status' => 'd'])->where('Product_SlNo', $data->productId)->update('tbl_product');
+            $this->db->set(['status' => 'd'])->where('product_id', $data->productId)->update('tbl_color_size');
 
             $res = ['success' => true, 'message' => 'Product deleted successfully'];
         } catch (Exception $ex) {
@@ -924,9 +926,8 @@ class Products extends CI_Controller
             join tbl_product p on p.Product_SlNo = pc.product_id
             where pc.status = 'a'
             and pc.product_id = ?
-            and pc.color_id = ?
             and pc.branch_id = ?
-        ", [$data->productId, $data->colorId, $this->brunch])->result();
+        ", [$data->productId, $this->brunch])->result();
 
         echo json_encode($colors);
     }
@@ -939,9 +940,8 @@ class Products extends CI_Controller
                 pc.*
             from tbl_color_size pc
             where pc.product_id = ?
-            and pc.color_id = ?
             and pc.branch_id = ?
-        ", [$data->productId, $data->colorId, $this->brunch])->result();
+        ", [$data->productId, $this->brunch])->result();
 
         echo json_encode($colorQty);
     }
@@ -954,10 +954,9 @@ class Products extends CI_Controller
                 pc.*
             from tbl_color_size pc
             where pc.product_id = ?
-            and pc.color_id = ?
             and pc.size_id = ?
             and pc.branch_id = ?
-        ", [$data->productId, $data->colorId, $data->sizeId, $this->brunch])->row()->stock;
+        ", [$data->productId, $data->sizeId, $this->brunch])->row()->stock;
 
         echo json_encode($colorQty);
     }

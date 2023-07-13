@@ -17,15 +17,14 @@
 		margin: 0px;
 	}
 
-	.v-select .vs__selected-options {
+	/* .v-select .vs__selected-options {
 		overflow: hidden;
 		flex-wrap: nowrap;
-	}
+	} */
 
 	.v-select .selected-tag {
 		margin: 2px 0px;
 		white-space: nowrap;
-		position: absolute;
 		left: 0px;
 	}
 
@@ -33,10 +32,10 @@
 		margin-top: -5px;
 	}
 
-	.v-select .dropdown-menu {
+	/* .v-select .dropdown-menu {
 		width: auto;
 		overflow-y: auto;
-	}
+	} */
 
 	#products label {
 		font-size: 13px;
@@ -141,7 +140,15 @@
 					</div>
 					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
-				<div class="information">
+
+				<div class="form-group clearfix">
+					<label class="control-label col-md-4">Size:</label>
+					<div class="col-md-7">
+						<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" multiple></v-select>
+					</div>
+				</div>
+
+				<!-- <div class="information">
 					<div class="col-sm-12 color_heading"> <strong>Product Size & Color</strong> <button class="btn btn-colorAdd" type="button" data-toggle="modal" data-target="#myModal">+Add</button></div>
 					<div class="table-responsive" style="padding: 5px 3px 0px 3px;">
 						<table class="table table-bordered">
@@ -163,7 +170,7 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
+				</div> -->
 			</div>
 
 			<div class="col-md-6">
@@ -264,14 +271,13 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Color & Size</h4>
+					<h4 class="modal-title">Size</h4>
 				</div>
 				<div class="modal-body">
 					<table class="table table-bordered">
 						<thead>
 							<tr>
 								<th>SL</th>
-								<th>Color</th>
 								<th>Size</th>
 								<th></th>
 							</tr>
@@ -279,7 +285,6 @@
 						<tbody>
 							<tr v-for="(item, sl) in productColors">
 								<td>{{ sl + 1 }}</td>
-								<td>{{ item.color_name }}</td>
 								<td>{{ item.size_name }}</td>
 								<td>
 									<button type="button" class="button" @click="window.location = `/Administrator/products/barcodeGenerate/${item.id}`">
@@ -294,9 +299,8 @@
 		</div>
 	</div>
 	<!-- Modal -->
-	<div id="myModal" class="modal fade" role="dialog">
+	<!-- <div id="myModal" class="modal fade" role="dialog">
 		<div class="modal-dialog modal-dialog-centered">
-			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -329,7 +333,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/vue/axios.min.js"></script>
@@ -365,17 +369,14 @@
 					brands: [],
 					selectedBrand: null,
 					units: [],
-					colors: [],
-					selectedColor: {
-						color_SiNo: '',
-						color_name: ''
-					},
+					// colors: [],
+					// selectedColor: {
+					// 	color_SiNo: '',
+					// 	color_name: ''
+					// },
 					sizes: [],
-					selectedSize: {
-						size_SiNo: '',
-						size_name: ''
-					},
-					cart: [],
+					selectedSize: null,
+					// cart: [],
 					selectedUnit: null,
 
 					columns: [{
@@ -440,7 +441,6 @@
 				this.getBrands();
 				this.getUnits();
 				this.getProducts();
-				this.getColors();
 				this.getSizes();
 			},
 			methods: {
@@ -459,11 +459,6 @@
 						this.brands = res.data;
 					})
 				},
-				getColors() {
-					axios.get('/get_colors').then(res => {
-						this.colors = res.data;
-					})
-				},
 				getSizes() {
 					axios.get('/get_sizes').then(res => {
 						this.sizes = res.data;
@@ -474,41 +469,41 @@
 						this.units = res.data;
 					})
 				},
-				addToCart() {
-					let sizeColor = {
-						colorId: this.selectedColor.color_SiNo,
-						colorName: this.selectedColor.color_name,
-						sizeId: this.selectedSize.size_SiNo,
-						sizeName: this.selectedSize.size_name,
-					}
+				// addToCart() {
+				// 	let sizeColor = {
+				// 		colorId: this.selectedColor.color_SiNo,
+				// 		colorName: this.selectedColor.color_name,
+				// 		sizeId: this.selectedSize.size_SiNo,
+				// 		sizeName: this.selectedSize.size_name,
+				// 	}
 
-					if ((sizeColor.colorId == '' || sizeColor.colorId == null) || (sizeColor.colorId == '' || sizeColor.colorId == null)) {
-						alert('select color or size');
-						return;
-					}
+				// 	if ((sizeColor.colorId == '' || sizeColor.colorId == null) || (sizeColor.colorId == '' || sizeColor.colorId == null)) {
+				// 		alert('select color or size');
+				// 		return;
+				// 	}
 
-					let cartInd = this.cart.findIndex(c => c.colorId == sizeColor.colorId && c.sizeId == sizeColor.sizeId);
-					if (cartInd > -1) {
-						this.cart.splice(cartInd, 1);
-					}
+				// 	let cartInd = this.cart.findIndex(c => c.colorId == sizeColor.colorId && c.sizeId == sizeColor.sizeId);
+				// 	if (cartInd > -1) {
+				// 		this.cart.splice(cartInd, 1);
+				// 	}
 
-					this.cart.unshift(sizeColor);
-					this.clearSizeColor();
-					$('#myModal').modal('hide');
-				},
-				removeFromCart(ind) {
-					this.cart.splice(ind, 1);
-				},
-				clearSizeColor() {
-					this.selectedColor = {
-						color_SiNo: '',
-						color_name: ''
-					}
-					this.selectedSize = {
-						size_SiNo: '',
-						size_name: ''
-					}
-				},
+				// 	this.cart.unshift(sizeColor);
+				// 	this.clearSizeColor();
+				// 	$('#myModal').modal('hide');
+				// },
+				// removeFromCart(ind) {
+				// 	this.cart.splice(ind, 1);
+				// },
+				// clearSizeColor() {
+				// 	this.selectedColor = {
+				// 		color_SiNo: '',
+				// 		color_name: ''
+				// 	}
+				// 	this.selectedSize = {
+				// 		size_SiNo: '',
+				// 		size_name: ''
+				// 	}
+				// },
 
 				getProducts() {
 					axios.get('/get_products').then(res => {
@@ -520,14 +515,15 @@
 						alert('Select category');
 						return;
 					}
-					if (this.cart.length == 0) {
-						alert('Color Cart is empty');
-						return;
-					}
 					if (this.selectedUnit == null) {
 						alert('Select unit');
 						return;
 					}
+					if (this.selectedSize == null) {
+						alert('Select Size');
+						return;
+					}
+
 					if (this.selectedBrand != null) {
 						this.product.brand = this.selectedBrand.brand_SiNo;
 					}
@@ -543,7 +539,7 @@
 
 					let data = {
 						product: this.product,
-						cart: this.cart,
+						cart: this.selectedSize,
 					}
 
 					axios.post(url, data)
@@ -572,15 +568,16 @@
 						ProductCategory_Name: product.ProductCategory_Name
 					}
 
+					// selected size
+					let si = [];
 					product.colors.forEach(color => {
 						let cartColor = {
-							colorId: color.color_id,
-							colorName: color.color_name,
-							sizeId: color.size_id,
-							sizeName: color.size_name,
+							size_SiNo: color.size_id,
+							size_name: color.size_name,
 						}
-						this.cart.push(cartColor);
+						si.push(cartColor);
 					})
+					this.selectedSize = si;
 
 					this.selectedUnit = {
 						Unit_SlNo: product.Unit_ID,

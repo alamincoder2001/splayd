@@ -157,7 +157,6 @@ class Sales extends CI_Controller
                 $saleDetails = array(
                     'SaleMaster_IDNo'           => $salesId,
                     'Product_IDNo'              => $cartProduct->productId,
-                    'Product_colorId'           => $cartProduct->colorId,
                     'Product_sizeId'            => $cartProduct->sizeId,
                     'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
@@ -184,11 +183,10 @@ class Sales extends CI_Controller
                 $this->db->query("
                     update tbl_color_size 
                     set stock = stock - ?
-                    where product_id = ?
-                    and color_id = ? 
+                    where product_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->colorId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
+                ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
             }
             // $currentDue = $data->sales->previousDue + ($data->sales->total - $data->sales->paid);
             // //Send sms
@@ -497,10 +495,9 @@ class Sales extends CI_Controller
                     update tbl_color_size 
                     set stock = stock + ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$product->SaleDetails_TotalQuantity, $product->Product_IDNo, $product->Product_colorId, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                ", [$product->SaleDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             foreach ($data->cart as $cartProduct) {
@@ -508,7 +505,6 @@ class Sales extends CI_Controller
                     $exchange = array(
                         'sale_id'    => $salesId,
                         'product_id' => $cartProduct->productId,
-                        'color_name' => $cartProduct->color,
                         'size_name'  => $cartProduct->size,
                         'rate'       => $cartProduct->salesRate,
                         'quantity'   => $cartProduct->quantity,
@@ -523,7 +519,6 @@ class Sales extends CI_Controller
                     $saleDetails = array(
                         'SaleMaster_IDNo'           => $salesId,
                         'Product_IDNo'              => $cartProduct->productId,
-                        'Product_colorId'           => $cartProduct->colorId,
                         'Product_sizeId'            => $cartProduct->sizeId,
                         'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                         'Purchase_Rate'             => $cartProduct->purchaseRate,
@@ -549,10 +544,9 @@ class Sales extends CI_Controller
                         update tbl_color_size 
                         set stock = stock - ?
                         where product_id = ?
-                        and color_id = ? 
                         and size_id = ? 
                         and branch_id = ?
-                    ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->colorId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
+                    ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
                 }
 
 
@@ -633,7 +627,6 @@ class Sales extends CI_Controller
                 $returnDetails = array(
                     'SaleReturn_IdNo' => $salesReturnId,
                     'SaleReturnDetailsProduct_SlNo' => $product->Product_IDNo,
-                    'SaleReturnDetailsColorId' => $product->Product_colorId,
                     'SaleReturnDetailsSizeId' => $product->Product_sizeId,
                     'SaleReturnDetails_ReturnQuantity' => $product->return_quantity,
                     'SaleReturnDetails_ReturnAmount' => $product->return_amount,
@@ -659,10 +652,9 @@ class Sales extends CI_Controller
                     update tbl_color_size 
                     set stock = stock + ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$product->return_quantity, $product->Product_IDNo, $product->Product_colorId, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                ", [$product->return_quantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             $customerInfo = $this->db->query("select * from tbl_customer where Customer_SlNo = ?", $data->invoice->SalseCustomer_IDNo)->row();
@@ -731,10 +723,9 @@ class Sales extends CI_Controller
                     update tbl_color_size 
                     set stock = stock - ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$product->SaleReturnDetails_ReturnQuantity, $product->SaleReturnDetailsProduct_SlNo, $product->SaleReturnDetailsColorId, $product->SaleReturnDetailsSizeId, $this->session->userdata('BRANCHid')]);
+                ", [$product->SaleReturnDetails_ReturnQuantity, $product->SaleReturnDetailsProduct_SlNo, $product->SaleReturnDetailsSizeId, $this->session->userdata('BRANCHid')]);
             }
 
             $this->db->query("delete from tbl_salereturndetails where SaleReturn_IdNo = ?", $salesReturnId);
@@ -744,7 +735,6 @@ class Sales extends CI_Controller
                 $returnDetails = array(
                     'SaleReturn_IdNo' => $salesReturnId,
                     'SaleReturnDetailsProduct_SlNo' => $product->Product_IDNo,
-                    'SaleReturnDetailsColorId' => $product->Product_colorId,
                     'SaleReturnDetailsSizeId' => $product->Product_sizeId,
                     'SaleReturnDetails_ReturnQuantity' => $product->return_quantity,
                     'SaleReturnDetails_ReturnAmount' => $product->return_amount,
@@ -770,10 +760,9 @@ class Sales extends CI_Controller
                     update tbl_color_size 
                     set stock = stock + ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$product->return_quantity, $product->Product_IDNo, $product->Product_colorId, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                ", [$product->return_quantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             $customerInfo = $this->db->query("select * from tbl_customer where Customer_SlNo = ?", $data->invoice->SalseCustomer_IDNo)->row();
@@ -871,10 +860,9 @@ class Sales extends CI_Controller
                     update tbl_color_size 
                     set stock = stock - ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$product->SaleReturnDetails_ReturnQuantity, $product->SaleReturnDetailsProduct_SlNo, $product->SaleReturnDetailsColorId, $product->SaleReturnDetailsSizeId, $this->session->userdata('BRANCHid')]);
+                ", [$product->SaleReturnDetails_ReturnQuantity, $product->SaleReturnDetailsProduct_SlNo, $product->SaleReturnDetailsSizeId, $this->session->userdata('BRANCHid')]);
             }
 
             $this->db->query("delete from tbl_salereturndetails where SaleReturn_IdNo = ?", $data->id);
@@ -1930,10 +1918,9 @@ class Sales extends CI_Controller
                     update tbl_color_size 
                     set stock = stock + ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ", [$detail->SaleDetails_TotalQuantity, $detail->Product_IDNo, $detail->Product_colorId, $detail->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                ", [$detail->SaleDetails_TotalQuantity, $detail->Product_IDNo, $detail->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             /*Delete Sale Details*/

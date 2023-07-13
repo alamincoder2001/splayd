@@ -146,12 +146,12 @@
 									</div>
 								</div>
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Color </label>
 									<div class="col-xs-9">
 										<v-select v-bind:options="colors" v-model="selectedColor" label="color_name" v-on:input="productColorChange" placeholder="select color"></v-select>
 									</div>
-								</div>
+								</div> -->
 
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Size </label>
@@ -224,7 +224,6 @@
 							<th v-if="sales.salesId > 0" style="color:#000;">Is Exchange</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="color:#000;">Color</th>
 							<th style="color:#000;">Size</th>
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
@@ -240,7 +239,6 @@
 							</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.color }}</td>
 							<td>{{ product.size }}</td>
 							<td>{{ product.quantity }}</td>
 							<td>{{ product.salesRate }}</td>
@@ -253,12 +251,12 @@
 						</tr>
 
 						<tr style="font-weight: bold;">
-							<td colspan="7">Note</td>
+							<td colspan="6">Note</td>
 							<td colspan="3">Total</td>
 						</tr>
 
 						<tr>
-							<td colspan="7"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
+							<td colspan="6"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
 							<td colspan="3" style="padding-top: 15px;font-size:18px;">{{ sales.total }}</td>
 						</tr>
 					</tbody>
@@ -589,8 +587,6 @@
 					vat: 0.00,
 					total: 0.00
 				},
-				colors: [],
-				selectedColor: null,
 				sizes: [],
 				selectedSize: null,
 				accounts: [],
@@ -684,8 +680,7 @@
 			},
 			getProductSizes() {
 				axios.post('/get_product_size', {
-						productId: this.selectedProduct.Product_SlNo,
-						colorId: this.selectedColor.color_id
+						productId: this.selectedProduct.Product_SlNo
 					})
 					.then(res => {
 						this.sizes = res.data;
@@ -752,32 +747,31 @@
 
 					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
 				}
-				this.selectedColor = null;
+				// this.selectedColor = null;
 				this.selectedSize = null;
-				this.getProductColors();
+				this.getProductSizes();
 			},
-			async productColorChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.sales.isService == 'false') {
-					await axios.post('/get_product_color_stock', {
-							productId: this.selectedProduct.Product_SlNo,
-							colorId: this.selectedColor.color_id
-						})
-						.then(res => {
-							this.productStock = res.data.reduce((pre, st) => {
-								return pre + +st.stock
-							}, 0);
-						})
+			// async productColorChange() {
+			// 	if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.sales.isService == 'false') {
+			// 		await axios.post('/get_product_color_stock', {
+			// 				productId: this.selectedProduct.Product_SlNo,
+			// 				colorId: this.selectedColor.color_id
+			// 			})
+			// 			.then(res => {
+			// 				this.productStock = res.data.reduce((pre, st) => {
+			// 					return pre + +st.stock
+			// 				}, 0);
+			// 			})
 
-					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
-					this.selectedSize = null;
-					this.getProductSizes();
-				}
-			},
+			// 		this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
+			// 		this.selectedSize = null;
+			// 		this.getProductSizes();
+			// 	}
+			// },
 			async productSizeChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.selectedSize != null && this.sales.isService == 'false') {
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null && this.sales.isService == 'false') {
 					await axios.post('/get_product_size_stock', {
 							productId: this.selectedProduct.Product_SlNo,
-							colorId: this.selectedColor.color_id,
 							sizeId: this.selectedSize.size_id
 						})
 						.then(res => {
@@ -798,8 +792,6 @@
 					productCode: this.selectedProduct.Product_Code,
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					name: this.selectedProduct.Product_Name,
-					colorId: this.selectedColor ? this.selectedColor.color_id : '',
-					color: this.selectedColor ? this.selectedColor.color_name : '',
 					sizeId: this.selectedSize ? this.selectedSize.size_id : '',
 					size: this.selectedSize ? this.selectedSize.size_name : '',
 					salesRate: this.selectedProduct.Product_SellingPrice,
@@ -1062,8 +1054,6 @@
 						let cartProduct = {
 							productCode: product.Product_Code,
 							productId: product.Product_IDNo,
-							colorId: product.Product_colorId,
-							color: product.color_name,
 							size: product.size_name,
 							sizeId: product.Product_sizeId,
 							categoryName: product.ProductCategory_Name,

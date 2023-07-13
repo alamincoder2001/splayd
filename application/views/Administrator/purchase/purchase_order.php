@@ -132,7 +132,7 @@
 									</div>
 								</div>
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-xs-4 control-label no-padding-right"> Color </label>
 									<div class="col-xs-7">
 										<v-select v-bind:options="colors" v-model="selectedColor" label="color_name" v-on:input="productColorChange" placeholder="select color"></v-select>
@@ -140,7 +140,7 @@
 									<div class="col-xs-1" style="padding: 0;">
 										<a href="<?= base_url('color') ?>" title="Add New Color" class="btn btn-xs btn-danger" style="height: 25px; border: 0; width: 27px; margin-left: -10px;" target="_blank"><i class="fa fa-plus" aria-hidden="true" style="margin-top: 5px;"></i></a>
 									</div>
-								</div>
+								</div> -->
 
 								<div class="form-group">
 									<label class="col-xs-4 control-label no-padding-right"> Size </label>
@@ -212,7 +212,6 @@
 							<th style="width:4%;color:#000;">SL</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:13%;color:#000;">Category</th>
-							<th style="width:13%;color:#000;">Color</th>
 							<th style="width:13%;color:#000;">Size</th>
 							<th style="width:12%;color:#000;">Purchase Rate</th>
 							<th style="width:5%;color:#000;">Quantity</th>
@@ -225,7 +224,6 @@
 							<td>{{ sl + 1}}</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.color }}</td>
 							<td>{{ product.size }}</td>
 							<td>{{product.purchaseRate}}</td>
 							<td>
@@ -236,16 +234,16 @@
 						</tr>
 
 						<tr>
-							<td colspan="9"></td>
+							<td colspan="8"></td>
 						</tr>
 
 						<tr style="font-weight: bold;">
-							<td colspan="6">Note</td>
+							<td colspan="5">Note</td>
 							<td colspan="3">Total</td>
 						</tr>
 
 						<tr>
-							<td colspan="6"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="purchase.note"></textarea></td>
+							<td colspan="5"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="purchase.note"></textarea></td>
 							<td colspan="3" style="padding-top: 15px;font-size:18px;">{{ purchase.total }}</td>
 						</tr>
 					</tbody>
@@ -454,8 +452,6 @@
 					previousDue: 0.00,
 					note: ''
 				},
-				colors: [],
-				selectedColor: null,
 				sizes: [],
 				selectedSize: null,
 				vatPercent: 0.00,
@@ -582,51 +578,45 @@
 					return
 				}
 				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
-					this.selectedColor = null;
+					// this.selectedColor = null;
 					this.selectedSize = null;
-					await this.getProductColors();
+					this.getProductSizes();
 				}
 			},
-			async productColorChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null) {
-					this.selectedSize = null;
-					await this.getProductSizes();
-				}
-			},
+			// async productColorChange() {
+			// 	if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null) {
+			// 		this.selectedSize = null;
+			// 		await this.getProductSizes();
+			// 	}
+			// },
 			productSizeChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.selectedSize != null) {
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null) {
 					this.$refs.quantity.focus();
 				}
 			},
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_Purchase_Rate)).toFixed(2);
 			},
-			getProductColors() {
-				axios.post('/get_product_color', {
-					productId: this.selectedProduct.Product_SlNo
-				}).then(res => {
-					this.colors = res.data;
-				})
-			},
+			// getProductColors() {
+			// 	axios.post('/get_product_color', {
+			// 		productId: this.selectedProduct.Product_SlNo
+			// 	}).then(res => {
+			// 		this.colors = res.data;
+			// 	})
+			// },
 			getProductSizes() {
 				axios.post('/get_product_size', {
-						productId: this.selectedProduct.Product_SlNo,
-						colorId: this.selectedColor.color_id
+						productId: this.selectedProduct.Product_SlNo
 					})
 					.then(res => {
 						this.sizes = res.data;
 					})
 			},
 			addToCart() {
-				let cartInd = this.cart.findIndex(p => p.productId == this.selectedProduct.Product_SlNo && p.colorId == this.selectedColor.color_id && p.sizeId == this.selectedSize
+				let cartInd = this.cart.findIndex(p => p.productId == this.selectedProduct.Product_SlNo && p.sizeId == this.selectedSize
 					.size_id);
 				if (cartInd > -1) {
 					alert('Product exists in cart');
-					return;
-				}
-
-				if (this.selectedColor == null) {
-					alert('Select Color');
 					return;
 				}
 
@@ -635,8 +625,6 @@
 					name: this.selectedProduct.Product_Name,
 					categoryId: this.selectedProduct.ProductCategory_ID,
 					name: this.selectedProduct.Product_Name,
-					colorId: this.selectedColor ? this.selectedColor.color_id : '',
-					color: this.selectedColor ? this.selectedColor.color_name : '',
 					sizeId: this.selectedSize ? this.selectedSize.size_id : '',
 					size: this.selectedSize ? this.selectedSize.size_name: '',
 					categoryName: this.selectedProduct.ProductCategory_Name,
@@ -675,7 +663,8 @@
 					Product_SellingPrice: 0.00,
 					total: ''
 				}
-				this.selectedColor = null;
+				// this.selectedColor = null;
+				this.sizes = [];
 				this.selectedSize = null;
 			},
 			onChangeQty(sl){
@@ -816,8 +805,6 @@
 							id: product.PurchaseDetails_SlNo,
 							productId: product.Product_IDNo,
 							name: product.Product_Name,
-							colorId: product.Product_colorId,
-							color: product.color_name,
 							sizeId: product.Product_sizeId,
 							size: product.size_name,
 							categoryId: product.ProductCategory_ID,
