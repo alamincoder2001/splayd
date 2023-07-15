@@ -55,9 +55,6 @@ class Products extends CI_Controller
         try {
             $data = json_decode($this->input->raw_input_stream);
 
-            echo json_encode($data);
-            exit;
-
             $productNameCount = $this->db->query("select * from tbl_product where Product_Name = ?", $data->product->Product_Name)->num_rows();
             if ($productNameCount > 0) {
                 $res = ['success' => false, 'message' => 'Product name already exists'];
@@ -993,6 +990,19 @@ class Products extends CI_Controller
                 return $product->stock_value;
             }, $stock)
         );
+        echo json_encode($res);
+    }
+
+    public function deleteSize()
+    {
+        
+        try {
+            $data = json_decode($this->input->raw_input_stream);
+            $this->db->query("update tbl_color_size set status = 'd' where id = ?", $data->sizeId);
+            $res = ['success' => true, 'message' => 'Size Delete'];
+        } catch (Exception $ex) {
+            $res = ['success' => false, 'message' => $ex->getMessage()];
+        }
         echo json_encode($res);
     }
 }

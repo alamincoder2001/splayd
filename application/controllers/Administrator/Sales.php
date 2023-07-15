@@ -1901,7 +1901,7 @@ class Sales extends CI_Controller
             }
 
             /*Get Sale Details Data*/
-            $saleDetails = $this->db->select('Product_IDNo, SaleDetails_TotalQuantity')->where('SaleMaster_IDNo', $saleId)->get('tbl_saledetails')->result();
+            $saleDetails = $this->db->select('Product_IDNo, SaleDetails_TotalQuantity, Product_sizeId')->where('SaleMaster_IDNo', $saleId)->get('tbl_saledetails')->result();
 
             foreach ($saleDetails as $detail) {
                 /*Get Product Current Quantity*/

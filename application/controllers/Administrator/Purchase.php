@@ -1211,7 +1211,7 @@ class Purchase extends CI_Controller
             }
 
             /*Get Purchase Details Data*/
-            $purchaseDetails = $this->db->select('Product_IDNo,PurchaseDetails_TotalQuantity,PurchaseDetails_TotalAmount')->where('PurchaseMaster_IDNo',$data->purchaseId)->get('tbl_purchasedetails')->result();
+            $purchaseDetails = $this->db->select('Product_IDNo,PurchaseDetails_TotalQuantity,PurchaseDetails_TotalAmount,Product_sizeId')->where('PurchaseMaster_IDNo',$data->purchaseId)->get('tbl_purchasedetails')->result();
 
             foreach($purchaseDetails as $detail) {
                 $stock = $this->mt->productStock($detail->Product_IDNo);
@@ -1251,7 +1251,7 @@ class Purchase extends CI_Controller
                     and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
-                ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_colorId, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             /*Delete Purchase Details*/

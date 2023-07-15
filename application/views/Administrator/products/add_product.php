@@ -279,6 +279,7 @@
 							<tr>
 								<th>SL</th>
 								<th>Size</th>
+								<th>Stock</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -286,10 +287,12 @@
 							<tr v-for="(item, sl) in productColors">
 								<td>{{ sl + 1 }}</td>
 								<td>{{ item.size_name }}</td>
+								<td>{{ item.stock }}</td>
 								<td>
 									<button type="button" class="button" @click="window.location = `/Administrator/products/barcodeGenerate/${item.id}`">
 										<i class="fa fa-barcode"></i>
 									</button>
+									<button type="button" class="button" @click="deleteSize(item.id)"><i class="fa fa-trash"></i></button>
 								</td>
 							</tr>
 						</tbody>
@@ -586,6 +589,17 @@
 				},
 				colorAndSize(color) {
 					this.productColors = color.colors;
+				},
+				deleteSize(sizeId) {
+					if (confirm("Are you sure?")) {
+						axios.post('/delete_size', {
+							sizeId: sizeId
+						}).then(res => {
+							let r = res.data;
+							alert(r.message);
+							this.getProducts();
+						})
+					}
 				},
 				deleteProduct(productId) {
 					let deleteConfirm = confirm('Are you sure?');

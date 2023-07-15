@@ -79,6 +79,8 @@ $route['areaedit/(:any)'] = 'Administrator/Page/areaedit/$1';
 $route['areaupdate']      = 'Administrator/Page/areaupdate';
 $route['get_districts']   = 'Administrator/Page/getDistricts';
 
+$route['delete_size']                        = 'Administrator/Products/deleteSize';
+
 $route['product']                        = 'Administrator/Products';
 $route['add_product']                    = 'Administrator/Products/addProduct';
 $route['productEdit']                    = 'Administrator/Products/product_edit';
