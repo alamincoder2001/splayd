@@ -626,9 +626,8 @@
 						}
 					})
 					this.selectedCategory = null;
-					this.selectedColor = null;
+					this.selectedSize = null;
 					this.selectedUnit = null;
-					this.cart = [];
 				}
 			}
 		})
