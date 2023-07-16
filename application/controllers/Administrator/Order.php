@@ -95,11 +95,9 @@ class Order extends CI_Controller
                 'SaleMaster_PaidAmount'          => $data->sales->paid,
                 'SaleMaster_cashPaid'            => $data->sales->cashPaid,
                 'SaleMaster_bankPaid'            => $data->sales->bankPaid,
-                'account_id'                     => $data->sales->account_id,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
                 'SaleMaster_Description'         => $data->sales->note,
-                'bankDigit'                      => $data->sales->bankDigit,
                 'Status'                         => 'p',
                 'is_order'                       => 'true',
                 'is_service'                     => $data->sales->isService,
@@ -116,7 +114,6 @@ class Order extends CI_Controller
                 $saleDetails = array(
                     'SaleMaster_IDNo'           => $salesId,
                     'Product_IDNo'              => $cartProduct->productId,
-                    'Product_colorId'           => $cartProduct->colorId,
                     'Product_sizeId'            => $cartProduct->sizeId,
                     'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
@@ -130,6 +127,18 @@ class Order extends CI_Controller
                 );
 
                 $this->db->insert('tbl_saledetails', $saleDetails);
+            }
+            if (count($data->banks) > 0) {
+                foreach ($data->banks as $bank) {
+                    $salesBank = array(
+                        'salesId'    => $salesId,
+                        'account_id' => $bank->account_id,
+                        'amount'     => $bank->amount,
+                        'lastDigit'  => $bank->bankDigit,
+                    );
+
+                    $this->db->insert('tbl_salesmaster_account', $salesBank);
+                }
             }
 
             // $currentDue = $data->sales->previousDue + ($data->sales->total - $data->sales->paid);
@@ -195,7 +204,6 @@ class Order extends CI_Controller
                 'SaleMaster_PaidAmount'          => $data->sales->paid,
                 'SaleMaster_cashPaid'            => $data->sales->cashPaid,
                 'SaleMaster_bankPaid'            => $data->sales->bankPaid,
-                'account_id'                     => $data->sales->account_id,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
                 'SaleMaster_Description'         => $data->sales->note,
@@ -203,7 +211,6 @@ class Order extends CI_Controller
                 'exchange_total'                 => $data->sales->exchangeTotal,
                 'takeAmount'                     => $data->sales->takeAmount,
                 'returnAmount'                   => $data->sales->returnAmount,
-                'bankDigit'                      => $data->sales->bankDigit,
                 'is_order'                       => 'true',
                 'is_service'                     => $data->sales->isService,
                 "AddBy"                          => $this->session->userdata("FullName"),
@@ -233,7 +240,6 @@ class Order extends CI_Controller
                     $exchange = array(
                         'sale_id'    => $salesId,
                         'product_id' => $cartProduct->productId,
-                        'color_name' => $cartProduct->color,
                         'size_name'  => $cartProduct->size,
                         'rate'       => $cartProduct->salesRate,
                         'quantity'   => $cartProduct->quantity,
@@ -248,7 +254,6 @@ class Order extends CI_Controller
                     $saleDetails = array(
                         'SaleMaster_IDNo'           => $salesId,
                         'Product_IDNo'              => $cartProduct->productId,
-                        'Product_colorId'           => $cartProduct->colorId,
                         'Product_sizeId'            => $cartProduct->sizeId,
                         'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                         'Purchase_Rate'             => $cartProduct->purchaseRate,
@@ -261,6 +266,20 @@ class Order extends CI_Controller
                         'SaleDetails_BranchId'      => $this->session->userdata('BRANCHid')
                     );
                     $this->db->insert('tbl_saledetails', $saleDetails);
+                }
+            }
+
+            $this->db->query("DELETE FROM tbl_salesmaster_account WHERE salesId = '$salesId'");
+            if (count($data->banks) > 0) {
+                foreach ($data->banks as $bank) {
+                    $salesBank = array(
+                        'salesId'    => $salesId,
+                        'account_id' => $bank->account_id,
+                        'amount'     => $bank->amount,
+                        'lastDigit'  => $bank->bankDigit,
+                    );
+
+                    $this->db->insert('tbl_salesmaster_account', $salesBank);
                 }
             }
 
@@ -286,8 +305,10 @@ class Order extends CI_Controller
 
     public function orderInvoicePrint($saleId)
     {
-        $data['title'] = "Order Sales Invoice";
+        $invoice = $this->db->query("SELECT sm.SaleMaster_InvoiceNo FROM tbl_salesmaster sm WHERE sm.SaleMaster_SlNo = '$saleId'")->row()->SaleMaster_InvoiceNo;
+        $data['title'] = "Order Sales Invoice"; 
         $data['salesId'] = $saleId;
+        $data['invoice'] = $invoice;
         $data['content'] = $this->load->view('Administrator/order/orderAndreport', $data, TRUE);
         $this->load->view('Administrator/index', $data);
     }
@@ -355,6 +376,18 @@ class Order extends CI_Controller
                 and e.sale_id = ?
             ", $data->salesId)->result();
             $res['exchanges'] = $exchange;
+
+            $banks = $this->db->query("
+                select 
+                    sb.*,
+                    a.account_id,
+                    a.account_name,
+                    a.bank_name
+                from tbl_salesmaster_account sb
+                join tbl_bank_accounts a on a.account_id = sb.account_id
+                where sb.salesId = ?
+            ", $data->salesId)->result();
+            $res['banks'] = $banks;
         }
 
         $sales = $this->db->query("
@@ -367,15 +400,11 @@ class Order extends CI_Controller
                             c.Customer_Address,
                             c.Customer_Type,
                             e.Employee_Name,
-                            a.account_name,
-                            a.account_number,
-                            a.bank_name,
                             br.Brunch_name
                             from tbl_salesmaster sm
                             left join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
                             left join tbl_employee e on e.Employee_SlNo = sm.employee_id
                             left join tbl_brunch br on br.brunch_id = sm.SaleMaster_branchid
-                            left join tbl_bank_accounts a on a.account_id = sm.account_id
                             where sm.SaleMaster_branchid = '$branchId'
                             and sm.Status != 'd'
                             and sm.is_order = 'true'
@@ -513,11 +542,11 @@ class Order extends CI_Controller
             $saleId = $data->saleId;
 
             $sale = $this->db->select('*')->where('SaleMaster_SlNo', $saleId)->get('tbl_salesmaster')->row();
-            if ($sale->Status != 'a') {
-                $res = ['success' => false, 'message' => 'Sale not found'];
-                echo json_encode($res);
-                exit;
-            }
+            // if ($sale->Status != 'a') {
+            //     $res = ['success' => false, 'message' => 'Sale not found'];
+            //     echo json_encode($res);
+            //     exit;
+            // }
 
             $returnCount = $this->db->query("select * from tbl_salereturn sr where sr.SaleMaster_InvoiceNo = ? and sr.Status = 'a'", $sale->SaleMaster_InvoiceNo)->num_rows();
 
@@ -668,10 +697,10 @@ class Order extends CI_Controller
         $data = json_decode($this->input->raw_input_stream);
         $clauses = "";
         if (isset($data->customerId) && $data->customerId != '') {
-            $clauses .=" and sm.SalseCustomer_IDNo = '$data->customerId'";
+            $clauses .= " and sm.SalseCustomer_IDNo = '$data->customerId'";
         }
         if (isset($data->dateFrom) && $data->dateFrom != '') {
-            $clauses .=" and sm.SaleMaster_SaleDate between '$data->dateFrom' and '$data->dateTo'";
+            $clauses .= " and sm.SaleMaster_SaleDate between '$data->dateFrom' and '$data->dateTo'";
         }
 
         $res = $this->db->query("SELECT

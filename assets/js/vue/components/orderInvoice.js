@@ -41,7 +41,7 @@ const orderInvoice = Vue.component('order-invoice', {
                                     <td>Sl.</td>
                                     <td>Description</td>
                                     <td>Qnty</td>
-                                    <td>Unit</td>
+                                    <td>Size</td>
                                     <td>Unit Price</td>
                                     <td style="text-align:right;">Total</td>
                                 </tr>
@@ -51,7 +51,7 @@ const orderInvoice = Vue.component('order-invoice', {
                                     <td>{{ sl + 1 }}</td>
                                     <td>{{ product.Product_Name }}</td>
                                     <td>{{ product.SaleDetails_TotalQuantity }}</td>
-                                    <td>{{ product.Unit_Name }}</td>
+                                    <td>{{ product.size_name }}</td>
                                     <td>{{ product.SaleDetails_Rate }}</td>
                                     <td align="right">{{ product.SaleDetails_TotalAmount }}</td>
                                 </tr>
@@ -61,15 +61,13 @@ const orderInvoice = Vue.component('order-invoice', {
                         <table _a584de style="margin-top: 15px;dispaly:none" :style="{display: exchanges.length  > 0 ? '' : 'none'}">
                             <thead>
                                 <tr>
-                                    <td colspan="9">Product Exchange Information</td>
+                                    <td colspan="6">Product Exchange Information</td>
                                 </tr>
                                 <tr>
                                     <td>Sl.</td>
                                     <td>Description</td>
-                                    <td>Color</td>
                                     <td>Size</td>
                                     <td>Qnty</td>
-                                    <td>Unit</td>
                                     <td>Unit Price</td>
                                     <td>Total</td>
                                 </tr>
@@ -78,10 +76,8 @@ const orderInvoice = Vue.component('order-invoice', {
                                 <tr v-for="(product, sl) in exchanges">
                                     <td>{{ sl + 1 }}</td>
                                     <td>{{ product.Product_Name }}</td>
-                                    <td>{{ product.color_name }}</td>
                                     <td>{{ product.size_name }}</td>
                                     <td>{{ product.quantity }}</td>
-                                    <td>{{ product.Unit_Name }}</td>
                                     <td>{{ product.rate }}</td>
                                     <td align="right" style="font-weight:bold">{{ product.total }}</td>
                                 </tr>
@@ -150,9 +146,16 @@ const orderInvoice = Vue.component('order-invoice', {
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
+                        <!--
                         <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }}<br><br>
                         <strong>Note: </strong>
-                        <p style="white-space: pre-line">{{ sales.SaleMaster_Description }}</p>
+                        -->
+                        <p style="white-space: pre-line;font-size:15px;">
+                            NO REFUND. You can only <strong>exchange within 3days</strong>
+                        </p>
+                        <p style="text-align:center;">                            
+                            <img id="barcode" />
+                        </p>
                     </div>
                 </div>
             </div>

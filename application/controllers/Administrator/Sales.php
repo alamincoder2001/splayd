@@ -137,11 +137,9 @@ class Sales extends CI_Controller
                 'SaleMaster_PaidAmount'          => $data->sales->paid,
                 'SaleMaster_cashPaid'            => ($data->sales->cashPaid - $data->sales->returnCash),
                 'SaleMaster_bankPaid'            => $data->sales->bankPaid,
-                'account_id'                     => $data->sales->account_id,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
                 'SaleMaster_Description'         => $data->sales->note,
-                'bankDigit'                      => $data->sales->bankDigit,
                 'Status'                         => 'a',
                 'is_service'                     => $data->sales->isService,
                 "AddBy"                          => $this->session->userdata("FullName"),
@@ -187,6 +185,19 @@ class Sales extends CI_Controller
                     and size_id = ? 
                     and branch_id = ?
                 ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
+            }
+
+            if (count($data->banks) > 0) {
+                foreach ($data->banks as $bank) {
+                    $salesBank = array(
+                        'salesId'    => $salesId,
+                        'account_id' => $bank->account_id,
+                        'amount'     => $bank->amount,
+                        'lastDigit'  => $bank->bankDigit,
+                    );
+
+                    $this->db->insert('tbl_salesmaster_account', $salesBank);
+                }
             }
             // $currentDue = $data->sales->previousDue + ($data->sales->total - $data->sales->paid);
             // //Send sms
@@ -383,6 +394,18 @@ class Sales extends CI_Controller
                 and e.sale_id = ?
             ", $data->salesId)->result();
             $res['exchanges'] = $exchange;
+
+            $banks = $this->db->query("
+                    select 
+                        sb.*,
+                        a.account_id,
+                        a.account_name,
+                        a.bank_name
+                    from tbl_salesmaster_account sb
+                    join tbl_bank_accounts a on a.account_id = sb.account_id
+                    where sb.salesId = ?
+                ", $data->salesId)->result();
+            $res['banks'] = $banks;
         }
         $sales = $this->db->query("
             select 
@@ -394,15 +417,11 @@ class Sales extends CI_Controller
             c.Customer_Address,
             c.Customer_Type,
             e.Employee_Name,
-            a.account_name,
-            a.account_number,
-            a.bank_name,
             br.Brunch_name
             from tbl_salesmaster sm
             left join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
             left join tbl_employee e on e.Employee_SlNo = sm.employee_id
             left join tbl_brunch br on br.brunch_id = sm.SaleMaster_branchid
-            left join tbl_bank_accounts a on a.account_id = sm.account_id
             where sm.SaleMaster_branchid = '$branchId'
             and sm.Status = 'a' and sm.is_order = 'false'
             $clauses
@@ -463,14 +482,12 @@ class Sales extends CI_Controller
                 'SaleMaster_PaidAmount'          => $data->sales->paid,
                 'SaleMaster_cashPaid'            => $data->sales->cashPaid - $data->sales->returnCash,
                 'SaleMaster_bankPaid'            => $data->sales->bankPaid,
-                'account_id'                     => $data->sales->account_id,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
                 'exchange_total'                 => $data->sales->exchangeTotal,
                 'takeAmount'                     => $data->sales->takeAmount,
                 'returnAmount'                   => $data->sales->returnAmount,
                 'SaleMaster_Description'         => $data->sales->note,
-                'bankDigit'                      => $data->sales->bankDigit,
                 "UpdateBy"                       => $this->session->userdata("FullName"),
                 'UpdateTime'                     => date("Y-m-d H:i:s"),
                 "SaleMaster_branchid"            => $this->session->userdata("BRANCHid")
@@ -531,14 +548,14 @@ class Sales extends CI_Controller
                         'SaleDetails_BranchId'      => $this->session->userdata('BRANCHid')
                     );
                     $this->db->insert('tbl_saledetails', $saleDetails);
-                    
+
                     $this->db->query("
                         update tbl_currentinventory 
                         set sales_quantity = sales_quantity + ? 
                         where product_id = ?
                         and branch_id = ?
                     ", [$cartProduct->quantity, $cartProduct->productId, $this->session->userdata('BRANCHid')]);
-                    
+
                     // update color wise stock
                     $this->db->query("
                         update tbl_color_size 
@@ -548,8 +565,20 @@ class Sales extends CI_Controller
                         and branch_id = ?
                     ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
                 }
+            }
 
+            $this->db->query("DELETE FROM tbl_salesmaster_account WHERE salesId = '$salesId'");
+            if (count($data->banks) > 0) {
+                foreach ($data->banks as $bank) {
+                    $salesBank = array(
+                        'salesId'    => $salesId,
+                        'account_id' => $bank->account_id,
+                        'amount'     => $bank->amount,
+                        'lastDigit'  => $bank->bankDigit,
+                    );
 
+                    $this->db->insert('tbl_salesmaster_account', $salesBank);
+                }
             }
 
             $this->db->trans_commit();

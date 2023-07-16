@@ -10,6 +10,7 @@
 <script src="<?php echo base_url();?>assets/js/vue/axios.min.js"></script>
 <script src="<?php echo base_url();?>assets/js/vue/components/orderInvoice.js"></script>
 <script src="<?php echo base_url();?>assets/js/moment.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/barcode.min.js"></script>
 <script>
 	new Vue({
 		el: '#orderInvoice',
@@ -22,5 +23,11 @@
 			}
 		}
 	})
+
+	JsBarcode("#barcode", "<?php echo $invoice; ?>", {
+			format: "CODE128",
+			height: 45,
+			displayValue: false
+		});
 </script>
 

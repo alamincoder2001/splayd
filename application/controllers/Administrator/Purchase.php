@@ -1248,7 +1248,6 @@ class Purchase extends CI_Controller
                     update tbl_color_size 
                     set stock = stock - ?
                     where product_id = ?
-                    and color_id = ? 
                     and size_id = ? 
                     and branch_id = ?
                 ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);

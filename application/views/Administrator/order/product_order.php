@@ -147,13 +147,6 @@
 								</div>
 
 								<div class="form-group">
-									<label class="col-xs-3 control-label no-padding-right"> Color </label>
-									<div class="col-xs-9">
-										<v-select v-bind:options="colors" v-model="selectedColor" label="color_name" v-on:input="productColorChange" placeholder="select color"></v-select>
-									</div>
-								</div>
-
-								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Size </label>
 									<div class="col-xs-9">
 										<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" v-on:input="productSizeChange" placeholder="select size"></v-select>
@@ -170,7 +163,7 @@
 								<div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Sale Rate </label>
 									<div class="col-xs-5">
-										<input type="number" id="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
+										<input type="number" id="salesRate" placeholder="Rate" min="0" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
 									</div>
 									<div class="col-xs-4">
 										<input type="text" min="0" class="form-control" ref="quantity" v-model="selectedProduct.quantity" placeholder="Quantity" v-on:input="productTotal" required>
@@ -224,7 +217,6 @@
 							<th v-if="sales.salesId > 0" style="color:#000;">Is Exchange</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="color:#000;">Color</th>
 							<th style="color:#000;">Size</th>
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
@@ -240,7 +232,6 @@
 							</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.color }}</td>
 							<td>{{ product.size }}</td>
 							<td>{{ product.quantity }}</td>
 							<td>{{ product.salesRate }}</td>
@@ -253,12 +244,12 @@
 						</tr>
 
 						<tr style="font-weight: bold;">
-							<td colspan="7">Note</td>
+							<td colspan="6">Note</td>
 							<td colspan="3">Total</td>
 						</tr>
 
 						<tr>
-							<td colspan="7"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
+							<td colspan="6"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
 							<td colspan="3" style="padding-top: 15px;font-size:18px;">{{ sales.total }}</td>
 						</tr>
 					</tbody>
@@ -342,11 +333,11 @@
 											<div class="form-group">
 												<label class="col-xs-12 control-label no-padding-right">Discount Persent</label>
 
-												<div class="col-xs-4">
+												<div class="col-xs-4 no-padding-right">
 													<input type="number" id="discountPercent" class="form-control" v-model="discountPercent" v-on:input="calculateTotal" />
 												</div>
 
-												<label class="col-xs-1 control-label no-padding-right">%</label>
+												<label class="col-xs-1 control-label no-padding-left">%</label>
 
 												<div class="col-xs-7">
 													<input type="number" id="discount" class="form-control" v-model="sales.discount" v-on:input="calculateTotal" />
@@ -435,33 +426,27 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Bank
-													Paid</label>
-												<div class="col-xs-12">
-													<input type="number" id="bankPaid" class="form-control" v-model="sales.bankPaid" v-on:input="calculateTotal" />
+												<div class="col-xs-2">
+													<input type="checkbox" id="bankStatus" v-model="sales.bankStatus" />
 												</div>
+												<label class="col-xs-10 control-label no-padding-right" for="bankStatus">Multiple Bank</label>
 											</div>
 										</td>
 									</tr>
 
-									<tr v-if="sales.bankPaid > 0">
+									<tr v-if="banks.length > 0">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Bank
-													Account</label>
 												<div class="col-xs-12">
-													<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
-												</div>
-											</div>
-										</td>
-									</tr>
-
-									<tr v-if="sales.bankPaid > 0">
-										<td>
-											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Last 4digit</label>
-												<div class="col-xs-12">
-													<input type="number" class="form-control" id="bankDigit" v-model="sales.bankDigit" />
+													<table class="border" style="width: 100%;">
+														<tr v-for="(item, index) in banks" :key="index">
+															<td>{{index + 1}}</td>
+															<td>{{item.bank_name}}</td>
+															<td>{{item.bankDigit}}</td>
+															<td>{{item.amount}}</td>
+															<td><i @click="removeBank(index)" class="fa fa-trash"></i></td>
+														</tr>
+													</table>
 												</div>
 											</div>
 										</td>
@@ -502,6 +487,61 @@
 			</div>
 		</div>
 	</div>
+
+	<div v-if="sales.bankStatus == true" class="card" style="position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;">
+		<div class="card-header" style="display: flex;justify-content: space-between;align-items: center;border-bottom: 1px dashed gray;">
+			<div class="card-title">
+				Multiple Bank
+			</div>
+			<button type="button" @click="sales.bankStatus = !sales.bankStatus" style="margin-bottom: 5px;">X</button>
+		</div>
+		<div class="card-body">
+			<div style="margin-top: 5px;">
+				<div class="row">
+					<div class="col-md-5">
+						<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
+					</div>
+					<div class="col-md-3 no-padding-left">
+						<input type="text" placeholder="last digit" v-model="bankDigit" style="width: 110px;padding: 2px 5px;">
+					</div>
+					<div class="col-md-2 no-padding-right">
+						<input type="number" step="0.01" min="0" v-model="bankAmount" style="width: 80px;padding: 2px 5px;">
+					</div>
+					<div class="col-md-1">
+						<button type="button" @click="bankAdd"><i class="fa fa-plus"></i></button>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<table v-if="banks.length > 0" border="1" style="width: 100%;">
+				<thead>
+					<tr>
+						<th>Sl</th>
+						<th>Bank Name</th>
+						<th>LastDigit</th>
+						<th>Amount</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(item, index) in banks" :key="index">
+						<td>{{index + 1}}</td>
+						<td>{{item.bank_name}}</td>
+						<td>{{item.bankDigit}}</td>
+						<td>{{item.amount}}</td>
+						<td>
+							<i @click="removeBank(index)" class="fa fa-trash"></i>
+						</td>
+					</tr>
+					<tr>
+						<th colspan="3" class="text-center">Total</th>
+						<th>{{sales.bankPaid}}</th>
+						<th></th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 
 <script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
@@ -540,7 +580,7 @@
 					exchangeTotal: 0,
 					returnAmount: 0,
 					takeAmount: 0,
-					bankDigit: '',
+					bankStatus: false,
 				},
 				vatPercent: 0,
 				discountPercent: 0,
@@ -576,8 +616,6 @@
 					vat: 0.00,
 					total: 0.00
 				},
-				colors: [],
-				selectedColor: null,
 				sizes: [],
 				selectedSize: null,
 				accounts: [],
@@ -592,6 +630,10 @@
 				saleOnProgress: false,
 				sales_due_on_update: 0,
 				exchanges: [],
+
+				banks: [],
+				bankAmount: 0,
+				bankDigit: "",
 				userType: '<?php echo $this->session->userdata("accountType"); ?>'
 			}
 		},
@@ -670,17 +712,10 @@
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_SellingPrice)).toFixed(2);
 			},
-			getProductColors() {
-				axios.post('/get_product_color', {
-					productId: this.selectedProduct.Product_SlNo
-				}).then(res => {
-					this.colors = res.data;
-				})
-			},
+
 			getProductSizes() {
 				axios.post('/get_product_size', {
 						productId: this.selectedProduct.Product_SlNo,
-						colorId: this.selectedColor.color_id
 					})
 					.then(res => {
 						this.sizes = res.data;
@@ -747,32 +782,14 @@
 
 					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
 				}
-				this.selectedColor = null;
 				this.selectedSize = null;
-				this.getProductColors();
+				this.getProductSizes();
 			},
-			async productColorChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.sales.isService == 'false') {
-					await axios.post('/get_product_color_stock', {
-							productId: this.selectedProduct.Product_SlNo,
-							colorId: this.selectedColor.color_id
-						})
-						.then(res => {
-							this.productStock = res.data.reduce((pre, st) => {
-								return pre + +st.stock
-							}, 0);
-						})
 
-					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
-					this.selectedSize = null;
-					this.getProductSizes();
-				}
-			},
 			async productSizeChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null && this.selectedSize != null && this.sales.isService == 'false') {
+				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null && this.sales.isService == 'false') {
 					await axios.post('/get_product_size_stock', {
 							productId: this.selectedProduct.Product_SlNo,
-							colorId: this.selectedColor.color_id,
 							sizeId: this.selectedSize.size_id
 						})
 						.then(res => {
@@ -780,6 +797,8 @@
 						})
 
 					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
+					this.selectedProduct.quantity = 1
+					this.productTotal();
 					this.$refs.quantity.focus();
 				}
 			},
@@ -793,8 +812,6 @@
 					productCode: this.selectedProduct.Product_Code,
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					name: this.selectedProduct.Product_Name,
-					colorId: this.selectedColor ? this.selectedColor.color_id : '',
-					color: this.selectedColor ? this.selectedColor.color_name : '',
 					sizeId: this.selectedSize ? this.selectedSize.size_id : '',
 					size: this.selectedSize ? this.selectedSize.size_name : '',
 					salesRate: this.selectedProduct.Product_SellingPrice,
@@ -825,7 +842,7 @@
 					return;
 				}
 
-				let cartInd = this.cart.findIndex(p => p.productId == product.productId && p.colorId == product.colorId && p.sizeId == product.sizeId);
+				let cartInd = this.cart.findIndex(p => p.productId == product.productId && p.sizeId == product.sizeId);
 				if (cartInd > -1) {
 					this.cart.splice(cartInd, 1);
 				}
@@ -850,7 +867,6 @@
 					vat: 0.00,
 					total: 0.00
 				}
-				this.selectedColor = null;
 				this.selectedSize = null;
 				this.productStock = '';
 				this.productStockText = '';
@@ -907,29 +923,17 @@
 					return;
 				}
 
-				if (this.sales.bankPaid > 0 && this.account.account_id == '') {
-					alert('Select a Bank Account');
-					return;
+				if (this.sales.salesId == 0) {
+					if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) != parseFloat(this.sales.total))) {
+						alert('Payment amount and total amount is not equal');
+						return;
+					}
+					if (this.selectedCustomer.Customer_Type != 'G') {
+						await this.getCustomerDue();
+					}
 				}
 
-				if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) != parseFloat(this.sales.total))) {
-					alert('Payment amount and total amount is not equal');
-					return;
-				}
-
-				if ((this.sales.bankDigit == '' || this.sales.bankDigit == null) && this.sales.bankPaid > 0) {
-					alert("Bank digit number empty");
-					return
-				}
-				if (this.sales.bankDigit.toString().length <= 3 && this.sales.bankPaid > 0) {
-					alert("Must be 4digit");
-					return
-				}
-
-				this.sales.account_id = parseFloat(this.sales.bankPaid) > 0 ? this.account.account_id : ''
 				this.sales.paid = parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
-
-				await this.getCustomerDue();
 
 				let url = "/add_order";
 				if (this.sales.salesId != 0) {
@@ -954,7 +958,8 @@
 
 				let data = {
 					sales: this.sales,
-					cart: this.cart
+					cart: this.cart,
+					banks: this.banks
 				}
 
 				if (this.selectedCustomer.Customer_Type == 'G' || this.selectedCustomer.Customer_Type == 'New') {
@@ -1000,7 +1005,6 @@
 					this.sales.paid = sales.SaleMaster_PaidAmount;
 					this.sales.cashPaid = sales.SaleMaster_cashPaid;
 					this.sales.bankPaid = sales.SaleMaster_bankPaid;
-					this.sales.account_id = sales.account_id;
 					this.sales.previousDue = sales.SaleMaster_Previous_Due;
 					this.sales.due = sales.SaleMaster_DueAmount;
 					this.sales.takeAmount = sales.takeAmount;
@@ -1020,14 +1024,6 @@
 						Employee_Name: sales.Employee_Name
 					}
 
-					if (sales.account_id != 0 && sales.account_id != null) {
-						this.account = {
-							account_id: sales.account_id,
-							account_name: sales.account_name,
-							display_text: sales.account_name + ' - ' + sales.account_number + '(' + sales.bank_name + ')'
-						}
-					}
-
 					this.selectedCustomer = {
 						Customer_SlNo: sales.SalseCustomer_IDNo,
 						Customer_Code: sales.Customer_Code,
@@ -1042,8 +1038,6 @@
 						let cartProduct = {
 							productCode: product.Product_Code,
 							productId: product.Product_IDNo,
-							colorId: product.Product_colorId,
-							color: product.color_name,
 							size: product.size_name,
 							sizeId: product.Product_sizeId,
 							categoryName: product.ProductCategory_Name,
@@ -1059,11 +1053,68 @@
 						this.cart.push(cartProduct);
 					})
 
+					if (r.banks.length > 0) {
+						r.banks.forEach(b => {
+							let bank = {
+								account_id: b.account_id,
+								account_name: b.account_name,
+								bank_name: b.bank_name,
+								amount: b.amount,
+								bankDigit: b.lastDigit
+							}
+
+							this.banks.push(bank);
+						})
+
+					}
+
 					this.exchanges = r.exchanges
 
 					let gCustomerInd = this.customers.findIndex(c => c.Customer_Type == 'G');
 					this.customers.splice(gCustomerInd, 1);
 				})
+			},
+
+			bankAdd() {
+				if (this.account == null) {
+					alert("Select Bank Account");
+					return
+				}
+				if (this.bankAmount == 0) {
+					alert("Amount field is required");
+					return
+				}
+
+				let bank = {
+					account_id: this.account.account_id,
+					account_name: this.account.account_name,
+					bank_name: this.account.bank_name,
+					amount: this.bankAmount,
+					bankDigit: this.bankDigit
+				}
+
+				let cartInd = this.banks.findIndex(p => p.account_id == bank.account_id);
+				if (cartInd > -1) {
+					this.banks.splice(cartInd, 1);
+				}
+
+				this.banks.push(bank);
+				this.account = null;
+				this.bankAmount = 0;
+				this.bankDigit = "";
+
+				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
+					return acc + +pre.amount
+				}, 0).toFixed(2);
+				this.calculateTotal();
+			},
+
+			removeBank(ind) {
+				this.banks.splice(ind, 1);
+				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
+					return acc + +pre.amount
+				}, 0).toFixed(2);
+				this.calculateTotal();
 			},
 		},
 	})

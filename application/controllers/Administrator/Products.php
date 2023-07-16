@@ -238,6 +238,7 @@ class Products extends CI_Controller
         $products = $this->db->query("
             select
                 p.*,
+                0 as quantity,
                 concat(p.Product_Name, ' - ', p.Product_Code) as display_text,
                 pc.ProductCategory_Name,
                 br.brand_name,
@@ -968,9 +969,13 @@ class Products extends CI_Controller
         if (isset($data->sizeId) && $data->sizeId != '') {
             $clauses .= "and pc.size_id = '$data->sizeId'";
         }
+        if (isset($data->productId) && $data->productId != '') {
+            $clauses .= "and p.Product_SlNo = '$data->productId'";
+        }
 
         $stock = $this->db->query("SELECT
                                 pc.stock,
+                                p.Product_SlNo,
                                 p.Product_Code,
                                 p.Product_Name,
                                 p.Product_Purchase_Rate,
@@ -979,10 +984,10 @@ class Products extends CI_Controller
                                 s.size_name,
                                 (pc.stock * p.Product_SellingPrice) as stock_value
                             FROM tbl_color_size pc
-                            LEFT JOIN tbl_product p ON p.Product_SlNo = pc.product_id
+                            JOIN tbl_product p ON p.Product_SlNo = pc.product_id
                             LEFT JOIN tbl_color c ON c.color_SiNo = pc.color_id
                             LEFT JOIN tbl_size s ON s.size_SiNo = pc.size_id
-                            WHERE pc.branch_id = ? $clauses", $this->brunch)->result();
+                            WHERE pc.status = 'a' and pc.branch_id = ? $clauses", $this->brunch)->result();
 
         $res['stock'] = $stock;
         $res['totalValue'] = array_sum(

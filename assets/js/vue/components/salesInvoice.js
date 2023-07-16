@@ -155,7 +155,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                     </div>
                 </div>
                 <div class="row">
-                <div class="col-xs-12">
+                    <div class="col-xs-12">
                         <!--
                         <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }}<br><br>
                         <strong>Note: </strong>

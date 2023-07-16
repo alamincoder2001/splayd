@@ -49,19 +49,13 @@
 				</div>
 			</div>
 	
-			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'product'">
+			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'product' || selectedSearchType.value == 'size'">
 				<div class="col-md-2">
 					<v-select v-bind:options="products" v-model="selectedProduct" label="display_text"></v-select>
 				</div>
 			</div>
 
-			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'sizeColor'">
-				<div class="col-md-2">
-					<v-select v-bind:options="colors" v-model="selectedColor" label="color_name"></v-select>
-				</div>
-			</div>
-
-			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'sizeColor'">
+			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'size'">
 				<div class="col-md-2">
 					<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name"></v-select>
 				</div>
@@ -123,12 +117,11 @@
 					</tfoot>
 				</table>
 
-				<table class="table table-bordered" v-if="searchType == 'sizeColor'" style="display:none" v-bind:style="{display: searchType == 'sizeColor' ? '' : 'none'}">
+				<table class="table table-bordered" v-if="searchType == 'size'" style="display:none" v-bind:style="{display: searchType == 'size' ? '' : 'none'}">
 					<thead>
 						<tr>
 							<th>Product Id</th>
 							<th>Product Name</th>
-							<th>Color</th>
 							<th>Size</th>
 							<th>Current Quantity</th>
 							<th>Rate</th>
@@ -139,7 +132,6 @@
 						<tr v-for="product in stock">
 							<td>{{ product.Product_Code }}</td>
 							<td>{{ product.Product_Name }}</td>
-							<td>{{ product.color_name }}</td>
 							<td>{{ product.size_name }}</td>
 							<td> {{ product.stock }} </td>
 							<td>{{ product.Product_SellingPrice | decimal }}</td>
@@ -148,13 +140,13 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan="6" style="text-align:right;">Total Stock Value</th>
+							<th colspan="5" style="text-align:right;">Total Stock Value</th>
 							<th>{{ totalStockValue | decimal }}</th>
 						</tr>
 					</tfoot>
 				</table>
 
-				<table class="table table-bordered" v-if="(searchType != 'current' && searchType != 'sizeColor') && searchType != null" style="display:none;" v-bind:style="{display: (searchType != 'current' && searchType != 'sizeColor') && searchType != null ? '' : 'none'}">
+				<table class="table table-bordered" v-if="(searchType != 'current' && searchType != 'size') && searchType != null" style="display:none;" v-bind:style="{display: (searchType != 'current' && searchType != 'size') && searchType != null ? '' : 'none'}">
 					<thead>
 						<tr>
 							<th>Product Id</th>
@@ -218,7 +210,7 @@
 					{text: 'Total Stock', value: 'total'},
 					{text: 'Category Wise Stock', value: 'category'},
 					{text: 'Product Wise Stock', value: 'product'},
-					{text: 'SizeColor Wise Stock', value: 'sizeColor'},
+					{text: 'Size Wise Stock', value: 'size'},
 					//{text: 'Brand Wise Stock', value: 'brand'}
 				],
 				selectedSearchType: {
@@ -227,8 +219,6 @@
 				},
 				searchType: null,
 				date: moment().format('YYYY-MM-DD'),
-				colors: [],
-				selectedColor: null,
 				sizes: [],
 				selectedSize: null,
 				categories: [],
@@ -257,9 +247,9 @@
 
 				if(this.searchType == 'current'){
 					url = '/get_current_stock';
-				}else if(this.searchType == 'sizeColor'){
+				}else if(this.searchType == 'size'){
 					url = '/get_sizewise_stock';
-					parameters.colorId = this.selectedColor == null ? '': this.selectedColor.color_SiNo;
+					parameters.productId = this.selectedProduct == null ? '': this.selectedProduct.Product_SlNo;
 					parameters.sizeId = this.selectedSize == null ? '': this.selectedSize.size_SiNo;
 				}else {
 					url = '/get_total_stock';
@@ -296,7 +286,7 @@
 				axios.post(url, parameters).then(res => {
 					if(this.searchType == 'current'){
 						this.stock = res.data.stock.filter((pro)=> pro.current_quantity > 0);
-					}else if(this.searchType == 'sizeColor'){
+					}else if(this.searchType == 'size'){
 						this.stock = res.data.stock.filter((pro)=> pro.stock > 0);
 					}
 					else{
@@ -308,7 +298,9 @@
 			onChangeSearchType(){
 				this.products = [];
 				this.sizes    = [];
-				this.colors   = [];
+				this.selectedProduct = null
+				this.selectedSize = null
+
 				this.stock = [];
 				if(this.selectedSearchType.value == 'category' && this.categories.length == 0){
 					this.getCategories();
@@ -316,8 +308,8 @@
 					this.getBrands();
 				} else if(this.selectedSearchType.value == 'product' && this.products.length == 0){
 					this.getProducts();
-				} else if(this.selectedSearchType.value == 'sizeColor'){
-					this.getProductColor();
+				} else if(this.selectedSearchType.value == 'size'){
+					this.getProducts();
 					this.getProductSize();
 				}
 			},
@@ -334,11 +326,6 @@
 			getBrands(){
 				axios.get('/get_brands').then(res => {
 					this.brands = res.data;
-				})
-			},
-			getProductColor(){
-				axios.get('/get_colors').then(res => {
-					this.colors = res.data;
 				})
 			},
 			getProductSize(){
