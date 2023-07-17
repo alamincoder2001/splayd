@@ -335,10 +335,11 @@ class Model_Table extends CI_Model{
             select 
                 ba.*,
                 (
-                    select ifnull(sum(sm.SaleMaster_bankPaid), 0) from tbl_salesmaster sm
+                    select ifnull(sum(sma.amount), 0) from tbl_salesmaster_account sma
+                    left join tbl_salesmaster sm on sm.SaleMaster_SlNo = sma.salesId
                     where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
-                    and sm.Status = 'a' and sm.SaleMaster_bankPaid > 0
-                    and sm.account_id = ba.account_id
+                    and sm.Status = 'a'
+                    and sma.account_id = ba.account_id
                     " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
                 ) as received_sales,
                 (
