@@ -1253,10 +1253,10 @@ class Account extends CI_Controller {
                     'h' as sequence,
                     sm.SaleMaster_SlNo as id,
                     concat('Product Sales- ', c.Customer_Name, ' (Invoice: ', sm.SaleMaster_InvoiceNo, ')') as description, 
-                    sm.account_id,
+                    sma.account_id,
                     sm.SaleMaster_SaleDate as transaction_date,
                     'deposit' as transaction_type,
-                    sm.SaleMaster_bankPaid as deposit,
+                    sma.amount as deposit,
                     0.00 as withdraw,
                     sm.SaleMaster_Description as note,
                     ac.account_name,
@@ -1264,12 +1264,12 @@ class Account extends CI_Controller {
                     ac.bank_name,
                     ac.branch_name,
                     0.00 as balance
-                from tbl_salesmaster sm
-                join tbl_bank_accounts ac on ac.account_id = sm.account_id
+                from tbl_salesmaster_account sma
+                join tbl_salesmaster sm on sm.SaleMaster_SlNo = sma.salesId
+                join tbl_bank_accounts ac on ac.account_id = sma.account_id
                 join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
-                where sm.account_id is not null
+                where sma.account_id is not null
                 and sm.Status = 'a'
-                and sm.SaleMaster_bankPaid > 0
                 and sm.SaleMaster_branchid = " . $this->session->userdata('BRANCHid') . "
             ) as tbl
             where 1 = 1 $clauses
