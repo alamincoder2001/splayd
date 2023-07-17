@@ -472,41 +472,6 @@
 						this.units = res.data;
 					})
 				},
-				// addToCart() {
-				// 	let sizeColor = {
-				// 		colorId: this.selectedColor.color_SiNo,
-				// 		colorName: this.selectedColor.color_name,
-				// 		sizeId: this.selectedSize.size_SiNo,
-				// 		sizeName: this.selectedSize.size_name,
-				// 	}
-
-				// 	if ((sizeColor.colorId == '' || sizeColor.colorId == null) || (sizeColor.colorId == '' || sizeColor.colorId == null)) {
-				// 		alert('select color or size');
-				// 		return;
-				// 	}
-
-				// 	let cartInd = this.cart.findIndex(c => c.colorId == sizeColor.colorId && c.sizeId == sizeColor.sizeId);
-				// 	if (cartInd > -1) {
-				// 		this.cart.splice(cartInd, 1);
-				// 	}
-
-				// 	this.cart.unshift(sizeColor);
-				// 	this.clearSizeColor();
-				// 	$('#myModal').modal('hide');
-				// },
-				// removeFromCart(ind) {
-				// 	this.cart.splice(ind, 1);
-				// },
-				// clearSizeColor() {
-				// 	this.selectedColor = {
-				// 		color_SiNo: '',
-				// 		color_name: ''
-				// 	}
-				// 	this.selectedSize = {
-				// 		size_SiNo: '',
-				// 		size_name: ''
-				// 	}
-				// },
 
 				getProducts() {
 					axios.get('/get_products').then(res => {
