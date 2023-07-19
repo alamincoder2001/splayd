@@ -25,7 +25,8 @@
             $monthlyRecord = [];
             $year = date('Y');
             $month = date('m');
-            $dayNumber = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $dayNumber = date('t', mktime(0, 0, 0, $month, 1, $year));
+            // $dayNumber = cal_days_in_month(CAL_GREGORIAN, $month, $year);
             for($i = 1; $i <= $dayNumber; $i++){
                 $date = $year . '-' . $month . '-'. sprintf("%02d", $i);
                 $query = $this->db->query("
