@@ -18,7 +18,7 @@
                                 <th>Product Name</th>
                                 <th>Category</th>
                                 <th>Sale Price</th>
-                                <th>Action</th>
+                                <!--<th>Action</th>-->
                             </tr>
                         </thead>
                         <tbody>
@@ -28,9 +28,9 @@
                                 <td>{{ product.Product_Name }}</td>
                                 <td>{{ product.ProductCategory_Name }}</td>
                                 <td style="text-align:right;">{{ product.Product_SellingPrice }}</td>
-                                <td>
-                                    <button type="button" class="button" data-toggle="modal" data-target="#colorSize" @click="colorAndSize(product)"><i class="fa fa-eye"></i></button>
-                                </td>
+                                <!--<td>-->
+                                <!--    <button type="button" class="button" data-toggle="modal" data-target="#colorSize" @click="colorAndSize(product)"><i class="fa fa-eye"></i></button>-->
+                                <!--</td>-->
                             </tr>
                         </tbody>
                     </table>

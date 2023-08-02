@@ -166,9 +166,11 @@
                                             <button class="button btn-info" @click="editTransaction(row)">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <?php if($this->session->userdata('accountType') != 'e'){?>
                                             <button class="button active-button" @click="removeTransaction(row)">
                                                 <i class="fa fa-trash"></i>
                                             </button>
+                                            <?php }?>
                                             <?php }?>
                                         </td>
                                     </tr>

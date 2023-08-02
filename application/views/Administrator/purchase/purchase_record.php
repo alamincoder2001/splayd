@@ -137,6 +137,7 @@
 				<table class="record-table" v-if="(searchTypesForRecord.includes(searchType)) && recordType == 'with_details'" style="display:none" v-bind:style="{display: (searchTypesForRecord.includes(searchType)) && recordType == 'with_details' ? '' : 'none'}">
 					<thead>
 						<tr>
+							<th>Sl.</th>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Supplier Name</th>
@@ -148,8 +149,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<template v-for="purchase in purchases">
+						<template v-for="(purchase, sl) in purchases" :key="sl">
 							<tr>
+								<td>{{ sl+1 }}</td>
 								<td>{{ purchase.PurchaseMaster_InvoiceNo }}</td>
 								<td>{{ purchase.PurchaseMaster_OrderDate }}</td>
 								<td>{{ purchase.Supplier_Name }}</td>
@@ -161,12 +163,14 @@
 									<a href="" title="Purchase Invoice" v-bind:href="`/purchase_invoice_print/${purchase.PurchaseMaster_SlNo}`" target="_blank"><i class="fa fa-file-text"></i></a>
 									<?php if ($this->session->userdata('accountType') != 'u') { ?>
 										<a href="javascript:" title="Edit Purchase" @click="checkReturnAndEdit(purchase)"><i class="fa fa-edit"></i></a>
+										<?php if($this->session->userdata('accountType') != 'e'){?>
 										<a href="" title="Delete Purchase" @click.prevent="deletePurchase(purchase.PurchaseMaster_SlNo)"><i class="fa fa-trash"></i></a>
+									<?php } ?>
 									<?php } ?>
 								</td>
 							</tr>
 							<tr v-for="(product, sl) in purchase.purchaseDetails.slice(1)">
-								<td colspan="3" v-bind:rowspan="purchase.purchaseDetails.length - 1" v-if="sl == 0"></td>
+								<td colspan="4" v-bind:rowspan="purchase.purchaseDetails.length - 1" v-if="sl == 0"></td>
 								<td>{{ product.Product_Name }}</td>
 								<td style="text-align:right;">{{ product.PurchaseDetails_Rate }}</td>
 								<td style="text-align:center;">{{ product.PurchaseDetails_TotalQuantity }}</td>
@@ -174,7 +178,7 @@
 								<td></td>
 							</tr>
 							<tr style="font-weight:bold;">
-								<td colspan="5" style="font-weight:normal;"><strong>Note: </strong>{{ purchase.PurchaseMaster_Description }}</td>
+								<td colspan="6" style="font-weight:normal;"><strong>Note: </strong>{{ purchase.PurchaseMaster_Description }}</td>
 								<td style="text-align:center;">Total Quantity<br>{{ purchase.purchaseDetails.reduce((prev, curr) => {return prev + parseFloat(curr.PurchaseDetails_TotalQuantity)}, 0) }}</td>
 								<td style="text-align:right;">
 									Total: {{ purchase.PurchaseMaster_TotalAmount }}<br>
@@ -190,6 +194,7 @@
 				<table class="record-table" v-if="(searchTypesForRecord.includes(searchType)) && recordType == 'without_details'" style="display:none" v-bind:style="{display: (searchTypesForRecord.includes(searchType)) && recordType == 'without_details' ? '' : 'none'}">
 					<thead>
 						<tr>
+							<th>Sl.</th>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Supplier Name</th>
@@ -205,7 +210,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="purchase in purchases">
+						<tr v-for="(purchase, sl) in purchases" :key="sl">
+							<td>{{ sl+1 }}</td>
 							<td>{{ purchase.PurchaseMaster_InvoiceNo }}</td>
 							<td>{{ purchase.PurchaseMaster_OrderDate }}</td>
 							<td>{{ purchase.Supplier_Name }}</td>
@@ -221,14 +227,16 @@
 								<a href="" title="Purchase Invoice" v-bind:href="`/purchase_invoice_print/${purchase.PurchaseMaster_SlNo}`" target="_blank"><i class="fa fa-file-text"></i></a>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<a href="javascript:" title="Edit Purchase" @click="checkReturnAndEdit(purchase)"><i class="fa fa-edit"></i></a>
+									<?php if ($this->session->userdata('accountType') != 'e') { ?>
 									<a href="" title="Delete Purchase" @click.prevent="deletePurchase(purchase.PurchaseMaster_SlNo)"><i class="fa fa-trash"></i></a>
+								<?php } ?>
 								<?php } ?>
 							</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr style="font-weight:bold;">
-							<td colspan="3" style="text-align:right;">Total</td>
+							<td colspan="4" style="text-align:right;">Total</td>
 							<td style="text-align:right;">{{ purchases.reduce((prev, curr)=>{return prev + parseFloat(curr.PurchaseMaster_SubTotalAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ purchases.reduce((prev, curr)=>{return prev + parseFloat(curr.PurchaseMaster_Tax)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ purchases.reduce((prev, curr)=>{return prev + parseFloat(curr.PurchaseMaster_DiscountAmount)}, 0).toFixed(2) }}</td>
@@ -245,6 +253,7 @@
 				<table class="record-table" v-if="searchTypesForDetails.includes(searchType)" style="display:none;" v-bind:style="{display: searchTypesForDetails.includes(searchType) ? '' : 'none'}">
 					<thead>
 						<tr>
+							<th>Sl.</th>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Supplier Name</th>
@@ -255,7 +264,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="purchase in purchases">
+						<tr v-for="(purchase, sl) in purchases" :key="sl">
+							<td>{{ sl+1 }}</td>
 							<td>{{ purchase.PurchaseMaster_InvoiceNo }}</td>
 							<td>{{ purchase.PurchaseMaster_OrderDate }}</td>
 							<td>{{ purchase.Supplier_Name }}</td>
@@ -269,7 +279,7 @@
 					</tbody>
 					<tfoot>
 						<tr style="font-weight:bold;">
-							<td colspan="5" style="text-align:right;">Total Quantity</td>
+							<td colspan="6" style="text-align:right;">Total Quantity</td>
 							<td style="text-align:right;">{{ purchases.reduce((prev, curr) => { return prev + parseFloat(curr.PurchaseDetails_TotalQuantity)}, 0) }}</td>
 							<td></td>
 						</tr>

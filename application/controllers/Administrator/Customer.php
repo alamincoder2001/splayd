@@ -47,6 +47,7 @@ class Customer extends CI_Controller
         if(isset($data->customerType) && $data->customerType != null){
             $customerTypeClause = " and Customer_Type = '$data->customerType'";
         }
+        
         $customers = $this->db->query("
             select
                 c.*,
@@ -55,7 +56,7 @@ class Customer extends CI_Controller
             from tbl_customer c
             left join tbl_district d on d.District_SlNo = c.area_ID
             where c.status = 'a'
-            and c.Customer_Type != 'G'
+            " . (isset($data->type) && $data->type != null ? "" : " and c.Customer_Type != 'G'") . "
             and (c.Customer_brunchid = ? or c.Customer_brunchid = 0)
             $customerTypeClause
             order by c.Customer_SlNo desc

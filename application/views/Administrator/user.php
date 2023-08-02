@@ -10,27 +10,27 @@
 <div class="col-xs-12">
 	<!-- PAGE CONTENT BEGINS -->
 	<div class="form-horizontal">
-	<div class="col-sm-6">
+	<div class="col-xs-12 col-sm-6">
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="txtFirstName"> Full Name </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="txtFirstName"> Full Name </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" name="txtFirstName" id="txtFirstName" placeholder="Full Name" value="" class="form-control" />
 			</div>
 		</div>
 		
 	<div class="form-group">
-			<label class="col-sm-4 control-label" for="user_email"> User Email </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="user_email"> User Email </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="email" name="user_email" id="user_email" onchange="check_email()" placeholder="User Email" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="Brunch"> Select Branch </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="Brunch"> Select Branch </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<select class="chosen-select form-control" name="Brunch" id="Brunch" data-placeholder="Choose a Brunch...">
 					<option value="">  </option>
 					
@@ -46,9 +46,9 @@
 		</div> 
 		
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="type"> User Type </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="type"> User Type </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<select class="chosen-select form-control" name="type" id="type" data-placeholder="Choose a User Type...">
 					<option value=""></option>
 					<option value="a">Admin</option>
@@ -61,38 +61,38 @@
 		
 	</div>
 		
-	<div class="col-sm-6">
+	<div class="col-xs-12 col-sm-6">
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="username"> User name </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="username"> User name </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="username" name="username" onchange="check_username()" placeholder="User name" class="form-control" />
 				<div id="usermes" class="col-sm-12"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="Password"> Password </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="Password"> Password </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="password" id="assword" name="Password" placeholder="Password" class="form-control" />
 				<div id="usermes" class="col-sm-12"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="rePassword"> Re-Password </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="rePassword"> Re-Password </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="password" id="rePassword" name="rePassword" placeholder="Re-Password" onchange="password()" class="form-control" />
 				<div id="mes" class="col-sm-12"></div>
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for=""> </label>
+			<label class="col-xs-4 col-sm-4 control-label" for=""> </label>
 			<label class="col-sm-1 control-label"></label>
-			<div class="col-sm-6">
+			<div class="col-xs-7 col-sm-6">
 				<button type="button" onclick="submit()" name="btnSubmit" title="Save" class="btn btn-sm btn-success pull-left">
 						Save
 						<i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>

@@ -51,21 +51,21 @@
 </style>
 <div id="cashTransaction">
 	<div class="row" style="border-bottom: 1px solid #ccc;padding-bottom: 15px;margin-bottom: 15px;">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<form @submit.prevent="addTransaction">
 				<div class="row">
-					<div class="col-md-5 col-md-offset-1">
+					<div class="col-xs-12 col-md-5 col-md-offset-1">
 						<div class="form-group">
-							<label class="col-md-4 control-label">Transaction Id</label>
-							<label class="col-md-1">:</label>
-							<div class="col-md-7">
+							<label class="col-xs-4 col-md-4 control-label">Transaction Id</label>
+							<label class="col-xs-1 col-md-1">:</label>
+							<div class="col-xs-7 col-md-7">
 								<input type="text" class="form-control" v-model="transaction.Tr_Id" readonly>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-4 control-label">Transaction Type</label>
-							<label class="col-md-1">:</label>
-							<div class="col-md-7">
+							<label class="col-xs-4 col-md-4 control-label">Transaction</label>
+							<label class="col-xs-1 col-md-1">:</label>
+							<div class="col-xs-7 col-md-7">
 								<select class="form-control" required v-model="transaction.Tr_Type" @change="onChangeTransactionType">
 									<option value=""></option>
 									<option value="In Cash">Cash Receive</option>
@@ -74,13 +74,13 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-4 control-label">Account</label>
-							<label class="col-md-1">:</label>
-							<div class="col-md-6 col-xs-11">
+							<label class="col-xs-4 col-md-4 control-label">Account</label>
+							<label class="col-xs-1 col-md-1">:</label>
+							<div class="col-xs-6 col-md-6">
 								<select class="form-control" v-if="accounts.length == 0"></select>
 								<v-select v-bind:options="accounts" v-model="selectedAccount" label="Acc_Name" v-if="accounts.length > 0"></v-select>
 							</div>
-							<div class="col-xs-1" style="padding-left:0;margin-left: -3px;">
+							<div class="col-xs-1 col-md-1" style="padding-left:0;margin-left: -3px;">
 								<a href="/account" target="_blank" class="add-button"><i class="fa fa-plus"></i></a>
 							</div>
 						</div>
@@ -88,23 +88,23 @@
 
 					<div class="col-md-5">
 						<div class="form-group">
-							<label class="col-md-4 control-label">Date</label>
-							<label class="col-md-1">:</label>
-							<div class="col-md-7">
+							<label class="col-xs-4 col-md-4 control-label">Date</label>
+							<label class="col-xs-1 col-md-1">:</label>
+							<div class="col-xs-7 col-md-7">
 								<input type="date" class="form-control" required v-model="transaction.Tr_date" @change="getTransactions" v-bind:disabled="userType == 'u' ? true : false">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-4 control-label">Description</label>
-							<label class="col-md-1">:</label>
-							<div class="col-md-7">
+							<label class="col-xs-4 col-md-4 control-label">Description</label>
+							<label class="col-xs-1 col-md-1">:</label>
+							<div class="col-xs-7 col-md-7">
 								<input type="text" class="form-control" v-model="transaction.Tr_Description">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-4 control-label">Amount</label>
-							<label class="col-md-1">:</label>
-							<div class="col-md-7">
+							<label class="col-xs-4 col-md-4 control-label">Amount</label>
+							<label class="col-xs-1 col-md-1">:</label>
+							<div class="col-xs-7 col-md-7">
 								<input type="number" class="form-control" step="0.01" required v-model="transaction.In_Amount" 
 									style="display:none;" 
 									v-if="transaction.Tr_Type == 'In Cash'"
@@ -117,7 +117,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-7 col-md-offset-5">
+							<div class="col-xs-12 col-md-7 col-md-offset-5">
 								<input type="submit" class="btn btn-success btn-sm" value="Save">
 								<input type="button" class="btn btn-danger btn-sm" value="Cancel" @click="resetForm">
 							</div>
@@ -135,7 +135,7 @@
 				<input type="text" class="form-control" v-model="filter" placeholder="Filter">
 			</div>
 		</div>
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<div class="table-responsive">
 				<datatable :columns="columns" :data="transactions" :filter-by="filter" style="margin-bottom: 5px;">
 					<template scope="{ row }">
@@ -152,9 +152,11 @@
 								<button type="button" class="button edit" @click="editTransaction(row)">
 									<i class="fa fa-pencil"></i>
 								</button>
+								<?php if($this->session->userdata('accountType') != 'e'){?>
 								<button type="button" class="button" @click="deleteTransaction(row.Tr_SlNo)">
 									<i class="fa fa-trash"></i>
 								</button>
+								<?php }?>
 								<?php }?>
 							</td>
 						</tr>

@@ -61,33 +61,41 @@
 </style>
 <div id="paymentsRecord">
 	<div class="row" style="border-bottom: 1px solid #ccc;padding: 3px 0;">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<form class="form-inline" id="searchForm" @submit.prevent="getSearchResult">
-				<div class="form-group">
-					<label>Search Type</label>
-					<select class="form-control" v-model="searchType" @change="onChangeSearchType">
-						<option value="">All</option>
-						<option value="month">By Month</option>
-						<option value="employee">By Employee</option>
-					</select>
+				<div class="form-group row">
+					<label class="col-xs-2 col-md-12">Search Type</label>
+					<div class="col-xs-10 col-md-12">
+						<select class="form-control" v-model="searchType" @change="onChangeSearchType">
+							<option value="">All</option>
+							<option value="month">By Month</option>
+							<option value="employee">By Employee</option>
+						</select>
+					</div>
 				</div>
 
-				<div class="form-group" style="display:none;" v-bind:style="{display: searchType == 'employee' && employees.length > 0 ? '' : 'none'}">
-					<label>Employee</label>
-					<v-select v-bind:options="employees" v-model="selectedEmployee" label="Employee_Name"></v-select>
+				<div class="form-group row" style="display:none;" v-bind:style="{display: searchType == 'employee' && employees.length > 0 ? '' : 'none'}">
+					<label class="col-xs-2">Employee</label>
+					<div class="col-xs-10 col-md-12">
+						<v-select v-bind:options="employees" v-model="selectedEmployee" label="Employee_Name"></v-select>
+					</div>
 				</div>
 
-				<div class="form-group" style="display:none;" v-bind:style="{display: searchType == 'month' || searchType == 'employee' ? '' : 'none'}">
-					<label>Month</label>
-					<v-select v-bind:options="months" v-model="selectedMonth" label="month_name"></v-select>
+				<div class="form-group row" style="display:none;" v-bind:style="{display: searchType == 'month' || searchType == 'employee' ? '' : 'none'}">
+					<label class="col-xs-2">Month</label>
+					<div class="col-xs-10 col-md-12">
+						<v-select v-bind:options="months" v-model="selectedMonth" label="month_name"></v-select>
+					</div>
 				</div>
 
-				<div class="form-group" v-bind:style="{display: searchTypesForRecord.includes(searchType) ? '' : 'none'}">
-					<label>Record Type</label>
-					<select class="form-control" v-model="recordType" @change="payments = []">
-						<option value="without_details">Without Details</option>
-						<option value="with_details">With Details</option>
-					</select>
+				<div class="form-group row" v-bind:style="{display: searchTypesForRecord.includes(searchType) ? '' : 'none'}">
+					<label class="col-xs-2 col-md-12">Record Type</label>
+					<div class="col-xs-10 col-md-12">
+						<select class="form-control col-xs-10" v-model="recordType" @change="payments = []">
+							<option value="without_details">Without Details</option>
+							<option value="with_details">With Details</option>
+						</select>
+					</div>
 				</div>
 
 				<div class="form-group" style="margin-top: -5px;">
@@ -163,7 +171,7 @@
                             <td>{{ payment.User_Name }}</td>
                             <td style="text-align:right;">{{ payment.total_payment_amount }}</td>
 							<td style="text-align:center;">
-                                <?php if($this->session->userdata('accountType') != 'u'){?>
+                                <?php if($this->session->userdata('accountType') != 'u' || $this->session->userdata('accountType') != 'e'){?>
                                 <a href="" title="Delete Payment" @click.prevent="deletePayment(payment.id)"><i class="fa fa-trash"></i></a>
                                 <?php }?>
                             </td>

@@ -35,65 +35,65 @@
         <div class="col-md-8">
             <form class="form-horizontal" @submit.prevent="addDamage">
                 <div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Code </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Code </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
                         <input type="text" placeholder="Code" class="form-control" v-model="damage.Damage_InvoiceNo" required readonly/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Date </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Date </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
                         <input type="date" placeholder="Date" class="form-control" v-model="damage.Damage_Date" required/>
                     </div>
 				</div>
 				
                 <div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Product </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Product </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
 						<v-select v-bind:options="products" label="display_text" v-model="selectedProduct" placeholder="Select Product" v-on:input="productOnChange"></v-select>
                     </div>
 				</div>
 				
 				<div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Damage Quantity </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Damage Quantity </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
                         <input type="number" placeholder="Quantity" class="form-control" v-model="damage.DamageDetails_DamageQuantity" required v-on:input="calculateTotal"/>
                     </div>
 				</div>
 
                 <div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Damage Rate </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Damage Rate </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
                         <input type="number" step="0.01" placeholder="Rate" class="form-control" v-model="damage.damage_rate" required v-on:input="calculateTotal"/>
                     </div>
                 </div>
 
 				<div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Damage Amount </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Damage Amount </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
                         <input type="number" placeholder="Amount" class="form-control" v-model="damage.damage_amount" required disabled />
                     </div>
 				</div>
 
                 <div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"> Description </label>
-                    <label class="col-sm-1 control-label no-padding-right">:</label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"> Description </label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+                    <div class="col-xs-7 col-sm-5">
                         <textarea class="form-control" placeholder="Description" v-model="damage.Damage_Description"></textarea>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-6 control-label no-padding-right"></label>
-                    <label class="col-sm-1 control-label no-padding-right"></label>
-                    <div class="col-sm-5">
+                    <label class="col-xs-4 col-sm-6 control-label no-padding-right"></label>
+                    <label class="col-xs-1 col-sm-1 control-label no-padding-right"></label>
+                    <div class="col-xs-7 col-sm-5">
                         <button type="submit" class="btn btn-sm btn-success">
                             Submit
                             <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
@@ -102,18 +102,18 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-xs-4 col-md-4">
             <h1 style="display: none;" v-bind:style="{display: productStock !== '' ? '' : 'none'}">Stock : {{productStock}}</h1>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12 form-inline">
+        <div class="col-xs-12 col-sm-12 form-inline">
             <div class="form-group">
                 <label for="filter" class="sr-only">Filter</label>
                 <input type="text" class="form-control" v-model="filter" placeholder="Filter">
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-xs-12 col-md-12">
             <div class="table-responsive">
                 <datatable :columns="columns" :data="damages" :filter-by="filter">
                     <template scope="{ row }">
@@ -131,9 +131,11 @@
                                 <button type="button" class="button edit" @click="editDamage(row)">
                                     <i class="fa fa-pencil"></i>
                                 </button>
+                                <?php if($this->session->userdata('accountType') != 'e'){?>
                                 <button type="button" class="button" @click="deleteDamage(row.Damage_SlNo)">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                <?php }?>
                                 <?php }?>
                             </td>
                         </tr>

@@ -128,6 +128,8 @@ class Purchase extends CI_Controller
         try{
             $this->db->trans_begin();
             $data = json_decode($this->input->raw_input_stream);
+            echo json_encode($data);
+            return ;
             $purchaseReturn = array(
                 'PurchaseMaster_InvoiceNo' => $data->invoice->PurchaseMaster_InvoiceNo,
                 'Supplier_IDdNo' => $data->invoice->Supplier_SlNo,
@@ -573,7 +575,7 @@ class Purchase extends CI_Controller
                 $purchaseDetails = array(
                     'PurchaseMaster_IDNo' => $purchaseId,
                     'Product_IDNo' => $product->productId,
-                    'Product_sizeId' => $product->sizeId,
+                    // 'Product_sizeId' => $product->sizeId,
                     'PurchaseDetails_TotalQuantity' => $product->quantity,
                     'PurchaseDetails_Rate' => $product->purchaseRate,
                     'PurchaseDetails_TotalAmount' => $product->total,
@@ -605,15 +607,15 @@ class Purchase extends CI_Controller
                 }
 
                 // update color wise product stock
-                $this->db->query("
-                    update tbl_color_size 
-                    set stock = stock + ?
-                    where product_id = ?
-                    and size_id = ? 
-                    and branch_id = ?
-                ",[$product->quantity, $product->productId, $product->sizeId, $this->session->userdata('BRANCHid')]);
+                // $this->db->query("
+                //     update tbl_color_size 
+                //     set stock = stock + ?
+                //     where product_id = ?
+                //     and size_id = ? 
+                //     and branch_id = ?
+                // ",[$product->quantity, $product->productId, $product->sizeId, $this->session->userdata('BRANCHid')]);
 
-                // $this->db->query("update tbl_product set Product_Purchase_Rate = ?, Product_SellingPrice = ? where Product_SlNo = ?", [$product->purchaseRate, $product->salesRate, $product->productId]);
+                $this->db->query("update tbl_product set Product_Purchase_Rate = ?, Product_SellingPrice = ? where Product_SlNo = ?", [$product->purchaseRate, $product->salesRate, $product->productId]);
 
                 $this->db->query("
                     update tbl_product set 
@@ -724,20 +726,20 @@ class Purchase extends CI_Controller
                 ]);
 
                 // update color wise product stock
-                $this->db->query("
-                    update tbl_color_size 
-                    set stock = stock - ?
-                    where product_id = ?
-                    and size_id = ? 
-                    and branch_id = ?
-                ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                // $this->db->query("
+                //     update tbl_color_size 
+                //     set stock = stock - ?
+                //     where product_id = ?
+                //     and size_id = ? 
+                //     and branch_id = ?
+                // ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             foreach($data->cartProducts as $product){
                 $purchaseDetails = array(
                     'PurchaseMaster_IDNo' => $purchaseId,
                     'Product_IDNo' => $product->productId,
-                    'Product_sizeId' => $product->sizeId,
+                    // 'Product_sizeId' => $product->sizeId,
                     'PurchaseDetails_TotalQuantity' => $product->quantity,
                     'PurchaseDetails_Rate' => $product->purchaseRate,
                     'PurchaseDetails_TotalAmount' => $product->total,
@@ -770,13 +772,13 @@ class Purchase extends CI_Controller
                 }
 
                 // update color wise product stock
-                $this->db->query("
-                    update tbl_color_size 
-                    set stock = stock + ?
-                    where product_id = ?
-                    and size_id = ? 
-                    and branch_id = ?
-                ",[$product->quantity, $product->productId, $product->sizeId, $this->session->userdata('BRANCHid')]);
+                // $this->db->query("
+                //     update tbl_color_size 
+                //     set stock = stock + ?
+                //     where product_id = ?
+                //     and size_id = ? 
+                //     and branch_id = ?
+                // ",[$product->quantity, $product->productId, $product->sizeId, $this->session->userdata('BRANCHid')]);
 
                 $this->db->query("
                     update tbl_product set 
@@ -1191,7 +1193,7 @@ class Purchase extends CI_Controller
     }
 
     /*Delete Purchase Record*/
-    public function  deletePurchase(){
+    public function deletePurchase(){
         $res = ['success'=>false, 'message'=>''];
         try{
             $this->db->trans_begin();
@@ -1244,13 +1246,13 @@ class Purchase extends CI_Controller
                 ]);
 
                 // update color wise product stock
-                $this->db->query("
-                    update tbl_color_size 
-                    set stock = stock - ?
-                    where product_id = ?
-                    and size_id = ? 
-                    and branch_id = ?
-                ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
+                // $this->db->query("
+                //     update tbl_color_size 
+                //     set stock = stock - ?
+                //     where product_id = ?
+                //     and size_id = ? 
+                //     and branch_id = ?
+                // ",[$product->PurchaseDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
 
             /*Delete Purchase Details*/

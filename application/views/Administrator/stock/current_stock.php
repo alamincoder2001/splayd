@@ -111,7 +111,9 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan="5" style="text-align:right;">Total Stock Value</th>
+							<th colspan="3" style="text-align:right;">Total Stock</th>
+							<th>{{stock.reduce((acc, pre) => {return acc + +pre.current_quantity},0)}}</th>
+							<th></th>
 							<th>{{ totalStockValue | decimal }}</th>
 						</tr>
 					</tfoot>
@@ -140,7 +142,9 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan="5" style="text-align:right;">Total Stock Value</th>
+							<th colspan="3" style="text-align:right;">Total Stock</th>
+							<th>{{stock.reduce((acc, pre) => {return acc + +pre.stock},0)}}</th>
+							<th></th>
 							<th>{{ totalStockValue | decimal }}</th>
 						</tr>
 					</tfoot>
@@ -183,7 +187,9 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan="12" style="text-align:right;">Total Stock Value</th>
+							<th colspan="10" style="text-align:right;">Total Stock</th>
+							<th>{{stock.reduce((acc, pre) => {return acc + +pre.current_quantity},0)}}</th>
+							<th></th>
 							<th>{{ totalStockValue | decimal }}</th>
 						</tr>
 					</tfoot>

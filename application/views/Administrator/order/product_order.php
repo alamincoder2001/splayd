@@ -488,7 +488,7 @@
 		</div>
 	</div>
 
-	<div v-if="sales.bankStatus == true" class="card" style="position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;">
+	<div class="card" style="display:none;position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;" :style="{display: sales.bankStatus == true ? '': 'none'}">
 		<div class="card-header" style="display: flex;justify-content: space-between;align-items: center;border-bottom: 1px dashed gray;">
 			<div class="card-title">
 				Multiple Bank
@@ -1082,6 +1082,10 @@
 				}
 				if (this.bankAmount == 0) {
 					alert("Amount field is required");
+					return
+				}
+				if (this.bankDigit == '') {
+					alert("Bank Digit required");
 					return
 				}
 

@@ -76,7 +76,9 @@
 								<a href="" v-bind:href="`/quotation_invoice/${quotation.SaleMaster_SlNo}`" title="View Invoice"><i class="fa fa-file"></i></a>
 								<?php if($this->session->userdata('accountType') != 'u'){?>
                                 <a href="" v-bind:href="`/quotation/${quotation.SaleMaster_SlNo}`" title="Edit Quotation"><i class="fa fa-edit"></i></a>
+								<?php if($this->session->userdata('accountType') != 'e'){?>
 								<a href="" @click.prevent="deleteQuotation(quotation.SaleMaster_SlNo)" title="Delete Quotation"><i class="fa fa-trash"></i></a>
+								<?php }?>
 								<?php }?>
                             </td>
                         </tr>

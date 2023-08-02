@@ -95,6 +95,11 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 		.navbar-header-first {
 			margin-right: 65px;
 		}
+		.nav-name {
+			font-weight: bold; 
+			color: #972366; 
+			font-size: 16px;
+		}
 
 		@media only screen and (max-width: 600px) and (min-width: 320px) {
 			.extra-menu-part {
@@ -103,6 +108,9 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 
 			.navbar-header-first {
 				margin-right: 0;
+			}
+			.nav-name {
+				font-size: 11px;
 			}
 		}
 	</style>
@@ -393,7 +401,7 @@ $companyInfo = $this->db->query("select * from tbl_company c order by c.Company_
 					</ul><!-- /.breadcrumb -->
 
 					<div class="nav-search" id="nav-search">
-						<span style="font-weight: bold; color: #972366; font-size: 16px;">
+						<span class="nav-name">
 							<?php echo $this->session->userdata('Brunch_name');  ?>
 						</span>
 					</div><!-- /.nav-search -->

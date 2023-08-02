@@ -115,9 +115,11 @@
                                             <button class="button edit" @click="editAccount(row)">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <?php if($this->session->userdata('accountType') != 'e'){?>
                                             <button class="button delete" @click="deleteAccount(row.Acc_SlNo)">
                                                 <i class="fa fa-trash"></i>
                                             </button>
+                                            <?php }?>
                                             <?php }?>
                                         </td>
                                     </tr>

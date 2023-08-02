@@ -63,25 +63,25 @@
         <div class="widget-body">
             <div class="widget-main">
                 <div class="row">
-                    <div class="col-md-6 col-md-offset-1">
+                    <div class="col-xs-12 col-md-6 col-md-offset-1">
                         <form action="" class="form-horizontal" @submit.prevent="saveTransaction">
                             <div class="form-group">
-                                <label for="" class="control-label col-md-4">Transaction Date</label>
-                                <div class="col-md-8">
+                                <label for="" class="control-label col-xs-4 col-md-4">Transaction Date</label>
+                                <div class="col-xs-8 col-md-8">
                                     <input type="date" class="form-control" v-model="transaction.transaction_date" required @change="getTransactions">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="control-label col-md-4">Account</label>
-                                <div class="col-md-8">
+                                <label for="" class="control-label col-xs-4 col-md-4">Account</label>
+                                <div class="col-xs-8 col-md-8">
                                     <v-select v-bind:options="filteredAccounts" v-model="selectedAccount" label="display_text" placeholder="Select account" @input="getBankBalance"></v-select>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="control-label col-md-4">Transaction Type</label>
-                                <div class="col-md-8">
+                                <label for="" class="control-label col-xs-4 col-md-4">Transaction Type</label>
+                                <div class="col-xs-8 col-md-8">
                                     <select class="form-control" v-model="transaction.transaction_type" required style="padding:0px;">
                                         <option value="">Select Type</option>
                                         <option value="deposit">Deposit</option>
@@ -91,28 +91,28 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="control-label col-md-4">Amount</label>
-                                <div class="col-md-8">
+                                <label for="" class="control-label col-xs-4 col-md-4">Amount</label>
+                                <div class="col-xs-8 col-md-8">
                                     <input type="number" class="form-control" v-model="transaction.amount" required>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="control-label col-md-4">Note</label>
-                                <div class="col-md-8">
+                                <label for="" class="control-label col-xs-4 col-md-4">Note</label>
+                                <div class="col-xs-8 col-md-8">
                                     <textarea class="form-control" v-model="transaction.note"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
+                                <div class="col-xs-8 col-md-8 col-md-offset-4">
                                     <input type="submit" value="Save Transaction" v-bind:disabled="onProgress ? true : false" class="btn btn-success btn-xs">
                                 </div>
                             </div>
                         </form>
                     </div>
 
-                    <div class="col-md-2 col-md-offset-1 text-center" style="display:none;" 
+                    <div class="col-xs-2 col-md-2 col-md-offset-1 text-center" style="display:none;" 
                         v-bind:style="{display: selectedAccount == null || selectedAccount.account_id == undefined ? 'none' : ''}"
                     >
                         <div style="width: 100%;min-height: 150px;padding:15px 5px;background: #eeeeee;border: 1px solid #cdcdcd;margin-top: 15px;">
@@ -142,13 +142,13 @@
         <div class="widget-body">
             <div class="widget-main">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-xs-4 col-md-4">
                         <label for="filter" class="sr-only">Filter</label>
                         <input type="text" class="form-control" v-model="filter" placeholder="Filter">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-xs-12 col-md-12">
                         <div class="table-responsive">
                             <datatable :columns="columns" :data="transactions" :filter-by="filter">
                                 <template scope="{ row }">
@@ -166,9 +166,11 @@
                                             <button class="button btn-info" @click="editTransaction(row)">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <?php if($this->session->userdata('accountType') != 'e'){?>
                                             <button class="button active-button" @click="removeTransaction(row)">
                                                 <i class="fa fa-trash"></i>
                                             </button>
+                                            <?php }?>
                                             <?php }?>
                                         </td>
                                     </tr>

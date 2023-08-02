@@ -162,9 +162,11 @@
 								<button type="button" class="button edit" @click="editPayment(row)">
 									<i class="fa fa-pencil"></i>
 								</button>
+								<?php if($this->session->userdata('accountType') != 'e'){?>
 								<button type="button" class="button" @click="deletePayment(row.SPayment_id)">
 									<i class="fa fa-trash"></i>
 								</button>
+								<?php }?>
 								<?php }?>
 							</td>
 						</tr>

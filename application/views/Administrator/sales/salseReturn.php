@@ -79,7 +79,7 @@
 								<th>Sl</th>
 								<th>Product</th>
 								<th>Color</th>
-								<th>Size</th>
+								<!-- <th>Size</th> -->
 								<th>Quantity</th>
 								<th>Amount</th>
 								<th>Already returned quantity</th>
@@ -94,7 +94,7 @@
 								<td>{{ sl + 1 }}</td>
 								<td>{{ product.Product_Name }}</td>
 								<td>{{ product.color_name }}</td>
-								<td>{{ product.size_name }}</td>
+								<!-- <td>{{ product.size_name }}</td> -->
 								<td>{{ product.SaleDetails_TotalQuantity }}</td>
 								<td>{{ product.SaleDetails_TotalAmount }}</td>
 								<td>{{ product.returned_quantity }}</td>

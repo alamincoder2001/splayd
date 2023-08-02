@@ -59,8 +59,9 @@
 										<a class="blue" href="<?php echo base_url(); ?>employeeEdit/<?php echo $row->Employee_SlNo; ?>" style="cursor:pointer;">
 											<i class="ace-icon fa fa-pencil bigger-130"></i> <?php //echo $row->Status; ?>
 										</a>
-										
+										<?php if($this->session->userdata('accountType') != 'e'){?>
 										<span onclick="deleted(<?php echo $row->Employee_SlNo; ?>)" style="cursor:pointer;color:red;font-size:20px;margin-right:20px;"><i class="fa fa-trash-o"></i></span>
+										<?php }?>
 										<?php }?>
 										
 									</div>

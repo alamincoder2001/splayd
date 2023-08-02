@@ -30,32 +30,32 @@
 	<div class="col-xs-12 col-md-12 col-lg-12" style="border-bottom:1px #ccc solid;">
 		<form v-on:submit.prevent="getProductLedger">
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Product </label>
-				<div class="col-sm-2">
+				<label class="col-xs-2 col-sm-1 control-label no-padding-right"> Product </label>
+				<div class="col-xs-10 col-sm-2">
 					<v-select v-bind:options="products" v-model="selectedProduct" label="display_text"></v-select>
 				</div>
 			</div>
 	
 			<div class="form-group">
-				<label class="col-sm-1 control-label no-padding-right"> Date from </label>
-				<div class="col-sm-2">
+				<label class="col-xs-2 col-sm-1 control-label no-padding-right"> Date from </label>
+				<div class="col-xs-10 col-sm-2">
 					<input type="date" class="form-control" v-model="dateFrom">
 				</div>
-				<label class="col-sm-1 control-label no-padding-right text-center" style="width:30px"> to </label>
-				<div class="col-sm-2">
+				<label class="col-xs-2 col-sm-1 control-label no-padding-right text-center" style="width:30px"> to </label>
+				<div class="col-xs-10 col-sm-2">
 					<input type="date" class="form-control" v-model="dateTo">
 				</div>
 			</div>
 	
 			<div class="form-group">
-				<div class="col-sm-1">
+				<div class="col-xs-12 col-sm-1">
 					<input type="submit" class="btn btn-primary" value="Show" style="margin-top:0px;border:0px;height:28px;">
 				</div>
 			</div>
 		</form>
 	</div>
 
-	<div class="col-sm-12" style="display:none;" v-bind:style="{display: showTable ? '' : 'none'}">
+	<div class="col-xs-12 col-sm-12" style="display:none;" v-bind:style="{display: showTable ? '' : 'none'}">
 		<a href="" style="margin: 7px 0;display:block;width:50px;" v-on:click.prevent="print">
 			<i class="fa fa-print"></i> Print
 		</a>

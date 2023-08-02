@@ -99,54 +99,61 @@
 <div id="products">
 	<form @submit.prevent="saveProduct">
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom: 15px;">
-			<div class="col-md-6">
+			<div class="col-xs-12 col-md-6">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Product Id:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Product Id:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_Code">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Category:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Category:</label>
+					<div class="col-xs-7 col-md-7">
 						<select class="form-control" v-if="categories.length == 0"></select>
 						<v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name" v-if="categories.length > 0"></v-select>
 					</div>
-					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/category" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+					<div class="col-xs-1 col-md-1" style="padding:0;margin-left: -15px;"><a href="/category" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
 
 				<div class="form-group clearfix" style="display:none;">
-					<label class="control-label col-md-4">Brand:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Brand:</label>
+					<div class="col-xs-7 col-md-7">
 						<select class="form-control" v-if="brands.length == 0"></select>
 						<v-select v-bind:options="brands" v-model="selectedBrand" label="brand_name" v-if="brands.length > 0"></v-select>
 					</div>
-					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="" class="add-button"><i class="fa fa-plus"></i></a></div>
+					<div class="col-xs-1 col-md-1" style="padding:0;margin-left: -15px;"><a href="" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Product Name:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Product Name:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_Name" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Unit:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Unit:</label>
+					<div class="col-xs-7 col-md-7">
 						<select class="form-control" v-if="units.length == 0"></select>
 						<v-select v-bind:options="units" v-model="selectedUnit" label="Unit_Name" v-if="units.length > 0"></v-select>
 					</div>
-					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+					<div class="col-xs-1 col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Size:</label>
-					<div class="col-md-7">
-						<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" multiple></v-select>
+					<label class="control-label col-xs-4 col-md-4">VAT:</label>
+					<div class="col-xs-8 col-md-7">
+						<input type="text" class="form-control" v-model="product.vat">
 					</div>
 				</div>
+
+				<!-- <div class="form-group clearfix">
+					<label class="control-label col-xs-4 col-md-4">Size:</label>
+					<div class="col-xs-8 col-md-7">
+						<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" multiple></v-select>
+					</div>
+				</div> -->
 
 				<!-- <div class="information">
 					<div class="col-sm-12 color_heading"> <strong>Product Size & Color</strong> <button class="btn btn-colorAdd" type="button" data-toggle="modal" data-target="#myModal">+Add</button></div>
@@ -173,49 +180,44 @@
 				</div> -->
 			</div>
 
-			<div class="col-md-6">
+			<div class="col-xs-12 col-md-6">
+				
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">VAT:</label>
-					<div class="col-md-7">
-						<input type="text" class="form-control" v-model="product.vat">
-					</div>
-				</div>
-				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Re-order level:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Re-order level:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_ReOrederLevel" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Purchase Rate:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Purchase Rate:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" id="purchase_rate" class="form-control" v-model="product.Product_Purchase_Rate" required v-bind:disabled="product.is_service ? true : false">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Sales Rate:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Sales Rate:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_SellingPrice" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Wholesale Rate:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Wholesale Rate:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="product.Product_WholesaleRate" required>
 					</div>
 				</div>
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Is Service:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Is Service:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="checkbox" v-model="product.is_service" @change="changeIsService">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<div class="col-md-7 col-md-offset-4">
+					<div class="col-xs-8 col-md-7 col-md-offset-4">
 						<input type="submit" class="btn btn-success btn-sm" value="Save">
 					</div>
 				</div>
@@ -224,13 +226,13 @@
 	</form>
 
 	<div class="row">
-		<div class="col-sm-12 form-inline">
+		<div class="col-xs-12 col-sm-12 form-inline">
 			<div class="form-group">
 				<label for="filter" class="sr-only">Filter</label>
 				<input type="text" class="form-control" v-model="filter" placeholder="Filter">
 			</div>
 		</div>
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<div class="table-responsive">
 				<datatable :columns="columns" :data="products" :filter-by="filter">
 					<template scope="{ row }">
@@ -245,14 +247,19 @@
 							<td>{{ row.is_service }}</td>
 							<td>{{ row.Unit_Name }}</td>
 							<td>
-								<button type="button" class="button" data-toggle="modal" data-target="#colorSize" @click="colorAndSize(row)"><i class="fa fa-eye"></i></button>
+								<!-- <button type="button" class="button" data-toggle="modal" data-target="#colorSize" @click="colorAndSize(row)"><i class="fa fa-eye"></i></button> -->
 
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<button type="button" class="button edit" @click="editProduct(row)">
 										<i class="fa fa-pencil"></i>
 									</button>
+									<?php if($this->session->userdata('accountType') != 'e'){?>
 									<button type="button" class="button" @click="deleteProduct(row.Product_SlNo)">
 										<i class="fa fa-trash"></i>
+									</button>
+								<?php } ?>
+									<button type="button" class="button" @click="window.location = `/Administrator/products/barcodeGenerate/${row.Product_SlNo}`">
+										<i class="fa fa-barcode"></i>
 									</button>
 								<?php } ?>
 
@@ -265,9 +272,9 @@
 		</div>
 	</div>
 	<!-- Modal -->
-	<div id="colorSize" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-			<!-- Modal content-->
+	<!-- <div id="colorSize" class="modal fade" role="dialog">
+		<div class="modal-dialog"> 
+			
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -300,7 +307,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 	<!-- Modal -->
 	<!-- <div id="myModal" class="modal fade" role="dialog">
 		<div class="modal-dialog modal-dialog-centered">
@@ -377,8 +384,8 @@
 					// 	color_SiNo: '',
 					// 	color_name: ''
 					// },
-					sizes: [],
-					selectedSize: null,
+					// sizes: [],
+					// selectedSize: null,
 					// cart: [],
 					selectedUnit: null,
 
@@ -487,10 +494,10 @@
 						alert('Select unit');
 						return;
 					}
-					if (this.selectedSize == null) {
-						alert('Select Size');
-						return;
-					}
+					// if (this.selectedSize == null) {
+					// 	alert('Select Size');
+					// 	return;
+					// }
 
 					if (this.selectedBrand != null) {
 						this.product.brand = this.selectedBrand.brand_SiNo;
@@ -552,8 +559,9 @@
 						Unit_Name: product.Unit_Name
 					}
 				},
-				colorAndSize(color) {
-					this.productColors = color.colors;
+				colorAndSize(row) {
+					// console.log(row)
+					this.productColors = row.colors;
 				},
 				deleteSize(sizeId) {
 					if (confirm("Are you sure?")) {

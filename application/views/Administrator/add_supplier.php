@@ -71,65 +71,65 @@
 <div id="suppliers">
 		<form @submit.prevent="saveSupplier">
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom:15px;">
-			<div class="col-md-5">
+			<div class="col-xs-12 col-md-5">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Supplier Id:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Supplier Id:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="supplier.Supplier_Code" required readonly>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Supplier Name:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Supplier Name:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="supplier.Supplier_Name" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Owner Name:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Owner Name:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="supplier.contact_person">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Address:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Address:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="supplier.Supplier_Address">
 					</div>
 				</div>
 			</div>	
 
-			<div class="col-md-5">
+			<div class="col-xs-12 col-md-5">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Mobile:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Mobile:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="supplier.Supplier_Mobile" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Email:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Email:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="supplier.Supplier_Email">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Previous Due:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Previous Due:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="number" class="form-control" v-model="supplier.previous_due" required>
 					</div>
 				</div>
 				
 				<div class="form-group clearfix">
-					<div class="col-md-7 col-md-offset-4">
+					<div class="col-xs-8 col-md-7 col-md-offset-4">
 						<input type="submit" class="btn btn-success btn-sm" value="Save">
 					</div>
 				</div>
 			</div>	
-			<div class="col-md-2 text-center;">
+			<div class="col-xs-12 col-md-2 text-center;">
 				<div class="form-group clearfix">
 					<div style="width: 100px;height:100px;border: 1px solid #ccc;overflow:hidden;">
 						<img id="supplierImage" v-if="imageUrl == '' || imageUrl == null" src="/assets/no_image.gif">
@@ -147,13 +147,13 @@
 		</form>
 
 		<div class="row">
-			<div class="col-sm-12 form-inline">
+			<div class="col-xs-12 col-sm-12 form-inline">
 				<div class="form-group">
 					<label for="filter" class="sr-only">Filter</label>
 					<input type="text" class="form-control" v-model="filter" placeholder="Filter">
 				</div>
 			</div>
-			<div class="col-md-12">
+			<div class="col-xs-12 col-md-12">
 				<div class="table-responsive">
 					<datatable :columns="columns" :data="suppliers" :filter-by="filter" style="margin-bottom: 5px;">
 						<template scope="{ row }">
@@ -168,9 +168,11 @@
 									<button type="button" class="button edit" @click="editSupplier(row)">
 										<i class="fa fa-pencil"></i>
 									</button>
-									<button type="button" class="button" @click="deleteSupplier(row.Supplier_SlNo)">
-										<i class="fa fa-trash"></i>
-									</button>
+										<?php if($this->session->userdata('accountType') != 'e'){?>
+										<button type="button" class="button" @click="deleteSupplier(row.Supplier_SlNo)">
+											<i class="fa fa-trash"></i>
+										</button>
+										<?php }?>
 									<?php }?>
 								</td>
 							</tr>

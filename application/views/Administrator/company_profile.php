@@ -27,29 +27,43 @@
 			</div>
 
 			<div class="form-group">
-				<label class="control-label" for="companyLogo">Change Logo</label>
-				<div >
+				<label class="control-label col-xs-4 col-md-12" for="companyLogo">Change Logo</label>
+				<div class="col-xs-8 col-md-12">
 					<input name="companyLogo" id="companyLogo" type="file"  onchange="readURL(this)" class="form-control" style="height:35px;" />
 				</div>
 			</div>
 
 			<div class="form-group" style="margin-top:15px">
-				<label class="control-label" for="form-field-1"> Company Name </label>
-				<div>
+				<label class="control-label col-xs-4 col-md-12" for="form-field-1"> Company Name </label>
+				<div class="col-xs-8 col-md-12">
 					<input name="Company_name" type="text" id="Company_name" value="<?php echo $selected->Company_Name; ?>" class="form-control" />
 					<input name="iidd" type="hidden" id="iidd" value="<?php echo $selected->Company_SlNo; ?>" class="txt" />
 				</div>
 			</div>
+
+			<div class="form-group" style="margin-top:15px">
+				<label class="control-label col-xs-4 col-md-12" for="form-field-1"> Company Email </label>
+				<div class="col-xs-8 col-md-12">
+					<input name="Company_email" type="email" id="Company_email" value="<?php echo @$selected->Company_email; ?>" class="form-control" />
+				</div>
+			</div>
+
+			<div class="form-group" style="margin-top:15px">
+				<label class="control-label col-xs-4 col-md-12" for="form-field-1"> Company Phone </label>
+				<div class="col-xs-8 col-md-12">
+					<input name="Company_phone" type="number" id="Company_phone" value="<?php echo @$selected->Company_phone; ?>" class="form-control" />
+				</div>
+			</div>
 			
 			<div class="form-group" style="margin-top:15px">
-				<label class="control-label" for="form-field-1"> Description  </label>
-				<div>
+				<label class="control-label col-xs-8 col-md-12" for="form-field-1"> Description  </label>
+				<div class="col-xs-8 col-md-12">
 					<textarea id="Description" name="Description" class="form-control"><?php echo $selected->Repot_Heading; ?></textarea>
 				</div>
 			</div>
 
 			<div class="control-group" style="margin-top:15px;">
-				<label class="col-sm-12 control-label bolder blue">Invoice Print Type</label>
+				<label class="col-xs-12 col-sm-12 control-label bolder blue">Invoice Print Type</label>
 				<div class="radio inline-radio">
 					<label>
 						<input name="inpt" id="a4"  type="radio" value="1" <?php if($selected->print_type==1){ echo "checked"; } ?>  class="ace" />
@@ -224,8 +238,10 @@
 									<td>
 										<?php if($this->session->userdata('accountType') != 'u'){?>
 										<a href="" title="Edit Branch" @click.prevent="editBranch(branch)"><i class="fa fa-pencil"></i></a>&nbsp;
-										<a href="" title="Deactive Branch" v-if="branch.status == 'a'" @click.prevent="changeStatus(branch.brunch_id)"><i class="fa fa-trash"></i></a>
-										<a href="" title="Active Branch" v-else><i class="fa fa-check" @click.prevent="changeStatus(branch.brunch_id)"></i></a>
+											<?php if($this->session->userdata('accountType') != 'e'){?>
+												<a href="" title="Deactive Branch" v-if="branch.status == 'a'" @click.prevent="changeStatus(branch.brunch_id)"><i class="fa fa-trash"></i></a>
+												<a href="" title="Active Branch" v-else><i class="fa fa-check" @click.prevent="changeStatus(branch.brunch_id)"></i></a>
+											<?php }?>
 										<?php }?>
 									</td>
 								</tr>

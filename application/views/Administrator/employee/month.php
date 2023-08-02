@@ -21,18 +21,18 @@
 	<div class="form-horizontal">
 		
 		<div class="form-group">
-			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Month Name  </label>
-			<label class="col-sm-1 control-label no-padding-right">:</label>
-			<div class="col-sm-8">
+			<label class="col-xs-3 col-sm-3 control-label no-padding-right" for="form-field-1"> Month Name  </label>
+			<label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+			<div class="col-xs-8 col-sm-8">
 				<input type="text" id="month" name="month" placeholder="Month Name" value="" class="col-xs-10 col-sm-4" />
 				<span id="msc"></span>
 			</div>
 		</div>
 		 
 		<div class="form-group">
-			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
-			<label class="col-sm-1 control-label no-padding-right"></label>
-			<div class="col-sm-8">
+			<label class="col-xs-3 col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+			<label class="col-xs-1 col-sm-1 control-label no-padding-right"></label>
+			<div class="col-xs-8 col-sm-8">
 				    <button type="button" class="btn btn-sm btn-success" onclick="Submitdata()" name="btnSubmit">
 						Submit
 						<i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>

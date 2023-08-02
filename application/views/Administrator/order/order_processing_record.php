@@ -94,7 +94,12 @@
                             <td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
                             <td style="text-align:center;">
+                                <a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
                                 <?php if ($this->session->userdata('accountType') != 'u') { ?>
+                                    <a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
+                                    <?php if($this->session->userdata('accountType') != 'e'){?>
+                                    <a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+                                    <?php } ?>
                                     <select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
                                         <option value="process">Processing</option>
                                         <option value="a">Delivery</option>
@@ -139,6 +144,7 @@
             OrderStatusChange(sale) {
                 let deleteConf = confirm('Are you sure? you want to confirm this order?');
                 if (deleteConf == false) {
+                    this.getOrders();
                     return;
                 }
                 let filter = {
@@ -146,6 +152,29 @@
                     Status: sale.Status
                 }
                 axios.post('/order_status_change', filter)
+                    .then(res => {
+                        let r = res.data;
+                        alert(r.message);
+                        if (r.success) {
+                            this.getOrders();
+                        }
+                    })
+            },
+            checkReturnAndEdit(sale) {
+                if (sale.is_service == 'true') {
+                    window.open('/order/service/' + sale.SaleMaster_SlNo, '_blank');
+                } else {
+                    window.open('/order/product/' + sale.SaleMaster_SlNo, '_blank');
+                }
+            },
+            deleteSale(saleId) {
+                let deleteConf = confirm('Are you sure?');
+                if (deleteConf == false) {
+                    return;
+                }
+                axios.post('/delete_order', {
+                        saleId: saleId
+                    })
                     .then(res => {
                         let r = res.data;
                         alert(r.message);

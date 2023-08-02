@@ -92,7 +92,7 @@
             </div>
 
 		    <div class="row">
-                <div class="output" style="margin:0px;padding;0px;">
+                <div class="output" style="margin:0px;padding:0px;">
                     <section class="output" style="margin:0px;padding:0px;">
                         <?php 
     
@@ -129,9 +129,9 @@
 								<span class="article" style="font-size: 12px;"><?php echo substr($article, 0, 20); ?>&nbsp;</span>
 								
 								<p style="font-size: 14px;text-align: center;margin:0px;font-weight: bold;letter-spacing: .5px;"><?php echo substr($pname, 0, 80); ?></p>
-								<img src='<?php echo site_url();?>GenerateBarcode/<?php echo $PID;?>' style="height: 40px; width: 120px;" />
+								<img src='<?php echo site_url();?>GenerateBarcode/<?php echo $PID;?>' style="height: 50px; width: 120px;" />
 	
-								<p style="text-align: center;margin:0px;font-size:13px">Size: <?php echo $Size; ?></p>
+								<!-- <p style="text-align: center;margin:0px;font-size:13px">Size: <?php echo $Size; ?></p> -->
 								<!--<p style="text-align: center;margin:0px;font-size:11px;">Color: <?php echo $Color; ?></p>-->
 								<!--<p style="text-align: center;font-weight: bold;font-size:13px;">TK: <?php echo $this->session->userdata('Currency_Name') . ' ' . $Price;?></p>-->
 								<p style="text-align: center;font-weight: bold;font-size:15px;"> <?php echo $Price;?></p>

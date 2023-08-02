@@ -95,6 +95,12 @@
                                     <input type="text" class="form-control" v-model="account.branch_name">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="" class="control-label col-md-4">Charge (%)</label>
+                                <div class="col-md-8">
+                                    <input type="number" step="0.01" min="0" class="form-control" v-model="account.charge">
+                                </div>
+                            </div>
 
                             <div class="form-group" style="display: none;">
                                 <label for="" class="control-label col-md-4">Initial Balance</label>
@@ -154,6 +160,7 @@
                                         <td>{{ row.account_type }}</td>
                                         <td>{{ row.bank_name }}</td>
                                         <td>{{ row.branch_name }}</td>
+                                        <td>{{ row.charge }}</td>
                                         <!-- <td>{{ row.initial_balance }}</td> -->
                                         <td>{{ row.status_text }}</td>
                                         <td>
@@ -161,9 +168,11 @@
                                             <button class="button edit" @click="editAccount(row)">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <?php if($this->session->userdata('accountType') != 'e'){?>
                                             <button class="button" v-bind:class="{active: row.status == 1}" @click="changeStatus(row)">
                                                 <i class="fa fa-trash"></i>
                                             </button>
+                                            <?php }?>
                                             <?php }?>
                                         </td>
                                     </tr>
@@ -197,6 +206,7 @@
                     account_type: '',
                     bank_name: '',
                     branch_name: '',
+                    charge: '',
                     initial_balance: 0.00,
                     description: ''
                 },
@@ -208,6 +218,7 @@
                     { label: 'Bank Name', field: 'bank_name', align: 'center' },
                     { label: 'Branch Name', field: 'branch_name', align: 'center' },
                     // { label: 'Initial Balance', field: 'initial_balance', align: 'center' },
+                    { label: 'Charge(%)', field: 'charge', align: 'center' },
                     { label: 'Status', field: 'status_text', align: 'center' },
                     { label: 'Action', align: 'center', filterable: false }
                 ],
@@ -239,11 +250,6 @@
                         this.getAccounts();
                     }
                 })
-                .catch(error => {
-                    if(error.response){
-                        alert(`${error.response.status}, ${error.response.statusText}`);
-                    }
-                })
             },
 
             editAccount(account){
@@ -260,11 +266,6 @@
                         this.getAccounts();
                     }
                 })
-                .catch(error => {
-                    if(error.response){
-                        alert(`${error.response.status}, ${error.response.statusText}`);
-                    }
-                })
             },
 
             resetForm(){
@@ -275,6 +276,7 @@
                     account_type: '',
                     bank_name: '',
                     branch_name: '',
+                    charge: '',
                     initial_balance: 0.00
                 }
             }

@@ -71,89 +71,89 @@
 <div id="customers">
 		<form @submit.prevent="saveCustomer">
 		<div class="row" style="margin-top: 10px;margin-bottom:15px;border-bottom: 1px solid #ccc;padding-bottom:15px;">
-			<div class="col-md-5">
+			<div class="col-xs-12 col-md-5">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Customer Id:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Customer Id:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="customer.Customer_Code" required readonly>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Customer Name:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Customer Name:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="customer.Customer_Name" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Owner Name:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Owner Name:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="customer.owner_name">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Address:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Address:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="customer.Customer_Address">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Area:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Area:</label>
+					<div class="col-xs-7 col-md-7">
 						<select class="form-control" v-if="districts.length == 0"></select>
 						<v-select v-bind:options="districts" v-model="selectedDistrict" label="District_Name" v-if="districts.length > 0"></v-select>
 					</div>
-					<div class="col-md-1" style="padding:0;margin-left: -15px;"><a href="/area" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+					<div class="col-xs-1 col-md-1" style="padding:0;margin-left: -15px;"><a href="/area" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
 			</div>	
 
-			<div class="col-md-5">
+			<div class="col-xs-12 col-md-5">
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Mobile:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Mobile:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="customer.Customer_Mobile" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Office Phone:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Office Phone:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="customer.Customer_OfficePhone">
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Previous Due:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Previous Due:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="number" class="form-control" v-model="customer.previous_due" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Credit Limit:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Credit Limit:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="number" class="form-control" v-model="customer.Customer_Credit_Limit" required>
 					</div>
 				</div>
 
 				<div class="form-group clearfix">
-					<label class="control-label col-md-4">Customer Type:</label>
-					<div class="col-md-7">
+					<label class="control-label col-xs-4 col-md-4">Customer Type:</label>
+					<div class="col-xs-8 col-md-7">
 						<input type="radio" name="customerType" value="retail" v-model="customer.Customer_Type"> Retail
 						<input type="radio" name="customerType" value="wholesale" v-model="customer.Customer_Type"> Wholesale
 					</div>
 				</div>
 				
 				<div class="form-group clearfix">
-					<div class="col-md-7 col-md-offset-4">
+					<div class="col-xs-8 col-md-7 col-md-offset-4">
 						<input type="submit" class="btn btn-success btn-sm" value="Save">
 					</div>
 				</div>
 			</div>	
-			<div class="col-md-2 text-center;">
+			<div class="col-xs-12 col-md-2 text-center;">
 				<div class="form-group clearfix">
 					<div style="width: 100px;height:100px;border: 1px solid #ccc;overflow:hidden;">
 						<img id="customerImage" v-if="imageUrl == '' || imageUrl == null" src="/assets/no_image.gif">
@@ -171,13 +171,13 @@
 		</form>
 
 		<div class="row">
-			<div class="col-sm-12 form-inline">
+			<div class="col-xs-12 col-sm-12 form-inline">
 				<div class="form-group">
 					<label for="filter" class="sr-only">Filter</label>
 					<input type="text" class="form-control" v-model="filter" placeholder="Filter">
 				</div>
 			</div>
-			<div class="col-md-12">
+			<div class="col-xs-12 col-md-12">
 				<div class="table-responsive">
 					<datatable :columns="columns" :data="customers" :filter-by="filter" style="margin-bottom: 5px;">
 						<template scope="{ row }">
@@ -195,9 +195,11 @@
 									<button type="button" class="button edit" @click="editCustomer(row)">
 										<i class="fa fa-pencil"></i>
 									</button>
-									<button type="button" class="button" @click="deleteCustomer(row.Customer_SlNo)">
-										<i class="fa fa-trash"></i>
-									</button>
+										<?php if($this->session->userdata('accountType') != 'e'){?>
+										<button type="button" class="button" @click="deleteCustomer(row.Customer_SlNo)">
+											<i class="fa fa-trash"></i>
+										</button>
+										<?php }?>
 									<?php }?>
 								</td>
 							</tr>

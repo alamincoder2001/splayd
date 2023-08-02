@@ -14,6 +14,11 @@
 		text-align: center;
 		color: #a30bf1;
 	}
+	@media(max-width:600px) {
+		.header h3 {
+			font-size: 25px;
+		}
+	}
 	.img{
 		height: 120px;
 		margin-top: 0px;
@@ -129,7 +134,12 @@
 </style>
 
 <style type="text/css">
-
+	@media only screen and (max-width: 600px) {
+		.section122 .logo {
+			height: 58px;
+			font-size: 50px;
+    	}
+	}
 	
 </style>
 

@@ -47,7 +47,7 @@
 						<th>Sl</th>
 						<th>Product</th>
 						<th>Color</th>
-						<th>Size</th>
+						<!-- <th>Size</th> -->
 						<th>Quantity</th>
 						<th>Amount</th>
 						<th>Already returned quantity</th>
@@ -62,7 +62,7 @@
 						<td>{{ sl + 1 }}</td>
 						<td>{{ product.Product_Name }}</td>
 						<td>{{ product.color_name }}</td>
-						<td>{{ product.size_name }}</td>
+						<!-- <td>{{ product.size_name }}</td> -->
 						<td>{{ product.PurchaseDetails_TotalQuantity }}</td>
 						<td>{{ product.PurchaseDetails_TotalAmount }}</td>
 						<td>{{ product.returned_quantity }}</td>
@@ -141,10 +141,8 @@
 					.then(res => {
 						return res.data;
 					})
-	
 					let returnDetail = this.returnDetails.find(rd => rd.PurchaseReturnDetailsProduct_SlNo == this.cart[ind].Product_IDNo);
 					stock = +stock + +(returnDetail?.PurchaseReturnDetails_ReturnQuantity ?? 0);
-	
 					if(stock < this.cart[ind].return_quantity) {
 						alert('Unavailable stock');
 						this.cart[ind].return_quantity = '';
@@ -225,6 +223,8 @@
 					await this.getPurchaseDetailsForReturn();
 
 					this.returnDetails = res.data.returnDetails;
+					
+					console.log(this.returnDetails);
 					
 					this.cart.map(product => {
 						let returnDetail = this.returnDetails.find(rd => rd.PurchaseReturnDetailsProduct_SlNo == product.Product_IDNo);

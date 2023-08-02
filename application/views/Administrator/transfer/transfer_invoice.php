@@ -55,6 +55,7 @@
                                 <th>Category</th>
                                 <th>Product Id</th>
                                 <th>Product Name</th>
+                                <!-- <th>Size</th> -->
                                 <th>Quantity</th>
                                 <th>Amount</th>
                             </tr>
@@ -66,6 +67,7 @@
                                     <td><?php echo $product->ProductCategory_Name; ?></td>
                                     <td><?php echo $product->Product_Code; ?></td>
                                     <td><?php echo $product->Product_Name; ?></td>
+                                    <!-- <td><?php echo $product->size_name; ?></td> -->
                                     <td style="text-align:right;"><?php echo $product->quantity; ?></td>
                                     <td style="text-align:right;"><?php echo $product->total; ?></td>
                                 </tr>

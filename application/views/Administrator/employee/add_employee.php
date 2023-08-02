@@ -25,31 +25,32 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 			<div class="col-sm-12 align-center"> <strong>Job Information</strong></div>
 		<hr/>
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="Product_id"> Employee ID </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-2">
+			<label class="col-xs-4 col-sm-4 control-label" for="Product_id"> Employee ID </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-2">
 				<input type="text" name="Employeer_id" id="Employeer_id" value="<?php echo $generateCode; ?>" class="form-control" readonly />
 			</div>
 			
-			<label class="col-sm-2 control-label" for="bio_id"> Bio ID: </label>
-			<div class="col-sm-2">
+			<label class="col-xs-4 col-sm-2 control-label" for="bio_id"> Bio ID </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-2">
 				<input type="text" name="bio_id" id="bio_id" value="" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_name"> Employee Name </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_name"> Employee Name </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="em_name" name="em_name" value="<?php echo set_value('em_name'); ?>" placeholder="Employee Name .." class="form-control" />
 				 <div id="em_name_" class="col-sm-12"></div>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_Designation"> Designation </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-5">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_Designation"> Designation </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-6 col-sm-5">
 				<select class="chosen-select form-control" name="em_Designation" id="em_Designation" data-placeholder="Choose a Designation...">
 				<option value="">  </option>
 					<?php
@@ -61,15 +62,15 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 					</select>
 				<div id="em_Designation_" class="col-sm-12"></div>
 			</div>
-			<div class="col-sm-1" style="padding: 0;">
+			<div class="col-xs-1 col-sm-1" style="padding: 0;">
 				<a href="<?= base_url('designation')?>" title="Add New Designation" class="btn btn-xs btn-danger" style="height: 25px; border: 0; width: 27px; margin-left: -10px;" target="_blank" ><i class="fa fa-plus" aria-hidden="true" style="margin-top: 5px;"></i></a>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_Depertment"> Department </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-5">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_Depertment"> Department </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-6 col-sm-5">
 				<select class="chosen-select form-control" name="em_Depertment" id="em_Depertment" data-placeholder="Choose a Depertment...">
 				<option value="">  </option>
 					<?php
@@ -81,33 +82,33 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 					</select>
 				<div id="em_Depertment_" class="col-sm-12"></div>
 			</div>
-			<div class="col-sm-1" style="padding: 0;">
+			<div class="col-xs-1 col-sm-1" style="padding: 0;">
 				<a href="<?= base_url('depertment')?>" title="Add New Department" class="btn btn-xs btn-danger" style="height: 25px; border: 0; width: 27px; margin-left: -10px;" target="_blank" ><i class="fa fa-plus" aria-hidden="true" style="margin-top: 5px;"></i></a>
 			</div>
 		</div>
 
 			<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_Joint_date">Joint Date</label>
-			<label class="col-sm-1 control-label">:</label>
-				<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_Joint_date">Joint Date</label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+				<div class="col-xs-6 col-sm-6">
 				<input class="form-control date-picker" name="em_Joint_date" id="em_Joint_date" type="text" data-date-format="yyyy-mm-dd" style="border-radius: 5px !important;" value="<?php echo date("Y-m-d") ?>" />
 				</div>
 			</div>
 
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="salary_range">Salary Range</label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="salary_range">Salary Range</label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="salary_range" name="salary_range" value="<?php echo set_value('phone_number'); ?>" placeholder="Salary Range .." class="form-control" />
 				 <div id="salary_range_" class="col-sm-12"></div>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="form-field-1"> Activation Status</label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="form-field-1"> Activation Status</label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<select class="chosen-select form-control" name="status" id="status" data-placeholder="Choose a status...">
 					<option value="">  </option>
 					<option value="a"> Active </option>
@@ -123,57 +124,57 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 
 		<hr/>
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_Present_address"> Present Address </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_Present_address"> Present Address </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="em_Present_address" name="em_Present_address" placeholder="Present Address" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_Permanent_address"> Permanent  Address </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_Permanent_address"> Permanent  Address </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="em_Permanent_address" name="em_Permanent_address" placeholder="Present Address" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_contact"> Contact No </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_contact"> Contact No </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="em_contact" name="em_contact"  placeholder="Contact No" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="ec_email"> E-mail </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="ec_email"> E-mail </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="ec_email" name="ec_email" placeholder="E-mail" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_photo"> Employee Image </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_photo"> Employee Image </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="file" id="em_photo" name="em_photo" class="form-control" onchange="readURL(this)" style="height:35px" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_photo"> Reference </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_photo"> Reference </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<textarea id="em_reference" name="em_reference" placeholder="Reference" class="form-control"></textarea>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for=""> </label>
-			<label class="col-sm-1 control-label"></label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for=""> </label>
+			<label class="col-xs-1 col-sm-1 control-label"></label>
+			<div class="col-xs-7 col-sm-6">
 				<button type="button" onclick="Employee_submit()" name="btnSubmit" title="Save" class="btn btn-sm btn-success pull-left">
 						Save
 						<i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
@@ -188,29 +189,29 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 <div class="row">
 	<div class="form-horizontal">
 			<br/>
-		<div class="col-sm-6">
-		<div class="col-sm-12 align-center"> <strong>Personal Information</strong></div>
+		<div class="col-xs-12 col-sm-6">
+		<div class="col-xs-12 col-sm-12 align-center"> <strong>Personal Information</strong></div>
 		<hr/>
 			<div class="form-group">
-				<label class="col-sm-4 control-label" for="form-field-1"> Father's Name </label>
-				<label class="col-sm-1 control-label">:</label>
-				<div class="col-sm-6">
+				<label class="col-xs-4 col-sm-4 control-label" for="form-field-1"> Father's Name </label>
+				<label class="col-xs-1 col-sm-1 control-label">:</label>
+				<div class="col-xs-7 col-sm-6">
 					<input type="text" id="em_father" name="em_father" placeholder="Father's Name" class="form-control" />
 				</div>
 			</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="form-field-1"> Mother's Name </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="form-field-1"> Mother's Name </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<input type="text" id="mother_name" name="mother_name" placeholder="Mother's Name" class="form-control" />
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="form-field-1"> Gender </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="form-field-1"> Gender </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<select class="chosen-select form-control" name="Gender" id="Gender" data-placeholder="Choose a Gender...">
 					<option value="">  </option>
 					<option value="Male">Male</option>
@@ -220,17 +221,17 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="em_dob">Date of Birth</label>
-			<label class="col-sm-1 control-label">:</label>
-				<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="em_dob">Date of Birth</label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+				<div class="col-xs-7 col-sm-6">
 				<input class="form-control date-picker" name="em_dob" id="em_dob" type="text" data-date-format="yyyy-mm-dd" style="border-radius: 5px !important;" value="<?php echo date("Y-m-d") ?>" />
 				</div>
 			</div>
 
 		<div class="form-group">
-			<label class="col-sm-4 control-label" for="Marital"> Marital Status </label>
-			<label class="col-sm-1 control-label">:</label>
-			<div class="col-sm-6">
+			<label class="col-xs-4 col-sm-4 control-label" for="Marital"> Marital Status </label>
+			<label class="col-xs-1 col-sm-1 control-label">:</label>
+			<div class="col-xs-7 col-sm-6">
 				<select class="chosen-select form-control" name="Marital" id="Marital" data-placeholder="Choose a Marital Status...">
 					<option value="">  </option>
 					<option value="married">Married</option>
@@ -241,7 +242,7 @@ if($serial[1]>=9){ $serial=$serial['1']; $autoserial= $serial+1; $generateCode =
 
 		</div>
 
-		<div class="col-sm-6">
+		<div class="col-xs-6 col-sm-6">
 				<span></span>
 				<img id="hideid" src="<?php echo base_url();?>assets/images/No-Image-.jpg" alt="" style="width:200px">
 				<img id="preview" src="#" style="width:80px;height:80px" hidden>

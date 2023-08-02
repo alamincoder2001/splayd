@@ -142,7 +142,7 @@
 									</div>
 								</div> -->
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-xs-4 control-label no-padding-right"> Size </label>
 									<div class="col-xs-7">
 										<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" v-on:input="productSizeChange" placeholder="select size"></v-select>
@@ -150,7 +150,7 @@
 									<div class="col-xs-1" style="padding: 0;">
 										<a href="<?= base_url('size') ?>" title="Add New Size" class="btn btn-xs btn-danger" style="height: 25px; border: 0; width: 27px; margin-left: -10px;" target="_blank"><i class="fa fa-plus" aria-hidden="true" style="margin-top: 5px;"></i></a>
 									</div>
-								</div>
+								</div> -->
 
 								<div class="form-group" style="display:none;">
 									<label class="col-xs-4 control-label no-padding-right"> Group Name</label>
@@ -212,7 +212,7 @@
 							<th style="width:4%;color:#000;">SL</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:13%;color:#000;">Category</th>
-							<th style="width:13%;color:#000;">Size</th>
+							<!-- <th style="width:13%;color:#000;">Size</th> -->
 							<th style="width:12%;color:#000;">Purchase Rate</th>
 							<th style="width:5%;color:#000;">Quantity</th>
 							<th style="width:13%;color:#000;">Total Amount</th>
@@ -224,7 +224,7 @@
 							<td>{{ sl + 1}}</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.size }}</td>
+							<!-- <td>{{ product.size }}</td> -->
 							<td>{{product.purchaseRate}}</td>
 							<td>
 								<input type="number" min="0" step="1" v-model="product.quantity" style="width: 70px;" @input="onChangeQty(sl)"/>
@@ -277,8 +277,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Sub Total</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Sub Total</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="subTotal" name="subTotal" class="form-control" v-model="purchase.subTotal" readonly />
 												</div>
 											</div>
@@ -288,8 +288,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right"> Vat </label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right"> Vat </label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" style="width: 50%;" id="vatPercent" name="vatPercent" v-model="vatPercent" v-on:input="calculateTotal" />
 													<span style="width:20%;"> % </span>
 													<input type="number" id="vat" name="vat" v-model="purchase.vat" readonly style="width: 40%;" />
@@ -301,8 +301,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Discount</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Discount</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="discount" name="discount" class="form-control" v-model="purchase.discount" v-on:input="calculateTotal" />
 												</div>
 											</div>
@@ -312,8 +312,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Transport / Labour Cost</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Transport / Labour Cost</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="freight" name="freight" class="form-control" v-model="purchase.freight" v-on:input="calculateTotal" />
 												</div>
 											</div>
@@ -323,8 +323,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Total</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Total</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="total" class="form-control" v-model="purchase.total" readonly />
 												</div>
 											</div>
@@ -345,9 +345,9 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Cash
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Cash
 													Paid</label>
-												<div class="col-xs-12">
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="cashPaid" class="form-control" v-model="purchase.cashPaid" v-on:input="calculateTotal" />
 												</div>
 											</div>
@@ -357,9 +357,9 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Bank
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Bank
 													Paid</label>
-												<div class="col-xs-12">
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="bankPaid" class="form-control" v-model="purchase.bankPaid" v-on:input="calculateTotal" />
 												</div>
 											</div>
@@ -369,9 +369,9 @@
 									<tr v-if="purchase.bankPaid > 0">
 										<td>
 											<div class="form-group">
-												<label class="col-sm-12 control-label no-padding-right">Bank
+												<label class="col-sm-4 col-md-12 control-label no-padding-right">Bank
 													Account</label>
-												<div class="col-sm-12">
+												<div class="col-sm-8 col-md-12">
 													<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
 												</div>
 											</div>
@@ -381,8 +381,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-6 control-label no-padding-right">Due</label>
-												<label class="col-xs-6 control-label no-padding-right">Previous Due</label>
+												<label class="col-xs-6 col-md-6 control-label no-padding-right">Due</label>
+												<label class="col-xs-6 col-md-6 control-label no-padding-right">Previous Due</label>
 											</div>
 										</td>
 									</tr>
@@ -390,10 +390,10 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<input type="number" id="due" name="due" class="form-control" v-model="purchase.due" readonly />
 												</div>
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<input type="number" id="previousDue" name="previousDue" class="form-control" v-model="purchase.previousDue" readonly style="color:red;" />
 												</div>
 											</div>
@@ -403,10 +403,10 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<input type="button" class="btn btn-success" value="Purchase" v-on:click="savePurchase" v-bind:disabled="purchaseOnProgress == true ? true : false" style="background:#000;color:#fff;padding:3px;width:100%;">
 												</div>
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<input type="button" class="btn btn-info" onclick="window.location = '<?php echo base_url(); ?>purchase'" value="New Purch.." style="background:#000;color:#fff;padding:3px;width:100%;">
 												</div>
 											</div>
@@ -452,8 +452,8 @@
 					previousDue: 0.00,
 					note: ''
 				},
-				sizes: [],
-				selectedSize: null,
+				// sizes: [],
+				// selectedSize: null,
 				vatPercent: 0.00,
 				branches: [],
 				selectedBranch: {
@@ -574,14 +574,15 @@
 				this.calculateTotal();
 			},
 			async onChangeProduct() {
-				if (this.selectedProduct.Product_SlNo == '') {
-					return
-				}
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
-					// this.selectedColor = null;
-					this.selectedSize = null;
-					this.getProductSizes();
-				}
+				this.$refs.quantity.focus();
+				// if (this.selectedProduct.Product_SlNo == '') {
+				// 	return
+				// }
+				// if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0)) {
+				// 	// this.selectedColor = null;
+				// 	this.selectedSize = null;
+				// 	this.getProductSizes();
+				// }
 			},
 			// async productColorChange() {
 			// 	if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedColor != null) {
@@ -589,11 +590,11 @@
 			// 		await this.getProductSizes();
 			// 	}
 			// },
-			productSizeChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null) {
-					this.$refs.quantity.focus();
-				}
-			},
+			// productSizeChange() {
+			// 	if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null) {
+			// 		this.$refs.quantity.focus();
+			// 	}
+			// },
 			productTotal() {
 				this.selectedProduct.total = (parseFloat(this.selectedProduct.quantity) * parseFloat(this.selectedProduct.Product_Purchase_Rate)).toFixed(2);
 			},
@@ -604,14 +605,14 @@
 			// 		this.colors = res.data;
 			// 	})
 			// },
-			getProductSizes() {
-				axios.post('/get_product_size', {
-						productId: this.selectedProduct.Product_SlNo
-					})
-					.then(res => {
-						this.sizes = res.data;
-					})
-			},
+			// getProductSizes() {
+			// 	axios.post('/get_product_size', {
+			// 			productId: this.selectedProduct.Product_SlNo
+			// 		})
+			// 		.then(res => {
+			// 			this.sizes = res.data;
+			// 		})
+			// },
 			addToCart() {
 				let cartInd = this.cart.findIndex(p => p.productId == this.selectedProduct.Product_SlNo && p.sizeId == this.selectedSize
 					.size_id);
@@ -625,8 +626,8 @@
 					name: this.selectedProduct.Product_Name,
 					categoryId: this.selectedProduct.ProductCategory_ID,
 					name: this.selectedProduct.Product_Name,
-					sizeId: this.selectedSize ? this.selectedSize.size_id : '',
-					size: this.selectedSize ? this.selectedSize.size_name: '',
+					// sizeId: this.selectedSize ? this.selectedSize.size_id : '',
+					// size: this.selectedSize ? this.selectedSize.size_name: '',
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					purchaseRate: this.selectedProduct.Product_Purchase_Rate,
 					salesRate: this.selectedProduct.Product_SellingPrice,
@@ -664,8 +665,8 @@
 					total: ''
 				}
 				// this.selectedColor = null;
-				this.sizes = [];
-				this.selectedSize = null;
+				// this.sizes = [];
+				// this.selectedSize = null;
 			},
 			onChangeQty(sl){
 				this.cart.map(p => {
@@ -805,8 +806,8 @@
 							id: product.PurchaseDetails_SlNo,
 							productId: product.Product_IDNo,
 							name: product.Product_Name,
-							sizeId: product.Product_sizeId,
-							size: product.size_name,
+							// sizeId: product.Product_sizeId,
+							// size: product.size_name,
 							categoryId: product.ProductCategory_ID,
 							categoryName: product.ProductCategory_Name,
 							purchaseRate: product.PurchaseDetails_Rate,

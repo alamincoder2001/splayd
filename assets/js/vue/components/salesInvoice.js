@@ -10,106 +10,159 @@ const salesInvoice = Vue.component("sales-invoice", {
             <div id="invoiceContent">
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <div _h098asdh>
-                            Sales Invoice
+                        <div _h098asde>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-7" style="font-size:15px;">
-                        <strong>Customer Id:</strong> {{ sales.Customer_Code }}<br>
-                        <strong>Customer Name:</strong> {{ sales.Customer_Name }}<br>
-                        <strong>Customer Address:</strong> {{ sales.Customer_Address }}<br>
-                        <strong>Customer Mobile:</strong> {{ sales.Customer_Mobile }}
-                    </div>
-                    <div class="col-xs-5 text-right" style="font-size:15px;">
-                        <strong>Sales by:</strong> {{ sales.AddBy }}<br>
-                        <strong>Invoice No.:</strong> {{ sales.SaleMaster_InvoiceNo }}<br>
-                        <strong>Sales Date:</strong> {{ sales.SaleMaster_SaleDate }} {{ sales.AddTime | formatDateTime('h:mm a') }}
+                    <div class="col-xs-12" style="font-size:15px;">
+                        <div class="col-xs-5">
+                            <strong>Invoice ID</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.SaleMaster_InvoiceNo || '&nbsp;' }}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Date</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.SaleMaster_SaleDate || '&nbsp;' }}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Time</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.AddTime | formatDateTime('h:mm a') || '&nbsp;' }}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Customer Id</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.Customer_Code || '&nbsp;' }}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Name</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.Customer_Name || '&nbsp;'}}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Address</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.Customer_Address || '&nbsp;' }}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Phone</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.Customer_Mobile || '&nbsp;' }}</strong>
+                        </div>
+                        <div class="col-xs-5">
+                            <strong>Sales by</strong>
+                        </div>
+                        <div class="col-xs-1"><strong>:</strong></div>
+                        <div class="col-xs-6">
+                            <strong>{{ sales.AddBy || '&nbsp;'}}</strong>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div _d9283dsc></div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-xs-12 text-center">
+                        <div _h098asdh>
+                            Invoice
+                        </div>
                     </div>
                 </div>
+                
                 <div class="row">
                     <div class="col-xs-12">
                         <table _a584de>
                             <thead>
                                 <tr>
-                                    <td>Sl.</td>
-                                    <td>Description</td>
-                                    <td>Size</td>
-                                    <td>Qnty</td>
-                                    <td>Unit Price</td>
-                                    <td>Total</td>
+                                    <td><strong>Sl.</strong></td>
+                                    <td><strong>Description</strong></td>
+                                    <!--<td><strong>Size</strong></td>-->
+                                    <td><strong>Qnty</strong></td>
+                                    <td><strong>Unit Price</strong></td>
+                                    <td><strong>Total</strong></strong></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(product, sl) in cart">
-                                    <td>{{ sl + 1 }}</td>
-                                    <td>{{ product.Product_Name }}</td>
-                                    <td>{{ product.size_name }}</td>
-                                    <td>{{ product.SaleDetails_TotalQuantity }}</td>
-                                    <td>{{ product.SaleDetails_Rate }}</td>
-                                    <td align="right">{{ product.SaleDetails_TotalAmount }}</td>
+                                    <td><strong>{{ sl + 1 }}</strong></td>
+                                    <td><strong>{{ product.Product_Name }}</strong></td>
+                                    <!--<td><strong>{{ product.size_name }}</strong></td>-->
+                                    <td><strong>{{ product.SaleDetails_TotalQuantity }}</strong></td>
+                                    <td><strong>{{ product.SaleDetails_Rate }}</strong></td>
+                                    <td align="right"><strong>{{ product.SaleDetails_TotalAmount }}</strong></td>
                                 </tr>
                             </tbody>
                         </table>
                         <table _a584de style="margin-top: 15px;dispaly:none" :style="{display: exchanges.length  > 0 ? '' : 'none'}">
                             <thead>
                                 <tr>
-                                    <td colspan="7">Product Exchange Information</td>
+                                    <td colspan="7"><span style="border-bottom:1px solid #000">Product Exchange Information</span></td>
                                 </tr>
                                 <tr>
-                                    <td>Sl.</td>
-                                    <td>Description</td>
-                                    <td>Size</td>
-                                    <td>Qnty</td>
-                                    <td>Unit</td>
-                                    <td>Unit Price</td>
-                                    <td>Total</td>
+                                    <td><strong>Sl.</strong></td>
+                                    <td><strong>Description</strong></td>
+                                    <!--<td><strong>Size</strong></td>-->
+                                    <td><strong>Qnty</strong></td>
+                                    <td><strong>Unit</strong></td>
+                                    <td><strong>Unit Price</strong></td>
+                                    <td><strong>Total</strong></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(product, sl) in exchanges">
-                                    <td>{{ sl + 1 }}</td>
-                                    <td>{{ product.Product_Name }}</td>
-                                    <td>{{ product.size_name }}</td>
-                                    <td>{{ product.quantity }}</td>
-                                    <td>{{ product.Unit_Name }}</td>
-                                    <td>{{ product.rate }}</td>
-                                    <td align="right" style="font-weight:bold">{{ product.total }}</td>
+                                    <td><strong>{{ sl + 1 }}</strong></td>
+                                    <td><strong>{{ product.Product_Name }}</strong></td>
+                                    <!--<td><strong>{{ product.size_name }}</strong></td>-->
+                                    <td><strong>{{ product.quantity }}</strong></td>
+                                    <td><strong>{{ product.Unit_Name }}</strong></td>
+                                    <td><strong>{{ product.rate }}</strong></td>
+                                    <td align="right" style="font-weight:bold"><strong>{{ product.total }}</strong></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <div _h098asdg>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-xs-6">
-                        <!--
-                        <table class="pull-left">
-                            <tr>
-                                <td><strong>Previous Due:</strong></td>
-                                
-                                <td style="text-align:right">{{ sales.SaleMaster_Previous_Due == null ? '0.00' : sales.SaleMaster_Previous_Due  }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Current Due:</strong></td>
-                                
-                                <td style="text-align:right">{{ sales.SaleMaster_DueAmount == null ? '0.00' : sales.SaleMaster_DueAmount  }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="border-bottom: 1px solid #ccc;"></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Total Due:</strong></td>
-                                
-                                <td style="text-align:right">{{ (parseFloat(sales.SaleMaster_Previous_Due) + parseFloat(sales.SaleMaster_DueAmount == null ? 0.00 : sales.SaleMaster_DueAmount)).toFixed(2) }}</td>
-                            </tr>
-                        </table>
-                        -->
+                        <div style="border:1px solid #000; margin-top:5px;padding:5px;overflow:hidden">
+                            <h5><strong>Payments</strong></h5>
+                            <table>
+                                <tr>
+                                    <td><strong>Cash:</strong></td>
+                                    <td style="text-align:right"><strong>{{ sales.SaleMaster_cashPaid == null ? '0.00' : sales.SaleMaster_cashPaid  }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bank:</strong></td>
+                                    <td style="text-align:right"><strong>{{ sales.SaleMaster_bankPaid == null ? '0.00' : sales.SaleMaster_bankPaid  }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="border-bottom: 1px solid #1a1a1a;"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total:</strong></td>
+                                    <td style="text-align:right"><strong>{{ (parseFloat(sales.SaleMaster_PaidAmount)) }}</strong></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-xs-6">
                         <table _t92sadbc2>
@@ -134,10 +187,19 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td><strong>Total:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_TotalSaleAmount }}</td>
                             </tr>
-                            <tr>
+                            <tr v-if='sales.SaleMaster_bankPaid > 0'>
+                            <td><strong>Bank/Bkesh Charge(1.5%):</strong></td>
+                            <td style="text-align:right">{{ (sales.SaleMaster_bankPaidwithChagre - sales.SaleMaster_PaidAmount) | decimal }}</td>
+                            </tr>
+                            <tr v-if='sales.SaleMaster_bankPaid > 0'>
+                            <td><strong>Total Paid:</strong></td>
+                            <td style="text-align:right">{{ sales.SaleMaster_bankPaidwithChagre}}</td>
+                            </tr>
+                            <tr v-else>
                                 <td><strong>Paid:</strong></td>
                                 <td style="text-align:right">{{ sales.SaleMaster_PaidAmount }}</td>
                             </tr>
+                           
                             <tr v-if='sales.returnAmount > 0'>
                                 <td><strong>Return Amount:</strong></td>
                                 <td style="text-align:right">{{ sales.returnAmount }}</td>
@@ -146,6 +208,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td><strong>Pay Amount:</strong></td>
                                 <td style="text-align:right">{{ sales.takeAmount }}</td>
                             </tr>
+                            
                             <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
                             <tr>
                                 <td style="font-size:18px;"><strong>Due:</strong></td>
@@ -164,7 +227,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                             NO REFUND. You can only <strong>exchange within 3days</strong>
                         </p>
                         <p style="text-align:center;">                            
-                            <img id="barcode" />
+                            <img style="width: 60%;height: 70px;" id="barcode" />
                         </p>
                     </div>
                 </div>
@@ -203,6 +266,9 @@ const salesInvoice = Vue.component("sales-invoice", {
     formatDateTime(dt, format) {
       return dt == "" || dt == null ? "" : moment(dt).format(format);
     },
+    decimal(value) {
+        return value == null ? '0.00' : parseFloat(value).toFixed(2);
+    }
   },
   created() {
     this.setStyle();
@@ -225,6 +291,18 @@ const salesInvoice = Vue.component("sales-invoice", {
     setStyle() {
       this.style = document.createElement("style");
       this.style.innerHTML = `
+                div[_h098asde]{
+                    font-weight: bold;
+                    font-size:15px;
+                    padding: 5px;
+                    border-top: 1px dotted #454545;
+                }
+                div[_h098asdg] {
+                    font-weight: bold;
+                    font-size: 15px;
+                    padding: 5px;
+                    border-bottom: 1px dotted #454545;
+                }
                 div[_h098asdh]{
                     /*background-color:#e0e0e0;*/
                     font-weight: bold;
@@ -248,7 +326,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                 }
                 table[_a584de] td{
                     padding: 3px;
-                    border: 1px solid black;
+                    border: 1px solid transparent;
                     font-size: 15px;
                 }
                 table[_t92sadbc2]{
@@ -383,8 +461,10 @@ const salesInvoice = Vue.component("sales-invoice", {
                         <body>
                             <div style="text-align:center;">
                                 <!-- <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br> -->
-                                <strong style="font-size:20px;">${this.currentBranch.Company_Name}</strong><br>
-                                <p style="white-space:pre-line;font-size:15px;">${this.currentBranch.Repot_Heading}</p>
+                                <strong style="text-transform:uppercase;font-size:26px;">${this.currentBranch.Company_Name}</strong><br>
+                                <p style="white-space:pre-line;font-size:18px;">${this.currentBranch.Repot_Heading}</p>
+                                <strong>Phone: </strong><strong style="font-size:12px;">${this.currentBranch.Company_phone}</strong><br>
+                                <strong>Email: </strong><strong style="font-size:12px;">${this.currentBranch.Company_email}</strong><br>
                             </div>
                             ${invoiceContent}
                         </body>

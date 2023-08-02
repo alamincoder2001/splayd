@@ -144,6 +144,7 @@
                             <td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
                             <th>
+                            <a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
                                 <button @click="StatusChange(sale.SaleMaster_SlNo, sale.delivery_status)" :disabled="sale.delivery_status == 'a'? true:false" :class="sale.delivery_status == 'p'? 'statusPendingBtn' :'statusReceivedBtn'">{{sale.delivery_status == 'p' ? 'Pending': 'Received'}}</button>
                             </th>
                         </tr>
@@ -181,6 +182,22 @@
             this.getCustomers();
         },
         methods: {
+            deleteSale(saleId) {
+                let deleteConf = confirm('Are you sure?');
+                if (deleteConf == false) {
+                    return;
+                }
+                axios.post('/delete_order', {
+                        saleId: saleId
+                    })
+                    .then(res => {
+                        let r = res.data;
+                        alert(r.message);
+                        if (r.success) {
+                            this.getOrders();
+                        }
+                    })
+            },
             getCustomers() {
                 axios.get('/get_customers').then(res => {
                     this.customers = res.data;

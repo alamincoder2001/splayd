@@ -46,6 +46,18 @@
             </div>
 
             <div class="group">
+                <input type="checkbox" id="order" class="group-head" @click="onClickGroupHeads"> <strong>Online Order</strong>
+                <ul ref="order">
+                    <li><input type="checkbox" class="access" value="order_entry" v-model="access"> Order Entry</li>
+                    <li><input type="checkbox" class="access" value="pending_order" v-model="access"> Pending Order</li>
+                    <li><input type="checkbox" class="access" value="processing_order" v-model="access"> Processing Order</li>
+                    <li><input type="checkbox" class="access" value="delivered_order" v-model="access"> Delivered Order</li>
+                    <li><input type="checkbox" class="access" value="cancel_order" v-model="access"> Cancel Order</li>
+                    <li><input type="checkbox" class="access" value="orderrecord" v-model="access"> Order Record</li>
+                </ul>
+            </div>
+
+            <div class="group">
                 <input type="checkbox" id="accounts" class="group-head" @click="onClickGroupHeads"> <strong>Accounts</strong>
                 <ul ref="accounts">
                     <li><input type="checkbox" class="access" value="cashTransaction" v-model="access"> Cash Transactions</li>

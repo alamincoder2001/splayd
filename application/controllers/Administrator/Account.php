@@ -883,7 +883,7 @@ class Account extends CI_Controller {
         $res = ['success'=>false, 'message'=>''];
         try{
             $data = json_decode($this->input->raw_input_stream);
-
+            
             $accountCheck = $this->db->query("
                 select
                 *
@@ -901,8 +901,8 @@ class Account extends CI_Controller {
             $account['saved_by'] = $this->session->userdata('userId');
             $account['saved_datetime'] = date('Y-m-d H:i:s');
             $account['branch_id'] = $this->session->userdata('BRANCHid');
-
             $this->db->insert('tbl_bank_accounts', $account);
+
             $res = ['success'=>true, 'message'=>'Account created successfully'];
         } catch (Exception $ex){
             $res = ['success'=>false, 'message'=>$ex->getMessage()];
@@ -935,7 +935,10 @@ class Account extends CI_Controller {
             $account['updated_datetime'] = date('Y-m-d H:i:s');
 
             $this->db->where('account_id', $data->account_id);
+            // echo json_encode($account);
+            // return ;
             $this->db->update('tbl_bank_accounts', $account);
+
             $res = ['success'=>true, 'message'=>'Account updated successfully'];
         } catch (Exception $ex){
             $res = ['success'=>false, 'message'=>$ex->getMessage()];

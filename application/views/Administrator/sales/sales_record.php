@@ -133,6 +133,7 @@
 					>
 					<thead>
 						<tr>
+							<th>Sl.</th>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Customer Name</th>
@@ -146,8 +147,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<template v-for="sale in sales">
+						<template v-for="(sale, sl) in sales" :key="sl">
 							<tr>
+								<td>{{ sl+1 }}</td>
 								<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 								<td>{{ sale.SaleMaster_SaleDate }}</td>
 								<td>{{ sale.Customer_Name }}</td>
@@ -162,12 +164,14 @@
 									<a href="" title="Chalan" v-bind:href="`/chalan/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file-o"></i></a>
 									<?php if($this->session->userdata('accountType') != 'u'){?>
 									<a href="javascript:" title="Edit Sale" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
+									<?php if($this->session->userdata('accountType') != 'e'){?>
 									<a href="" title="Delete Sale" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+									<?php }?>
 									<?php }?>
 								</td>
 							</tr>
 							<tr v-for="(product, sl) in sale.saleDetails.slice(1)">
-								<td colspan="5" v-bind:rowspan="sale.saleDetails.length - 1" v-if="sl == 0"></td>
+								<td colspan="6" v-bind:rowspan="sale.saleDetails.length - 1" v-if="sl == 0"></td>
 								<td>{{ product.Product_Name }}</td>
 								<td style="text-align:right;">{{ product.SaleDetails_Rate }}</td>
 								<td style="text-align:center;">{{ product.SaleDetails_TotalQuantity }}</td>
@@ -175,7 +179,7 @@
 								<td></td>
 							</tr>
 							<tr style="font-weight:bold;">
-								<td colspan="7" style="font-weight:normal;"><strong>Note: </strong>{{ sale.SaleMaster_Description }}</td>
+								<td colspan="8" style="font-weight:normal;"><strong>Note: </strong>{{ sale.SaleMaster_Description }}</td>
 								<td style="text-align:center;">Total Quantity<br>{{ sale.saleDetails.reduce((prev, curr) => {return prev + parseFloat(curr.SaleDetails_TotalQuantity)}, 0) }}</td>
 								<td style="text-align:right;">
 									Total: {{ sale.SaleMaster_TotalSaleAmount }}<br>
@@ -196,6 +200,7 @@
 					>
 					<thead>
 						<tr>
+							<th>Sl.</th>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Customer Name</th>
@@ -213,7 +218,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="sale in sales">
+						<tr v-for="(sale, sl) in sales" :key="sl">
+							<td>{{ sl+1 }}</td>
 							<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 							<td>{{ sale.SaleMaster_SaleDate }}</td>
 							<td>{{ sale.Customer_Name }}</td>
@@ -232,14 +238,16 @@
 								<a href="" title="Chalan" v-bind:href="`/chalan/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file-o"></i></a>
 								<?php if($this->session->userdata('accountType') != 'u'){?>
 								<a href="javascript:" title="Edit Sale" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-								<a href="" title="Delete Sale" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+								<?php }?>
+								<?php if($this->session->userdata('accountType') != 'e'){?>
+									<a href="" title="Delete Sale" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
 								<?php }?>
 							</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr style="font-weight:bold;">
-							<td colspan="5" style="text-align:right;">Total</td>
+							<td colspan="6" style="text-align:right;">Total</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_SubTotalAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_TaxAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_TotalDiscountAmount)}, 0).toFixed(2) }}</td>
@@ -261,6 +269,7 @@
 					<table class="record-table" v-if="selectedProduct != null">
 						<thead>
 							<tr>
+								<th>Sl.</th>
 								<th>Invoice No.</th>
 								<th>Date</th>
 								<th>Customer Name</th>
@@ -270,7 +279,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="sale in sales">
+							<tr v-for="(sale, sl) in sales" :key="sl">
+								<td>{{ sl+1 }}</td>
 								<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 								<td>{{ sale.SaleMaster_SaleDate }}</td>
 								<td>{{ sale.Customer_Name }}</td>
@@ -281,8 +291,8 @@
 						</tbody>
 						<tfoot>
 							<tr style="font-weight:bold;">
-								<td colspan="5" style="text-align:right;">Total Quantity</td>
-								<td style="text-align:right;">{{ sales.reduce((prev, curr) => { return prev + parseFloat(curr.SaleDetails_TotalQuantity)}, 0) }}</td>
+								<td colspan="6" style="text-align:right;">Total Quantity</td>
+								<td style="text-align:right;">{{ sales.reduce((prev, curr) => {return prev + parseFloat(curr.SaleDetails_TotalQuantity)}, 0) }}</td>
 							</tr>
 						</tfoot>
 					</table>
@@ -307,6 +317,12 @@
 								</tr>
 							</template>
 						</tbody>
+						<tfoot>
+							<tr style="font-weight:bold;">
+								<td colspan="2" style="text-align:right;">Total Quantity</td>
+								<td style="text-align:right;">{{ sales.reduce((prev, curr) => {return prev + parseFloat(curr.products.reduce((p, c) => {return p + parseFloat(c.quantity)}, 0))}, 0)}}</td>
+							</tr>
+						</tfoot>
 					</table>
 				</template>
 			</div>
@@ -383,7 +399,7 @@
 				})
 			},
 			getCustomers(){
-				axios.get('/get_customers').then(res => {
+				axios.post('/get_customers', { type: 'G' }).then(res => {
 					this.customers = res.data;
 				})
 			},

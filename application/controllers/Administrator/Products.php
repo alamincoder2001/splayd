@@ -89,20 +89,20 @@ class Products extends CI_Controller
 
             $this->db->insert('tbl_product', $product);
 
-            $productId = $this->db->insert_id();
+            // $productId = $this->db->insert_id();
 
-            foreach ($data->cart as $color) {
-                $colorDetails = array(
-                    'product_id' => $productId,
-                    'size_id' => $color->size_SiNo,
-                    'status' => 'a',
-                    'add_by' => $this->session->userdata("FullName"),
-                    'add_time' => date('Y-m-d H:i:s'),
-                    'branch_id' => $this->brunch,
-                );
+            // foreach ($data->cart as $color) {
+            //     $colorDetails = array(
+            //         'product_id' => $productId,
+            //         'size_id' => $color->size_SiNo,
+            //         'status' => 'a',
+            //         'add_by' => $this->session->userdata("FullName"),
+            //         'add_time' => date('Y-m-d H:i:s'),
+            //         'branch_id' => $this->brunch,
+            //     );
 
-                $this->db->insert('tbl_color_size', $colorDetails);
-            }
+            //     $this->db->insert('tbl_color_size', $colorDetails);
+            // }
 
             $res = ['success' => true, 'message' => 'Product added successfully', 'productId' => $this->mt->generateProductCode()];
         } catch (Exception $ex) {

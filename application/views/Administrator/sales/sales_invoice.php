@@ -21,20 +21,20 @@
 <div id="salesInvoiceReport" class="row">
   <div class="col-xs-12 col-md-12 col-lg-12" style="border-bottom:1px #ccc solid;margin-bottom:5px;">
     <div class="form-group" style="margin-top:10px;">
-      <label class="col-sm-1 col-sm-offset-2 control-label no-padding-right"> Invoice no </label>
-      <label class="col-sm-1 control-label no-padding-right"> : </label>
-      <div class="col-sm-3">
+      <label class="col-xs-3 col-sm-1 col-sm-offset-2 control-label no-padding-right"> Invoice no </label>
+      <label class="col-xs-1 col-sm-1 control-label no-padding-right"> : </label>
+      <div class="col-xs-8 col-sm-3">
         <v-select v-bind:options="invoices" label="invoice_text" v-model="selectedInvoice" v-on:input="viewInvoice" placeholder="Select Invoice"></v-select>
       </div>
     </div>
 
     <div class="form-group">
-      <div class="col-sm-2">
+      <div class="col-xs-2 col-sm-2">
         <input type="button" class="btn btn-primary" value="Show Report" v-on:click="viewInvoice" style="margin-top:0px;width:150px;display: none;">
       </div>
     </div>
   </div>
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
     <br>
     <sales-invoice v-bind:sales_id="selectedInvoice.SaleMaster_SlNo" v-if="showInvoice"></sales-invoice>
   </div>

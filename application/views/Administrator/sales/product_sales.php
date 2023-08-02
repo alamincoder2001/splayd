@@ -153,12 +153,12 @@
 									</div>
 								</div> -->
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Size </label>
 									<div class="col-xs-9">
 										<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" v-on:input="productSizeChange" placeholder="select size"></v-select>
 									</div>
-								</div>
+								</div> -->
 
 								<div class="form-group" style="display: none;">
 									<label class="col-xs-3 control-label no-padding-right"> Brand </label>
@@ -173,7 +173,7 @@
 										<input type="number" id="salesRate" placeholder="Rate" step="0.01" class="form-control" v-model="selectedProduct.Product_SellingPrice" v-on:input="productTotal" />
 									</div>
 									<div class="col-xs-4">
-										<input type="number" min="0" step="0.01" class="form-control" ref="quantity" v-model="selectedProduct.quantity" placeholder="Quantity" v-on:input="productTotal" required>
+										<input type="number" min="0" step="" class="form-control" ref="quantity" v-model="selectedProduct.quantity" placeholder="Quantity" v-on:input="productTotal" required>
 									</div>
 								</div>
 
@@ -224,7 +224,7 @@
 							<th v-if="sales.salesId > 0" style="color:#000;">Is Exchange</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="color:#000;">Size</th>
+							<!-- <th style="color:#000;">Size</th> -->
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
@@ -239,7 +239,7 @@
 							</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.size }}</td>
+							<!-- <td>{{ product.size }}</td> -->
 							<td>{{ product.quantity }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
@@ -269,7 +269,7 @@
 							<th style="width:7%;color:#000;">Sl</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="color:#000;">Color</th>
-							<th style="color:#000;">Size</th>
+							<!-- <th style="color:#000;">Size</th> -->
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
@@ -280,7 +280,7 @@
 							<td>{{sl + 1}}</td>
 							<td>{{product.Product_Name}}</td>
 							<td>{{product.color_name}}</td>
-							<td>{{product.size_name}}</td>
+							<!-- <td>{{product.size_name}}</td> -->
 							<td>{{product.quantity}}</td>
 							<td>{{product.rate}}</td>
 							<td>{{product.total}}</td>
@@ -316,8 +316,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Sub Total</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Sub Total</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="subTotal" class="form-control" v-model="sales.subTotal" readonly />
 												</div>
 											</div>
@@ -327,8 +327,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right"> Vat </label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right"> Vat </label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="vat" readonly="" class="form-control" v-model="sales.vat" />
 												</div>
 											</div>
@@ -338,15 +338,15 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Discount Persent</label>
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Discount Persent</label>
 
-												<div class="col-xs-4">
+												<div class="col-xs-4 col-md-4">
 													<input type="number" id="discountPercent" class="form-control" v-model="discountPercent" v-on:input="calculateTotal" />
 												</div>
 
-												<label class="col-xs-1 control-label no-padding-right">%</label>
+												<label class="col-xs-1 col-md-1 control-label no-padding-right">%</label>
 
-												<div class="col-xs-7">
+												<div class="col-xs-3 col-md-7">
 													<input type="number" id="discount" class="form-control" v-model="sales.discount" v-on:input="calculateTotal" />
 												</div>
 
@@ -357,8 +357,8 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Transport Cost</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Transport Cost</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" class="form-control" v-model="sales.transportCost" v-on:input="calculateTotal" />
 												</div>
 											</div>
@@ -368,8 +368,8 @@
 									<tr style="display:none;">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Round Of</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Round Of</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="roundOf" class="form-control" />
 												</div>
 											</div>
@@ -379,8 +379,8 @@
 									<tr v-if="sales.salesId > 0">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Exchange Total</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Exchange Total</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="total" class="form-control" v-model="sales.exchangeTotal" readonly />
 												</div>
 											</div>
@@ -390,8 +390,8 @@
 									<tr v-if="sales.salesId > 0 && parseFloat(sales.returnAmount) < parseFloat(sales.takeAmount)">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Pay Exchange Amount</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Pay Exchange Amount</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="takeAmount" class="form-control" v-model="sales.takeAmount" />
 												</div>
 											</div>
@@ -400,8 +400,8 @@
 									<tr v-if="sales.salesId > 0 && parseFloat(sales.returnAmount) > parseFloat(sales.takeAmount)">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Return Amount</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4col-md-12 control-label no-padding-right">Return Amount</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="returnAmount" class="form-control" v-model="sales.returnAmount" />
 												</div>
 											</div>
@@ -411,9 +411,9 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Total</label>
-												<div class="col-xs-12">
-													<input type="number" id="total" class="form-control" v-model="sales.total" readonly />
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Total</label>
+												<div class="col-xs-8 col-md-12">
+													<input type="number" step="0.01" id="total" class="form-control" v-model="sales.total" readonly />
 												</div>
 											</div>
 										</td>
@@ -422,9 +422,9 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Cash
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Cash
 													Paid</label>
-												<div class="col-xs-12">
+												<div class="col-xs-8 col-md-12">
 													<input type="number" id="cashPaid" class="form-control" v-model="sales.cashPaid" v-on:input="calculateTotal" />
 												</div>
 											</div>
@@ -434,10 +434,10 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<div class="col-xs-2">
+												<div class="col-xs-1 col-md-2">
 													<input type="checkbox" id="bankStatus" v-model="sales.bankStatus" />
 												</div>
-												<label class="col-xs-10 control-label no-padding-right" for="bankStatus">Multiple Bank</label>
+												<label class="col-xs-11 col-md-10 control-label no-padding-right" for="bankStatus">Multiple Bank</label>
 											</div>
 										</td>
 									</tr>
@@ -445,13 +445,15 @@
 									<tr v-if="banks.length > 0">
 										<td>
 											<div class="form-group">
-												<div class="col-xs-12">
+												<div class="col-xs-12 col-md-12">
 													<table class="border" style="width: 100%;">
 														<tr v-for="(item, index) in banks" :key="index">
 															<td>{{index + 1}}</td>
 															<td>{{item.bank_name}}</td>
 															<td>{{item.bankDigit}}</td>
 															<td>{{item.amount}}</td>
+															<td>{{item.charge_amount}}</td>
+															<td>{{item.charge_with_amount}}</td>
 															<td><i @click="removeBank(index)" class="fa fa-trash"></i></td>
 														</tr>
 													</table>
@@ -463,8 +465,8 @@
 									<tr v-if="sales.bankPaid <= 0">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label no-padding-right">Return</label>
-												<div class="col-xs-12">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Return</label>
+												<div class="col-xs-8 col-md-12">
 													<input type="number" class="form-control" id="returnCash" v-model="sales.returnCash" />
 												</div>
 											</div>
@@ -474,11 +476,22 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-12 control-label">Due</label>
-												<div class="col-xs-6">
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Total Paid With Charge</label>
+												<div class="col-xs-8 col-md-12">
+													<input type="number" step="0.01" id="total" class="form-control" v-model="sales.bankPaidwithChagre" readonly />
+												</div>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<div class="form-group">
+												<label class="col-xs-12 col-md-12 control-label">Due</label>
+												<div class="col-xs-6 col-md-6">
 													<input type="number" id="due" class="form-control" v-model="sales.due" readonly />
 												</div>
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<input type="number" id="previousDue" class="form-control" v-model="sales.previousDue" readonly style="color:red;" />
 												</div>
 											</div>
@@ -488,10 +501,10 @@
 									<tr>
 										<td>
 											<div class="form-group">
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<input type="button" class="btn btn-default btn-sm" value="Sale" v-on:click="saveSales" v-bind:disabled="saleOnProgress ? true : false" style="color: black!important;margin-top: 0px;width:100%;padding:5px;font-weight:bold;">
 												</div>
-												<div class="col-xs-6">
+												<div class="col-xs-6 col-md-6">
 													<a class="btn btn-info btn-sm" v-bind:href="`/sales/${sales.isService == 'true' ? 'service' : 'product'}`" style="color: black!important;margin-top: 0px;width:100%;padding:5px;font-weight:bold;">New Sale</a>
 												</div>
 											</div>
@@ -507,7 +520,7 @@
 		</div>
 	</div>
 
-	<div v-if="sales.bankStatus == true" class="card" style="position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;">
+	<div class="card" style="display:none;position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;" :style="{display: sales.bankStatus == true ?'':'none'}">
 		<div class="card-header" style="display: flex;justify-content: space-between;align-items: center;border-bottom: 1px dashed gray;">
 			<div class="card-title">
 				Multiple Bank
@@ -517,16 +530,19 @@
 		<div class="card-body">
 			<div style="margin-top: 5px;">
 				<div class="row">
-					<div class="col-md-5">
-						<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
+					<div class="col-xs-12 col-md-5">
+						<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account" @input="bankChange"></v-select>
 					</div>
-					<div class="col-md-3 no-padding-left">
-						<input type="text" placeholder="last digit" v-model="bankDigit" style="width: 110px;padding: 2px 5px;">
+					<div class="col-xs-4 col-md-2 no-padding-left">
+						<input type="text" placeholder="last digit" v-model="bankDigit" style="width: 100px;padding: 2px 5px;">
 					</div>
-					<div class="col-md-2 no-padding-right">
-						<input type="number" step="0.01" min="0" v-model="bankAmount" style="width: 80px;padding: 2px 5px;">
+					<div class="col-xs-5 col-md-2 no-padding-right">
+						<input type="number" step="0.01" min="0" v-model="bankAmount" v-on:input='chargeAmount()' style="width: 80px;padding: 2px 5px;">
 					</div>
-					<div class="col-md-1">
+					<div class="col-xs-5 col-md-2 no-padding-right">
+						<input type="number" step="0.01" min="0" v-model="charge_amount" readonly style="width: 80px;padding: 2px 5px;">
+					</div>
+					<div class="col-xs-1 col-md-1">
 						<button type="button" @click="bankAdd"><i class="fa fa-plus"></i></button>
 					</div>
 				</div>
@@ -539,6 +555,8 @@
 						<th>Bank Name</th>
 						<th>LastDigit</th>
 						<th>Amount</th>
+						<th>Charge</th>
+						<th>Amount(With 1.5% Charge)</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -548,6 +566,8 @@
 						<td>{{item.bank_name}}</td>
 						<td>{{item.bankDigit}}</td>
 						<td>{{item.amount}}</td>
+						<td>{{item.charge_amount}}</td>
+						<td>{{item.charge_with_amount}}</td>
 						<td>
 							<i @click="removeBank(index)" class="fa fa-trash"></i>
 						</td>
@@ -556,6 +576,7 @@
 						<th colspan="3" class="text-center">Total</th>
 						<th>{{sales.bankPaid}}</th>
 						<th></th>
+						<th>{{sales.bankPaidwithChagre}}</th>
 					</tr>
 				</tbody>
 			</table>
@@ -576,30 +597,31 @@
 		data() {
 			return {
 				sales: {
-					salesId: parseInt('<?php echo $salesId; ?>'),
-					invoiceNo: '<?php echo $invoice; ?>',
-					salesBy: '<?php echo $this->session->userdata("FullName"); ?>',
-					salesType: 'retail',
-					salesFrom: '',
-					salesDate: '',
-					customerId: '',
-					employeeId: null,
-					subTotal: 0.00,
-					discount: 0.00,
-					vat: 0.00,
-					transportCost: 0.00,
-					total: 0.00,
-					paid: 0.00,
-					cashPaid: 0.00,
-					bankPaid: 0.00,
-					previousDue: 0.00,
-					due: 0.00,
-					isService: '<?php echo $isService; ?>',
-					note: '',
-					exchangeTotal: 0,
-					returnAmount: 0,
-					takeAmount: 0,
-					returnCash: 0,
+					salesId           : parseInt('<?php echo $salesId; ?>'),
+					invoiceNo         : '<?php echo $invoice; ?>',
+					salesBy           : '<?php echo $this->session->userdata("FullName"); ?>',
+					salesType         : 'retail',
+					salesFrom         : '',
+					salesDate         : '',
+					customerId        : '',
+					employeeId        : null,
+					subTotal          : 0.00,
+					discount          : 0.00,
+					vat               : 0.00,
+					transportCost     : 0.00,
+					total             : 0.00,
+					paid              : 0.00,
+					cashPaid          : 0.00,
+					bankPaid          : 0.00,
+					bankPaidwithChagre: 0.00,
+					previousDue       : 0.00,
+					due               : 0.00,
+					isService         : '<?php echo $isService; ?>',
+					note              : '',
+					exchangeTotal     : 0,
+					returnAmount      : 0,
+					takeAmount        : 0,
+					returnCash        : 0,
 				},
 				vatPercent: 0,
 				discountPercent: 0,
@@ -652,6 +674,7 @@
 
 				banks: [],
 				bankAmount: 0,
+				charge_amount: 0,
 				bankDigit: "",
 				userType: '<?php echo $this->session->userdata("accountType"); ?>'
 			}
@@ -684,6 +707,7 @@
 					this.employees = res.data;
 				})
 			},
+			
 			getBranches() {
 				axios.get('/get_branches').then(res => {
 					this.branches = res.data;
@@ -730,14 +754,14 @@
 					this.colors = res.data;
 				})
 			},
-			getProductSizes() {
-				axios.post('/get_product_size', {
-						productId: this.selectedProduct.Product_SlNo
-					})
-					.then(res => {
-						this.sizes = res.data;
-					})
-			},
+			// getProductSizes() {
+			// 	axios.post('/get_product_size', {
+			// 			productId: this.selectedProduct.Product_SlNo
+			// 		})
+			// 		.then(res => {
+			// 			this.sizes = res.data;
+			// 		})
+			// },
 			onSalesTypeChange() {
 				this.selectedCustomer = {
 					Customer_SlNo: '',
@@ -801,25 +825,29 @@
 				}
 				// this.selectedColor = null;
 				this.selectedSize = null;
-				this.getProductSizes();
+				this.selectedProduct.quantity = 1
+				this.productTotal();
+				this.$refs.quantity.focus();
+			
+				// this.getProductSizes();
 			},
 
-			async productSizeChange() {
-				if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null && this.sales.isService == 'false') {
-					await axios.post('/get_product_size_stock', {
-							productId: this.selectedProduct.Product_SlNo,
-							sizeId: this.selectedSize.size_id
-						})
-						.then(res => {
-							this.productStock = res.data;
-						})
+			// async productSizeChange() {
+			// 	if ((this.selectedProduct.Product_SlNo != '' || this.selectedProduct.Product_SlNo != 0) && this.selectedSize != null && this.sales.isService == 'false') {
+			// 		await axios.post('/get_product_size_stock', {
+			// 				productId: this.selectedProduct.Product_SlNo,
+			// 				sizeId: this.selectedSize.size_id
+			// 			})
+			// 			.then(res => {
+			// 				this.productStock = res.data;
+			// 			})
 
-					this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
-					this.selectedProduct.quantity = 1
-					this.productTotal();
-					this.$refs.quantity.focus();
-				}
-			},
+			// 		this.productStockText = this.productStock > 0 ? "Available Stock" : "Stock Unavailable";
+			// 		this.selectedProduct.quantity = 1
+			// 		this.productTotal();
+			// 		this.$refs.quantity.focus();
+			// 	}
+			// },
 			toggleProductPurchaseRate() {
 				//this.productPurchaseRate = this.productPurchaseRate == '' ? this.selectedProduct.Product_Purchase_Rate : '';
 				this.$refs.productPurchaseRate.type = this.$refs.productPurchaseRate.type == 'text' ? 'password' : 'text';
@@ -830,8 +858,8 @@
 					productCode: this.selectedProduct.Product_Code,
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					name: this.selectedProduct.Product_Name,
-					sizeId: this.selectedSize ? this.selectedSize.size_id : '',
-					size: this.selectedSize ? this.selectedSize.size_name : '',
+					// sizeId: this.selectedSize ? this.selectedSize.size_id : '',
+					// size: this.selectedSize ? this.selectedSize.size_name : '',
 					salesRate: this.selectedProduct.Product_SellingPrice,
 					vat: this.selectedProduct.vat,
 					quantity: this.selectedProduct.quantity,
@@ -914,6 +942,7 @@
 				}
 				this.sales.total = ((parseFloat(this.sales.subTotal) + parseFloat(this.sales.vat) + parseFloat(this
 					.sales.transportCost)) - parseFloat(this.sales.discount)).toFixed(2);
+
 				if (this.selectedCustomer.Customer_Type == 'G') {
 					this.sales.due = 0;
 				} else {
@@ -938,11 +967,70 @@
 				if (this.sales.bankPaid <= 0) {
 					this.sales.returnCash = (parseFloat(this.sales.cashPaid) - parseFloat(this.sales.total)).toFixed(2);
 					this.sales.due = 0;
-				}else{
+				} else {
 					this.sales.returnCash = 0;
 				}
 			},
+			
+			bankChange(){
+				let totalPaid = +parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
+				let totalAmount = (parseFloat(this.sales.total) - parseFloat(totalPaid))
+			},
+			chargeAmount() {
+				console.log(this.account)
+				this.charge_amount = +this.bankAmount * (this.account.charge / 100);
+			},
+			bankAdd() {
+				if (this.account == null) {
+					alert("Select Bank Account");
+					return
+				}
+				if (this.bankAmount == 0) {
+					alert("Amount field is required");
+					return
+				}
+
+				if (this.bankDigit == '') {
+					alert("Bank Digit required");
+					return
+				}
+
+
+				let bank = {
+					account_id        : this.account.account_id,
+					account_name      : this.account.account_name,
+					bank_name         : this.account.bank_name,
+					amount            : this.bankAmount,
+					charge_amount     : this.charge_amount,
+					charge_with_amount: +this.bankAmount + +this.charge_amount,
+					bankDigit         : this.bankDigit
+				}
+
+				let cartInd = this.banks.findIndex(p => p.account_id == bank.account_id);
+				if (cartInd > -1) {
+					this.banks.splice(cartInd, 1);
+				}
+				this.banks.push(bank);
+
+				let chargeAmount = (parseFloat(this.sales.total) * parseFloat(1.5)) / 100;
+				
+				this.sales.subTotal = parseFloat(+parseFloat(this.sales.subTotal) + chargeAmount).toFixed(2);
+				this.account = null;
+				this.bankAmount = 0;
+				this.charge_amount = 0;
+				this.bankDigit = "";
+
+				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
+					return acc + +pre.amount
+				}, 0).toFixed(2);
+				this.sales.bankPaidwithChagre = this.banks.reduce((acc, pre) => {
+					return acc + +pre.charge_with_amount
+				}, 0).toFixed(2);
+
+				this.calculateTotal();
+			},
 			async saveSales() {
+				
 				if (this.selectedCustomer.Customer_SlNo == '') {
 					alert('Select Customer');
 					return;
@@ -953,7 +1041,7 @@
 				}
 
 				if (this.sales.salesId == 0) {
-					if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid))-parseFloat(this.sales.returnCash) != parseFloat(this.sales.total))) {
+					if (this.selectedCustomer.Customer_Type == 'G' && ((parseFloat(this.sales.bankPaid) + parseFloat(this.sales.cashPaid)) - parseFloat(this.sales.returnCash) != parseFloat(this.sales.total))) {
 						alert('Payment amount and total amount is not equal');
 						return;
 					}
@@ -1018,28 +1106,29 @@
 				await axios.post('/get_sales', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r                        = res.data;
-					let sales                    = r.sales[0];
-					    this.sales.salesBy       = sales.AddBy;
-					    this.sales.salesFrom     = sales.SaleMaster_branchid;
-					    this.sales.salesDate     = sales.SaleMaster_SaleDate;
-					    this.sales.salesType     = sales.SaleMaster_SaleType;
-					    this.sales.customerId    = sales.SalseCustomer_IDNo;
-					    this.sales.employeeId    = sales.Employee_SlNo;
-					    this.sales.subTotal      = sales.SaleMaster_SubTotalAmount;
-					    this.sales.discount      = sales.SaleMaster_TotalDiscountAmount;
-					    this.sales.vat           = sales.SaleMaster_TaxAmount;
-					    this.sales.transportCost = sales.SaleMaster_Freight;
-					    this.sales.total         = sales.SaleMaster_TotalSaleAmount;
-					    this.sales.paid          = sales.SaleMaster_PaidAmount;
-					    this.sales.cashPaid      = sales.SaleMaster_cashPaid;
-					    this.sales.bankPaid      = sales.SaleMaster_bankPaid;
-					    this.sales.previousDue   = sales.SaleMaster_Previous_Due;
-					    this.sales.due           = sales.SaleMaster_DueAmount;
-					    this.sales.takeAmount    = sales.takeAmount;
-					    this.sales.returnAmount  = sales.returnAmount;
-					    this.sales.note          = sales.SaleMaster_Description;
-					    this.sales.returnCash    = 0;
+					let r = res.data;
+					let sales = r.sales[0];
+					this.sales.salesBy = sales.AddBy;
+					this.sales.salesFrom = sales.SaleMaster_branchid;
+					this.sales.salesDate = sales.SaleMaster_SaleDate;
+					this.sales.salesType = sales.SaleMaster_SaleType;
+					this.sales.customerId = sales.SalseCustomer_IDNo;
+					this.sales.employeeId = sales.Employee_SlNo;
+					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
+					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
+					this.sales.vat = sales.SaleMaster_TaxAmount;
+					this.sales.transportCost = sales.SaleMaster_Freight;
+					this.sales.total = sales.SaleMaster_TotalSaleAmount;
+					this.sales.paid = sales.SaleMaster_PaidAmount;
+					this.sales.cashPaid = sales.SaleMaster_cashPaid;
+					this.sales.bankPaid = sales.SaleMaster_bankPaid;
+					this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
+					this.sales.previousDue = sales.SaleMaster_Previous_Due;
+					this.sales.due = sales.SaleMaster_DueAmount;
+					this.sales.takeAmount = sales.takeAmount;
+					this.sales.returnAmount = sales.returnAmount;
+					this.sales.note = sales.SaleMaster_Description;
+					this.sales.returnCash = 0;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
@@ -1067,8 +1156,8 @@
 						let cartProduct = {
 							productCode: product.Product_Code,
 							productId: product.Product_IDNo,
-							size: product.size_name,
-							sizeId: product.Product_sizeId,
+							// size: product.size_name,
+							// sizeId: product.Product_sizeId,
 							categoryName: product.ProductCategory_Name,
 							name: product.Product_Name,
 							salesRate: product.SaleDetails_Rate,
@@ -1086,11 +1175,13 @@
 					if (r.banks.length > 0) {
 						r.banks.forEach(b => {
 							let bank = {
-								account_id: b.account_id,
-								account_name: b.account_name,
-								bank_name: b.bank_name,
-								amount: b.amount,
-								bankDigit: b.lastDigit
+								account_id        : b.account_id,
+								account_name      : b.account_name,
+								bank_name         : b.bank_name,
+								amount            : b.amount,
+								bankDigit         : b.lastDigit,
+								charge_amount     : b.charge_amount,
+								charge_with_amount: +b.amount + +b.charge_amount
 							}
 
 							this.banks.push(bank);
@@ -1102,45 +1193,14 @@
 					this.customers.splice(gCustomerInd, 1);
 				})
 			},
-
-			bankAdd() {
-				if (this.account == null) {
-					alert("Select Bank Account");
-					return
-				}
-				if (this.bankAmount == 0) {
-					alert("Amount field is required");
-					return
-				}
-
-				let bank = {
-					account_id: this.account.account_id,
-					account_name: this.account.account_name,
-					bank_name: this.account.bank_name,
-					amount: this.bankAmount,
-					bankDigit: this.bankDigit
-				}
-
-				let cartInd = this.banks.findIndex(p => p.account_id == bank.account_id);
-				if (cartInd > -1) {
-					this.banks.splice(cartInd, 1);
-				}
-
-				this.banks.push(bank);
-				this.account = null;
-				this.bankAmount = 0;
-				this.bankDigit = "";
-
-				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
-					return acc + +pre.amount
-				}, 0).toFixed(2);
-				this.calculateTotal();
-			},
-
+			
 			removeBank(ind) {
 				this.banks.splice(ind, 1);
 				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
 					return acc + +pre.amount
+				}, 0).toFixed(2);
+				this.sales.bankPaidwithChagre = this.banks.reduce((acc, pre) => {
+					return acc + +pre.charge_with_amount
 				}, 0).toFixed(2);
 				this.calculateTotal();
 			},

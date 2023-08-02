@@ -4,9 +4,9 @@
 	<div class="form-horizontal">
 		
 		<div class="form-group">
-			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Area Name  </label>
-			<label class="col-sm-1 control-label no-padding-right">:</label>
-			<div class="col-sm-8">
+			<label class="col-xs-3 col-sm-3 control-label no-padding-right" for="form-field-1"> Area Name  </label>
+			<label class="col-xs-1 col-sm-1 control-label no-padding-right">:</label>
+			<div class="col-xs-8 col-sm-8">
 				<input type="text" id="district" name="district" placeholder="Area Name" value="<?php echo set_value('district'); ?>" class="col-xs-10 col-sm-4" />
 				<span id="msg"></span>
 				<?php echo form_error('district'); ?>
@@ -15,9 +15,9 @@
 		</div>
 		
 		<div class="form-group">
-			<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
-			<label class="col-sm-1 control-label no-padding-right"></label>
-			<div class="col-sm-8">
+			<label class="col-xs-3 col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+			<label class="col-xs-1 col-sm-1 control-label no-padding-right"></label>
+			<div class="col-xs-8 col-sm-8">
 				    <button type="button" class="btn btn-sm btn-success" onclick="submit()" name="btnSubmit">
 						Submit
 						<i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
@@ -85,13 +85,14 @@
 								</a>
 
 								<?php if($this->session->userdata('accountType') != 'u'){?>
-								<a class="green" href="<?php echo base_url() ?>areaedit/<?php echo $row->District_SlNo; ?>" title="Eidt" onclick="return confirm('Are you sure you want to Edit this item?');">
-									<i class="ace-icon fa fa-pencil bigger-130"></i>
-								</a>
-
-								<a class="red" href="#" onclick="deleted(<?php echo $row->District_SlNo; ?>)">
-									<i class="ace-icon fa fa-trash-o bigger-130"></i>
-								</a>
+									<a class="green" href="<?php echo base_url() ?>areaedit/<?php echo $row->District_SlNo; ?>" title="Eidt" onclick="return confirm('Are you sure you want to Edit this item?');">
+										<i class="ace-icon fa fa-pencil bigger-130"></i>
+									</a>
+									<?php if($this->session->userdata('accountType') != 'e'){?>
+									<a class="red" href="#" onclick="deleted(<?php echo $row->District_SlNo; ?>)">
+										<i class="ace-icon fa fa-trash-o bigger-130"></i>
+									</a>
+									<?php }?>
 								<?php }?>
 							</div>
 						</td>

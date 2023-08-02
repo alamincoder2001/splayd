@@ -161,9 +161,11 @@
                                             <button class="button edit" @click="editAccount(row)">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <?php if($this->session->userdata('accountType') != 'e'){?>
                                             <button class="button" v-bind:class="{active: row.status == 1}" @click="changeStatus(row)">
                                                 <i class="fa fa-trash"></i>
                                             </button>
+                                            <?php }?>
                                             <?php }?>
                                         </td>
                                     </tr>

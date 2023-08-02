@@ -37,6 +37,7 @@
             $res = ['success'=>false, 'message'=>''];
             try{
                 $data = json_decode($this->input->raw_input_stream);
+
                 $transfer = array(
                     'transfer_date' => $data->transfer->transfer_date,
                     'transfer_by' => $data->transfer->transfer_by,
@@ -53,6 +54,7 @@
                     $transferDetails = array(
                         'transfer_id' => $transferId,
                         'product_id' => $cartProduct->product_id,
+                        // 'size_id' => $cartProduct->sizeId,
                         'quantity' => $cartProduct->quantity,
                         'purchase_rate' => $cartProduct->purchase_rate,
                         'total' => $cartProduct->total
@@ -78,6 +80,16 @@
                         ", [$cartProduct->quantity, $cartProduct->product_id, $this->session->userdata('BRANCHid')]);
                     }
 
+                    // update color wise product stock
+                    // $this->db->query("
+                    //     update tbl_color_size 
+                    //     set stock = stock - ?
+                    //     where product_id = ?
+                    //     and size_id = ? 
+                    //     and branch_id = ?
+                    // ",[$cartProduct->quantity, $cartProduct->product_id, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
+
+
                     $transferToBranchInventoryCount = $this->db->query("select * from tbl_currentinventory where product_id = ? and branch_id = ?", [$cartProduct->product_id, $data->transfer->transfer_to])->num_rows();
                     if($transferToBranchInventoryCount == 0){
                         $transferToBranchInventory = array(
@@ -95,8 +107,34 @@
                             and branch_id = ?
                         ", [$cartProduct->quantity, $cartProduct->product_id, $data->transfer->transfer_to]);
                     }
+
+                    // update color wise product stock
+                    // $transferToBranchSizeCount = $this->db->query("select * from tbl_color_size where product_id = ? and size_id = ? and branch_id = ?", [$cartProduct->product_id, $cartProduct->sizeId, $data->transfer->transfer_to])->num_rows();
+                    // if($transferToBranchSizeCount == 0) {
+                    //     $colorDetails = array(
+                    //         'product_id' => $cartProduct->product_id,
+                    //         'stock' => $cartProduct->quantity,
+                    //         'size_id' => $cartProduct->sizeId,
+                    //         'status' => 'a',
+                    //         'add_by' => $this->session->userdata("FullName"),
+                    //         'add_time' => date('Y-m-d H:i:s'),
+                    //         'branch_id' =>  $data->transfer->transfer_to,
+                    //     );
+                    //     $this->db->insert('tbl_color_size', $colorDetails);
+                    // } else {
+                    //     $this->db->query("
+                    //         update tbl_color_size 
+                    //         set stock = stock + ?
+                    //         where product_id = ?
+                    //         and size_id = ? 
+                    //         and branch_id = ?
+                    //     ",[$cartProduct->quantity, $cartProduct->product_id, $cartProduct->sizeId, $data->transfer->transfer_to]);
+                    // }
+
                 }
+
                 $res = ['success'=>true, 'message'=>'Transfer success'];
+
             } catch (Exception $ex){
                 $res = ['success'=>false, 'message'=>$ex->getMessage];
             }
@@ -108,6 +146,7 @@
             $res = ['success'=>false, 'message'=>''];
             try{
                 $data           = json_decode($this->input->raw_input_stream);
+              
                 $transferId     =   $data->transfer->transfer_id;
 
                 $oldTransfer    =   $this->db->query("select * from tbl_transfermaster where transfer_id = ?", $transferId)->row();
@@ -123,6 +162,7 @@
                 $this->db->where('transfer_id', $transferId)->update('tbl_transfermaster', $transfer);
 
                 $oldTransferDetails = $this->db->query("select * from tbl_transferdetails where transfer_id = ?", $transferId)->result();
+                
                 $this->db->query("delete from tbl_transferdetails where transfer_id = ?", $transferId);
                 foreach($oldTransferDetails as $oldDetails) {
                     $this->db->query("
@@ -138,12 +178,30 @@
                         where product_id = ?
                         and branch_id = ?
                     ", [$oldDetails->quantity, $oldDetails->product_id, $oldTransfer->transfer_to]);
+
+                      // update color wise product stock
+                    //   $this->db->query("
+                    //     update tbl_color_size 
+                    //     set stock = stock + ?
+                    //     where product_id = ?
+                    //     and size_id = ?
+                    //     and branch_id = ?
+                    // ",[$oldDetails->quantity, $oldDetails->product_id, $oldDetails->size_id, $this->session->userdata('BRANCHid')]);
+
+                    // $this->db->query("
+                    //     update tbl_color_size 
+                    //     set stock = stock - ?
+                    //     where product_id = ?
+                    //     and size_id = ?
+                    //     and branch_id = ?
+                    // ",[$oldDetails->quantity, $oldDetails->product_id, $oldDetails->size_id, $oldTransfer->transfer_to]);
                 }
 
                 foreach($data->cart as $cartProduct){
                     $transferDetails = array(
                         'transfer_id' => $transferId,
                         'product_id' => $cartProduct->product_id,
+                        'size_id' => $cartProduct->sizeId,
                         'quantity' => $cartProduct->quantity
                     );
 
@@ -167,6 +225,15 @@
                         ", [$cartProduct->quantity, $cartProduct->product_id, $this->session->userdata('BRANCHid')]);
                     }
 
+                    // update color wise product stock
+                    // $this->db->query("
+                    //     update tbl_color_size 
+                    //     set stock = stock - ?
+                    //     where product_id = ?
+                    //     and size_id = ? 
+                    //     and branch_id = ?
+                    // ",[$cartProduct->quantity, $cartProduct->product_id, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
+
                     $transferToBranchInventoryCount = $this->db->query("select * from tbl_currentinventory where product_id = ? and branch_id = ?", [$cartProduct->product_id, $data->transfer->transfer_to])->num_rows();
                     if($transferToBranchInventoryCount == 0){
                         $transferToBranchInventory = array(
@@ -184,6 +251,30 @@
                             and branch_id = ?
                         ", [$cartProduct->quantity, $cartProduct->product_id, $data->transfer->transfer_to]);
                     }
+
+                    // update color wise product stock
+
+                    // $transferToBranchSizeCount = $this->db->query("select * from tbl_color_size where product_id = ? and size_id = ? and branch_id = ?", [$cartProduct->product_id, $cartProduct->sizeId, $data->transfer->transfer_to])->num_rows();
+                    // if($transferToBranchSizeCount == 0) {
+                    //     $colorDetails = array(
+                    //         'product_id' => $cartProduct->product_id,
+                    //         'stock' => $cartProduct->quantity,
+                    //         'size_id' => $cartProduct->sizeId,
+                    //         'status' => 'a',
+                    //         'add_by' => $this->session->userdata("FullName"),
+                    //         'add_time' => date('Y-m-d H:i:s'),
+                    //         'branch_id' =>  $data->transfer->transfer_to,
+                    //     );
+                    //     $this->db->insert('tbl_color_size', $colorDetails);
+                    // } else {
+                    //     $this->db->query("
+                    //         update tbl_color_size 
+                    //         set stock = stock + ?
+                    //         where product_id = ?
+                    //         and size_id = ? 
+                    //         and branch_id = ?
+                    //     ",[$cartProduct->quantity, $cartProduct->product_id, $cartProduct->sizeId, $data->transfer->transfer_to]);
+                    // }
                 }
                 $res = ['success'=>true, 'message'=>'Transfer updated'];
             } catch (Exception $ex){
@@ -248,12 +339,14 @@
             $transferDetails = $this->db->query("
                 select 
                     td.*,
+                    s.size_name,
                     p.Product_Code,
                     p.Product_Name,
                     pc.ProductCategory_Name
                 from tbl_transferdetails td
                 join tbl_product p on p.Product_SlNo = td.product_id
                 left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_size s on s.size_SiNo = td.size_id
                 where td.transfer_id = ?
             ", $data->transferId)->result();
 
@@ -305,12 +398,14 @@
             $data['transferDetails'] = $this->db->query("
                 select
                     td.*,
+                    s.size_name,
                     p.Product_Code,
                     p.Product_Name,
                     pc.ProductCategory_Name
                 from tbl_transferdetails td
                 join tbl_product p on p.Product_SlNo = td.product_id
                 join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_size s on s.size_SiNo = td.size_id
                 where td.transfer_id = ?
             ", $transferId)->result();
 
@@ -343,6 +438,23 @@
                         where product_id = ?
                         and branch_id = ?
                     ", [$oldDetails->quantity, $oldDetails->product_id, $oldTransfer->transfer_to]);
+
+                     // update color wise product stock
+                    //  $this->db->query("
+                    //     update tbl_color_size 
+                    //     set stock = stock + ?
+                    //     where product_id = ?
+                    //     and size_id = ?
+                    //     and branch_id = ?
+                    // ",[$oldDetails->quantity, $oldDetails->product_id, $oldDetails->size_id, $this->session->userdata('BRANCHid')]);
+
+                    // $this->db->query("
+                    //     update tbl_color_size 
+                    //     set stock = stock - ?
+                    //     where product_id = ?
+                    //     and size_id = ?
+                    //     and branch_id = ?
+                    // ",[$oldDetails->quantity, $oldDetails->product_id, $oldDetails->size_id, $oldTransfer->transfer_to]);
                 }
 
                 $res = ['success'=>true, 'message'=>'Transfer deleted'];

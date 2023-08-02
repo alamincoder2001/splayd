@@ -53,15 +53,15 @@
 </style>
 <div id="employeeSalary">
 	<div class="row"style="border-bottom:1px solid #ccc;padding: 10px 0;">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<form class="form-inline" @submit.prevent="getEmployees">
 
 				<div class="form-group">
-					<label class="col-sm-4 control-label no-padding-right"> Month </label>
-					<div class="col-sm-7">
+					<label class="col-xs-4 col-sm-4 control-label no-padding-right"> Month </label>
+					<div class="col-xs-7 col-sm-7">
 					<v-select v-bind:options="months" label="month_name" v-model="month" v-on:input="employees = []"></v-select>
 					</div>
-					<div class="col-sm-1" style="padding: 0;">
+					<div class="col-xs-1 col-sm-1" style="padding: 0;">
 						<a href="<?= base_url('month')?>" class="btn btn-xs btn-danger" style="height: 25px; border: 0; width: 27px; margin-left: -10px;" target="_blank" title="Add New Month"><i class="fa fa-plus" aria-hidden="true" style="margin-top: 5px;"></i></a>
 					</div>
 				</div>
