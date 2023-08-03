@@ -723,8 +723,6 @@
 				this.purchase.supplierId = this.selectedSupplier.Supplier_SlNo;
 				this.purchase.purchaseFor = this.selectedBranch.brunch_id;
 
-				this.purchaseOnProgress = true;
-
 				let data = {
 					purchase: this.purchase,
 					cartProducts: this.cart
@@ -738,6 +736,8 @@
 				if (this.purchase.purchaseId != 0) {
 					url = '/update_purchase';
 				}
+
+				this.purchaseOnProgress = true;
 
 				axios.post(url, data).then(async res => {
 					let r = res.data;

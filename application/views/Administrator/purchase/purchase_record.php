@@ -163,9 +163,9 @@
 									<a href="" title="Purchase Invoice" v-bind:href="`/purchase_invoice_print/${purchase.PurchaseMaster_SlNo}`" target="_blank"><i class="fa fa-file-text"></i></a>
 									<?php if ($this->session->userdata('accountType') != 'u') { ?>
 										<a href="javascript:" title="Edit Purchase" @click="checkReturnAndEdit(purchase)"><i class="fa fa-edit"></i></a>
-										<?php if($this->session->userdata('accountType') != 'e'){?>
-										<a href="" title="Delete Purchase" @click.prevent="deletePurchase(purchase.PurchaseMaster_SlNo)"><i class="fa fa-trash"></i></a>
-									<?php } ?>
+										<?php if ($this->session->userdata('accountType') != 'e') { ?>
+											<a href="" title="Delete Purchase" @click.prevent="deletePurchase(purchase.PurchaseMaster_SlNo)"><i class="fa fa-trash"></i></a>
+										<?php } ?>
 									<?php } ?>
 								</td>
 							</tr>
@@ -228,8 +228,8 @@
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<a href="javascript:" title="Edit Purchase" @click="checkReturnAndEdit(purchase)"><i class="fa fa-edit"></i></a>
 									<?php if ($this->session->userdata('accountType') != 'e') { ?>
-									<a href="" title="Delete Purchase" @click.prevent="deletePurchase(purchase.PurchaseMaster_SlNo)"><i class="fa fa-trash"></i></a>
-								<?php } ?>
+										<a href="" title="Delete Purchase" @click.prevent="deletePurchase(purchase.PurchaseMaster_SlNo)"><i class="fa fa-trash"></i></a>
+									<?php } ?>
 								<?php } ?>
 							</td>
 						</tr>

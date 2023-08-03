@@ -8,13 +8,15 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 
-	'username' => 'splay4oftware_admin',
-	'password' => '?lcIE*ijkLv~',
+
+	// 'username' => 'splay4oftware_admin',
+	// 'password' => '?lcIE*ijkLv~',
+	// 'database' => 'splay4oftware_software',
+
+	'username' => 'root',
+	'password' => '',
 	'database' => 'splay4oftware_software',
 
-// 	'username' => 'root',
-// 	'password' => '',
-// 	'database' => 'splayd',
 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

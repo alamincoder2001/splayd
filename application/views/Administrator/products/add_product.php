@@ -181,7 +181,7 @@
 			</div>
 
 			<div class="col-xs-12 col-md-6">
-				
+
 				<div class="form-group clearfix">
 					<label class="control-label col-xs-4 col-md-4">Re-order level:</label>
 					<div class="col-xs-8 col-md-7">
@@ -218,7 +218,7 @@
 
 				<div class="form-group clearfix">
 					<div class="col-xs-8 col-md-7 col-md-offset-4">
-						<input type="submit" class="btn btn-success btn-sm" value="Save">
+						<input type="submit" class="btn btn-success btn-sm" value="Save" :disabled="onProgress ? true : false">
 					</div>
 				</div>
 			</div>
@@ -253,11 +253,11 @@
 									<button type="button" class="button edit" @click="editProduct(row)">
 										<i class="fa fa-pencil"></i>
 									</button>
-									<?php if($this->session->userdata('accountType') != 'e'){?>
-									<button type="button" class="button" @click="deleteProduct(row.Product_SlNo)">
-										<i class="fa fa-trash"></i>
-									</button>
-								<?php } ?>
+									<?php if ($this->session->userdata('accountType') != 'e') { ?>
+										<button type="button" class="button" @click="deleteProduct(row.Product_SlNo)">
+											<i class="fa fa-trash"></i>
+										</button>
+									<?php } ?>
 									<button type="button" class="button" @click="window.location = `/Administrator/products/barcodeGenerate/${row.Product_SlNo}`">
 										<i class="fa fa-barcode"></i>
 									</button>
@@ -443,7 +443,9 @@
 					],
 					page: 1,
 					per_page: 10,
-					filter: ''
+					filter: '',
+
+					onProgress: false,
 				}
 			},
 			created() {
@@ -517,6 +519,8 @@
 						cart: this.selectedSize,
 					}
 
+					this.onProgress = true;
+
 					axios.post(url, data)
 						.then(res => {
 							let r = res.data;
@@ -525,6 +529,7 @@
 								this.clearForm();
 								this.product.Product_Code = r.productId;
 								this.getProducts();
+								this.onProgress = false;
 							}
 						})
 

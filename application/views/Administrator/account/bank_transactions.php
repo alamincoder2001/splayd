@@ -106,7 +106,7 @@
 
                             <div class="form-group">
                                 <div class="col-xs-8 col-md-8 col-md-offset-4">
-                                    <input type="submit" value="Save Transaction" v-bind:disabled="onProgress ? true : false" class="btn btn-success btn-xs">
+                                    <input type="submit" value="Save Transaction" :disabled="onProgress ? true : false" class="btn btn-success btn-xs">
                                 </div>
                             </div>
                         </form>

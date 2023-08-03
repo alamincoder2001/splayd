@@ -1,33 +1,40 @@
 <style>
-	.v-select{
-		margin: 0 10px 5px 5px;
-		float:right;
-		min-width: 180px;
-	}
-	.v-select .dropdown-toggle{
-		padding: 0px;
-		height: 25px;
-	}
-	.v-select input[type=search], .v-select input[type=search]:focus{
-		margin: 0px;
-	}
-	.v-select .vs__selected-options{
-		overflow: hidden;
-		flex-wrap:nowrap;
-	}
-	.v-select .selected-tag{
-		margin: 2px 0px;
-		white-space: nowrap;
-		position:absolute;
-		left: 0px;
-	}
-	.v-select .vs__actions{
-		margin-top:-5px;
-	}
-	.v-select .dropdown-menu{
-		width: auto;
-		overflow-y:auto;
-	}
+    .v-select {
+        margin: 0 10px 5px 5px;
+        float: right;
+        min-width: 180px;
+    }
+
+    .v-select .dropdown-toggle {
+        padding: 0px;
+        height: 25px;
+    }
+
+    .v-select input[type=search],
+    .v-select input[type=search]:focus {
+        margin: 0px;
+    }
+
+    .v-select .vs__selected-options {
+        overflow: hidden;
+        flex-wrap: nowrap;
+    }
+
+    .v-select .selected-tag {
+        margin: 2px 0px;
+        white-space: nowrap;
+        position: absolute;
+        left: 0px;
+    }
+
+    .v-select .vs__actions {
+        margin-top: -5px;
+    }
+
+    .v-select .dropdown-menu {
+        width: auto;
+        overflow-y: auto;
+    }
 </style>
 
 <div id="transferList">
@@ -50,8 +57,8 @@
                 </div>
 
                 <div class="form-group">
-					<input type="submit" class="btn btn-info btn-xs" value="Search" style="padding-top:0px;padding-bottom:0px;margin-top:-4px;">
-				</div>
+                    <input type="submit" class="btn btn-info btn-xs" value="Search" style="padding-top:0px;padding-bottom:0px;margin-top:-4px;">
+                </div>
             </form>
         </div>
     </div>
@@ -80,9 +87,13 @@
                             <td>{{ transfer.total_amount }}</td>
                             <td>{{ transfer.note }}</td>
                             <td>
-                                <a href="" v-bind:href="`/transfer_invoice/${transfer.transfer_id}`" target="_blank" title="View invoice"><i class="fa fa-file"></i></a>
-                                <a href="" v-bind:href="`/product_transfer/${transfer.transfer_id}`" target="_blank" title="Edit"><i class="fa fa-edit"></i></a>
-                                <a href="" @click.prevent="deleteTransfer(transfer.transfer_id)" title="Delete"><i class="fa fa-trash"></i></a>
+                                <?php if ($this->session->userdata('accountType') != 'u') { ?>
+                                    <a href="" v-bind:href="`/transfer_invoice/${transfer.transfer_id}`" target="_blank" title="View invoice"><i class="fa fa-file"></i></a>
+                                    <a href="" v-bind:href="`/product_transfer/${transfer.transfer_id}`" target="_blank" title="Edit"><i class="fa fa-edit"></i></a>
+                                    <?php if ($this->session->userdata('accountType') != 'e') { ?>
+                                        <a href="" @click.prevent="deleteTransfer(transfer.transfer_id)" title="Delete"><i class="fa fa-trash"></i></a>
+                                    <?php } ?>
+                                <?php } ?>
                             </td>
                         </tr>
                     </tbody>
@@ -92,16 +103,16 @@
     </div>
 </div>
 
-<script src="<?php echo base_url();?>assets/js/vue/vue.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/axios.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/vue-select.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/moment.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/axios.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue-select.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 
 <script>
     Vue.component('v-select', VueSelect.VueSelect);
     new Vue({
         el: '#transferList',
-        data(){
+        data() {
             return {
                 filter: {
                     branch: null,
@@ -113,21 +124,21 @@
                 transfers: []
             }
         },
-        created(){
+        created() {
             this.getBranches();
         },
         methods: {
-            getBranches(){
+            getBranches() {
                 axios.get('/get_branches').then(res => {
-                    let thisBranchId = parseInt("<?php echo $this->session->userdata('BRANCHid');?>");
+                    let thisBranchId = parseInt("<?php echo $this->session->userdata('BRANCHid'); ?>");
                     let ind = res.data.findIndex(branch => branch.brunch_id == thisBranchId);
                     res.data.splice(ind, 1);
                     this.branches = res.data;
                 })
             },
 
-            getTransfers(){
-                if(this.selectedBranch != null){
+            getTransfers() {
+                if (this.selectedBranch != null) {
                     this.filter.branch = this.selectedBranch.brunch_id;
                 } else {
                     this.filter.branch = null;
@@ -140,13 +151,15 @@
 
             deleteTransfer(transferId) {
                 let confirmation = confirm('Are you sure?');
-                if(confirmation == false){
+                if (confirmation == false) {
                     return;
                 }
-                axios.post('/delete_transfer', {transferId: transferId}).then(res => {
+                axios.post('/delete_transfer', {
+                    transferId: transferId
+                }).then(res => {
                     let r = res.data;
                     alert(r.message);
-                    if(r.success){
+                    if (r.success) {
                         this.getTransfers();
                     }
                 })

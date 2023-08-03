@@ -1,50 +1,62 @@
 <style>
-	.v-select{
+	.v-select {
 		margin-bottom: 5px;
 	}
-	.v-select.open .dropdown-toggle{
+
+	.v-select.open .dropdown-toggle {
 		border-bottom: 1px solid #ccc;
 	}
-	.v-select .dropdown-toggle{
+
+	.v-select .dropdown-toggle {
 		padding: 0px;
 		height: 25px;
 	}
-	.v-select input[type=search], .v-select input[type=search]:focus{
+
+	.v-select input[type=search],
+	.v-select input[type=search]:focus {
 		margin: 0px;
 	}
-	.v-select .vs__selected-options{
+
+	.v-select .vs__selected-options {
 		overflow: hidden;
-		flex-wrap:nowrap;
+		flex-wrap: nowrap;
 	}
-	.v-select .selected-tag{
+
+	.v-select .selected-tag {
 		margin: 2px 0px;
 		white-space: nowrap;
-		position:absolute;
+		position: absolute;
 		left: 0px;
 	}
-	.v-select .vs__actions{
-		margin-top:-5px;
+
+	.v-select .vs__actions {
+		margin-top: -5px;
 	}
-	.v-select .dropdown-menu{
+
+	.v-select .dropdown-menu {
 		width: auto;
-		overflow-y:auto;
+		overflow-y: auto;
 	}
-	#cashTransaction label{
-		font-size:13px;
+
+	#cashTransaction label {
+		font-size: 13px;
 	}
-	#cashTransaction select{
+
+	#cashTransaction select {
 		border-radius: 3px;
 		padding: 0;
 	}
-	#cashTransaction .add-button{
+
+	#cashTransaction .add-button {
 		padding: 2.5px;
 		width: 28px;
 		background-color: #298db4;
-		display:block;
+		display: block;
 		text-align: center;
 		color: white;
 	}
-	#cashTransaction .add-button:hover{
+
+	#cashTransaction .add-button:hover {
 		background-color: #41add6;
 		color: white;
 	}
@@ -105,20 +117,13 @@
 							<label class="col-xs-4 col-md-4 control-label">Amount</label>
 							<label class="col-xs-1 col-md-1">:</label>
 							<div class="col-xs-7 col-md-7">
-								<input type="number" class="form-control" step="0.01" required v-model="transaction.In_Amount" 
-									style="display:none;" 
-									v-if="transaction.Tr_Type == 'In Cash'"
-									v-bind:style="{display: transaction.Tr_Type == 'In Cash' ? '' : 'none'}"
-								>
-								<input type="number" class="form-control" step="0.01" required v-model="transaction.Out_Amount" 
-									v-if="transaction.Tr_Type == 'Out Cash' || transaction.Tr_Type == ''"
-									v-bind:style="{display: transaction.Tr_Type == 'Out Cash' || transaction.Tr_Type == '' ? '' : 'none'}"
-								>
+								<input type="number" class="form-control" step="0.01" required v-model="transaction.In_Amount" style="display:none;" v-if="transaction.Tr_Type == 'In Cash'" v-bind:style="{display: transaction.Tr_Type == 'In Cash' ? '' : 'none'}">
+								<input type="number" class="form-control" step="0.01" required v-model="transaction.Out_Amount" v-if="transaction.Tr_Type == 'Out Cash' || transaction.Tr_Type == ''" v-bind:style="{display: transaction.Tr_Type == 'Out Cash' || transaction.Tr_Type == '' ? '' : 'none'}">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-xs-12 col-md-7 col-md-offset-5">
-								<input type="submit" class="btn btn-success btn-sm" value="Save">
+								<input type="submit" class="btn btn-success btn-sm" value="Save" :disabled="cashOnProgress == true ? true: false">
 								<input type="button" class="btn btn-danger btn-sm" value="Cancel" @click="resetForm">
 							</div>
 						</div>
@@ -148,16 +153,16 @@
 							<td>{{ row.Out_Amount }}</td>
 							<td>{{ row.AddBy }}</td>
 							<td>
-								<?php if($this->session->userdata('accountType') != 'u'){?>
-								<button type="button" class="button edit" @click="editTransaction(row)">
-									<i class="fa fa-pencil"></i>
-								</button>
-								<?php if($this->session->userdata('accountType') != 'e'){?>
-								<button type="button" class="button" @click="deleteTransaction(row.Tr_SlNo)">
-									<i class="fa fa-trash"></i>
-								</button>
-								<?php }?>
-								<?php }?>
+								<?php if ($this->session->userdata('accountType') != 'u') { ?>
+									<button type="button" class="button edit" @click="editTransaction(row)">
+										<i class="fa fa-pencil"></i>
+									</button>
+									<?php if ($this->session->userdata('accountType') != 'e') { ?>
+										<button type="button" class="button" @click="deleteTransaction(row.Tr_SlNo)">
+											<i class="fa fa-trash"></i>
+										</button>
+									<?php } ?>
+								<?php } ?>
 							</td>
 						</tr>
 					</template>
@@ -166,20 +171,20 @@
 			</div>
 		</div>
 	</div>
-	
+
 </div>
 
-<script src="<?php echo base_url();?>assets/js/vue/vue.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/axios.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/vuejs-datatable.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/vue-select.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/moment.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/axios.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vuejs-datatable.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue-select.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 
 <script>
 	Vue.component('v-select', VueSelect.VueSelect);
 	new Vue({
 		el: '#cashTransaction',
-		data(){
+		data() {
 			return {
 				transaction: {
 					Tr_SlNo: 0,
@@ -195,45 +200,78 @@
 				transactions: [],
 				accounts: [],
 				selectedAccount: null,
-				userType: '<?php echo $this->session->userdata("accountType");?>',
-				
-				columns: [
-                    { label: 'Transaction Id', field: 'Tr_Id', align: 'center' },
-                    { label: 'Account Name', field: 'Acc_Name', align: 'center' },
-                    { label: 'Date', field: 'Tr_date', align: 'center' },
-                    { label: 'Description', field: 'Tr_Description', align: 'center' },
-                    { label: 'Received Amount', field: 'In_Amount', align: 'center' },
-                    { label: 'Paid Amount', field: 'Out_Amount', align: 'center' },
-                    { label: 'Saved By', field: 'AddBy', align: 'center' },
-                    { label: 'Action', align: 'center', filterable: false }
-                ],
-                page: 1,
-                per_page: 10,
-                filter: ''
+				userType: '<?php echo $this->session->userdata("accountType"); ?>',
+
+				columns: [{
+						label: 'Transaction Id',
+						field: 'Tr_Id',
+						align: 'center'
+					},
+					{
+						label: 'Account Name',
+						field: 'Acc_Name',
+						align: 'center'
+					},
+					{
+						label: 'Date',
+						field: 'Tr_date',
+						align: 'center'
+					},
+					{
+						label: 'Description',
+						field: 'Tr_Description',
+						align: 'center'
+					},
+					{
+						label: 'Received Amount',
+						field: 'In_Amount',
+						align: 'center'
+					},
+					{
+						label: 'Paid Amount',
+						field: 'Out_Amount',
+						align: 'center'
+					},
+					{
+						label: 'Saved By',
+						field: 'AddBy',
+						align: 'center'
+					},
+					{
+						label: 'Action',
+						align: 'center',
+						filterable: false
+					}
+				],
+				page: 1,
+				per_page: 10,
+				filter: '',
+
+				cashOnProgress: false,
 			}
 		},
-		created(){
+		created() {
 			this.getTransactionCode();
 			this.getAccounts();
 			this.getTransactions();
 		},
-		methods:{
-			getTransactionCode(){
+		methods: {
+			getTransactionCode() {
 				axios.get('/get_cash_transaction_code').then(res => {
 					this.transaction.Tr_Id = res.data;
 				})
 			},
-			getAccounts(){
+			getAccounts() {
 				axios.get('/get_accounts').then(res => {
 					this.accounts = res.data;
 				})
 			},
-			onChangeTransactionType(){
+			onChangeTransactionType() {
 				this.transaction.In_Amount = '';
 				this.transaction.Out_Amount = '';
 
 			},
-			getTransactions(){
+			getTransactions() {
 				let data = {
 					dateFrom: this.transaction.Tr_date,
 					dateTo: this.transaction.Tr_date
@@ -243,8 +281,8 @@
 					this.transactions = res.data;
 				})
 			},
-			addTransaction(){
-				if(this.selectedAccount == null || this.selectedAccount.Acc_SlNo == undefined){
+			addTransaction() {
+				if (this.selectedAccount == null || this.selectedAccount.Acc_SlNo == undefined) {
 					alert('Select account');
 					return;
 				}
@@ -253,20 +291,23 @@
 				this.transaction.Acc_SlID = this.selectedAccount.Acc_SlNo;
 
 				let url = '/add_cash_transaction';
-				if(this.transaction.Tr_SlNo != 0){
+				if (this.transaction.Tr_SlNo != 0) {
 					url = '/update_cash_transaction';
 				}
+
+				this.cashOnProgress = true;
 
 				axios.post(url, this.transaction).then(res => {
 					let r = res.data;
 					alert(r.message);
-					if(r.success){
+					if (r.success) {
 						this.resetForm();
 						this.getTransactions();
+						this.cashOnProgress = false;
 					}
 				})
 			},
-			editTransaction(transaction){
+			editTransaction(transaction) {
 				let keys = Object.keys(this.transaction);
 				keys.forEach(key => {
 					this.transaction[key] = transaction[key];
@@ -278,16 +319,18 @@
 					Acc_Name: transaction.Acc_Name
 				}
 			},
-			deleteTransaction(transactionId){
-				axios.post('/delete_cash_transaction', {transactionId: transactionId}).then(res => {
+			deleteTransaction(transactionId) {
+				axios.post('/delete_cash_transaction', {
+					transactionId: transactionId
+				}).then(res => {
 					let r = res.data;
 					alert(r.message);
-					if(r.success){
+					if (r.success) {
 						this.getTransactions();
 					}
 				})
 			},
-			resetForm(){
+			resetForm() {
 				this.transaction.Tr_SlNo = 0;
 				this.transaction.Tr_Id = '';
 				this.transaction.Tr_account_Type = '';

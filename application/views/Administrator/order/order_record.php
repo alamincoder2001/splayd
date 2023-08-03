@@ -171,8 +171,8 @@
 									<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
 									<?php if ($this->session->userdata('accountType') != 'u') { ?>
 										<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-										<?php if($this->session->userdata('accountType') != 'e'){?>
-										<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+										<?php if ($this->session->userdata('accountType') != 'e') { ?>
+											<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
 										<?php } ?>
 										<select style="border: 1px dashed;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
 											<option :disabled="sale.Status != 'p'" value="p">Pending</option>
@@ -243,8 +243,8 @@
 								<a href="" title="Sale Invoice" v-bind:href="`/order_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
 								<?php if ($this->session->userdata('accountType') != 'u') { ?>
 									<a href="javascript:" title="Edit Order" @click="checkReturnAndEdit(sale)"><i class="fa fa-edit"></i></a>
-									<?php if($this->session->userdata('accountType') != 'e'){?>
-									<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+									<?php if ($this->session->userdata('accountType') != 'e') { ?>
+										<a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
 									<?php } ?>
 									<select style="border: 1px dashed;height:auto;" v-model="sale.Status" v-if="sale.Status != 'a'" @change.prevent="OrderStatusChange(sale)">
 										<option :disabled="sale.Status != 'p'" value="p">Pending</option>

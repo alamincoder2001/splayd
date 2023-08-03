@@ -127,7 +127,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-7 col-md-offset-5">
-								<input type="submit" class="btn btn-success btn-sm" value="Save">
+								<input type="submit" class="btn btn-success btn-sm" value="Save" :disabled="onProgress ? true : false">
 								<input type="button" class="btn btn-danger btn-sm" value="Cancel" @click="resetForm">
 							</div>
 						</div>
@@ -227,7 +227,8 @@
                 ],
                 page: 1,
                 per_page: 10,
-                filter: ''
+                filter: '',
+				onProgress: false,
 			}
 		},
 		computed: {
@@ -299,6 +300,8 @@
 				if(this.payment.CPayment_id != 0){
 					url = '/update_customer_payment';
 				}
+
+				this.onProgress = true
 				axios.post(url, this.payment).then(res => {
 					let r = res.data;
 					alert(r.message);
@@ -309,6 +312,8 @@
 						if(invoiceConfirm == true){
 							window.open('/paymentAndReport/'+r.paymentId, '_blank');
 						}
+
+						this.onProgress = false
 					}
 				})
 			},
