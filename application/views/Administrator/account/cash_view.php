@@ -33,6 +33,7 @@
         flex: 1;
         display: flex;
         align-items: center; 
+        justify-content: center;
     }
     .account-section .col2{
         background-color: #def1f8;

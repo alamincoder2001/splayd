@@ -16,13 +16,13 @@ const orderInvoice = Vue.component('order-invoice', {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-7">
+                    <div class="col-xs-7" style="font-size:16px;">
                         <strong>Customer Id: {{ sales.Customer_Code || '&nbsp;'}}</strong><br>
                         <strong>Customer Name: {{ sales.Customer_Name || '&nbsp;'}}</strong><br>
-                        <strong>Customer Address:</strong> {{ sales.Customer_Address || '&nbsp;'}}<br>
+                        <strong>Customer Address: {{ sales.Customer_Address || '&nbsp;'}} </strong><br>
                         <strong>Customer Mobile: {{ sales.Customer_Mobile || '&nbsp;'}}</strong>
                     </div>
-                    <div class="col-xs-5 text-right">
+                    <div class="col-xs-5 text-right" style="font-size:16px;">
                         <strong>Order by: {{ sales.AddBy || '&nbsp;' }}</strong><br>
                         <strong>Invoice No.: {{ sales.SaleMaster_InvoiceNo || '&nbsp;' }}</strong><br>
                         <strong>Order Date: {{ sales.SaleMaster_SaleDate || '&nbsp;' }} </strong><br>
@@ -42,7 +42,6 @@ const orderInvoice = Vue.component('order-invoice', {
                                     <td><strong>Sl.</strong></td>
                                     <td><strong>Description</strong></td>
                                     <td><strong>Qnty</strong></td>
-                                    <td><strong>Size</strong></td>
                                     <td><strong>Unit Price</strong></td>
                                     <td style="text-align:right;"><strong>Total</strong></td>
                                 </tr>
@@ -52,7 +51,6 @@ const orderInvoice = Vue.component('order-invoice', {
                                     <td><strong>{{ sl + 1 }}</strong></td>
                                     <td><strong>{{ product.Product_Name }}</strong></td>
                                     <td><strong>{{ product.SaleDetails_TotalQuantity }}</strong></td>
-                                    <td><strong>{{ product.size_name }}</strong></td>
                                     <td><strong>{{ product.SaleDetails_Rate }}</strong></td>
                                     <td align="right"><strong>{{ product.SaleDetails_TotalAmount }}</strong></td>
                                 </tr>
@@ -67,7 +65,6 @@ const orderInvoice = Vue.component('order-invoice', {
                                 <tr>
                                     <td><strong>Sl.</strong></td>
                                     <td><strong>Description</strong></td>
-                                    <td><strong>Size</strong></td>
                                     <td><strong>Qnty</strong></td>
                                     <td><strong>Unit Price</strong></td>
                                     <td><strong>Total</strong></td>
@@ -77,7 +74,6 @@ const orderInvoice = Vue.component('order-invoice', {
                                 <tr v-for="(product, sl) in exchanges">
                                     <td><strong>{{ sl + 1 }}</strong></td>
                                     <td><strong>{{ product.Product_Name }}</strong></td>
-                                    <td><strong>{{ product.size_name }}</strong></td>
                                     <td><strong>{{ product.quantity }}</strong></td>
                                     <td><strong>{{ product.rate }}</strong></td>
                                     <td align="right" style="font-weight:bold"><strong>{{ product.total }}</strong></td>
@@ -89,7 +85,7 @@ const orderInvoice = Vue.component('order-invoice', {
                 <div class="row">
                     <div class="col-xs-6">
                         <br>
-                        <table class="pull-left">
+                        <table style="display:none;" class="pull-left">
                             <tr>
                                 <td><strong>Previous Due:</strong></td>
                                 
@@ -114,7 +110,7 @@ const orderInvoice = Vue.component('order-invoice', {
                         <table _t92sadbc2>
                             <tr>
                                 <td><strong>Sub Total:</strong></td>
-                                <td style="text-align:right"><strong>{{ sales.SaleMaster_SubTotalAmount }}</strong></td>
+                                <td style="text-align:right"><strong>{{ parseFloat(+parseFloat(sales.SaleMaster_SubTotalAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2) }}</strong></td>
                             </tr>
                             <tr>
                                 <td><strong>VAT:</strong></td>
@@ -131,14 +127,14 @@ const orderInvoice = Vue.component('order-invoice', {
                             <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
                             <tr>
                                 <td><strong>Total:</strong></td>
-                                <td style="text-align:right"><strong>{{ sales.SaleMaster_TotalSaleAmount }}</strong></td>
+                                <td style="text-align:right"><strong>{{ parseFloat(+parseFloat(sales.SaleMaster_TotalSaleAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2) }}</strong></td>
                             </tr>
                             <tr>
                                 <td><strong>Paid:</strong></td>
-                                <td style="text-align:right"><strong>{{ sales.SaleMaster_PaidAmount }}</strong></td>
+                                <td style="text-align:right"><strong>{{ parseFloat(+parseFloat(sales.SaleMaster_PaidAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2) }}</strong></td>
                             </tr>
                             <tr><td colspan="2" style="border-bottom: 1px solid #ccc"></td></tr>
-                            <tr>
+                            <tr style="font-size:20px;">
                                 <td><strong>Due:</strong></td>
                                 <td style="text-align:right"><strong>{{ sales.SaleMaster_DueAmount }}</strong></td>
                             </tr>

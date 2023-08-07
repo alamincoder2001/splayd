@@ -156,7 +156,6 @@ class Sales extends CI_Controller
                 $saleDetails = array(
                     'SaleMaster_IDNo'           => $salesId,
                     'Product_IDNo'              => $cartProduct->productId,
-                    // 'Product_sizeId'            => $cartProduct->sizeId,
                     'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                     'Purchase_Rate'             => $cartProduct->purchaseRate,
                     'SaleDetails_Rate'          => $cartProduct->salesRate,
@@ -188,7 +187,7 @@ class Sales extends CI_Controller
                 // ", [$cartProduct->quantity, $cartProduct->productId, $cartProduct->sizeId, $this->session->userdata('BRANCHid')]);
             }
 
-            if(count($data->banks) > 0) {
+            if (count($data->banks) > 0) {
                 foreach ($data->banks as $bank) {
                     $salesBank = array(
                         'salesId'       => $salesId,
@@ -196,6 +195,7 @@ class Sales extends CI_Controller
                         'amount'        => $bank->amount,
                         'charge_amount' => $bank->charge_amount,
                         'lastDigit'     => $bank->bankDigit,
+                        'status'        => 'a',
                     );
 
                     $this->db->insert('tbl_salesmaster_account', $salesBank);
@@ -369,15 +369,11 @@ class Sales extends CI_Controller
                     p.Product_Name,
                     p.per_unit_convert,
                     pc.ProductCategory_Name,
-                    c.color_name,
-                    s.size_name,
                     u.Unit_Name
                 from tbl_saledetails sd
-                join tbl_product p on p.Product_SlNo = sd.Product_IDNo
-                join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
-                join tbl_unit u on u.Unit_SlNo = p.Unit_ID
-                left join tbl_color c on c.color_SiNo = sd.Product_colorId
-                left join tbl_size s on s.size_SiNo = sd.Product_sizeId
+                left join tbl_product p on p.Product_SlNo = sd.Product_IDNo
+                left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
+                left join tbl_unit u on u.Unit_SlNo = p.Unit_ID
                 where sd.SaleMaster_IDNo = ?
             ", $data->salesId)->result();
 
@@ -405,7 +401,7 @@ class Sales extends CI_Controller
                         a.bank_name
                     from tbl_salesmaster_account sb
                     join tbl_bank_accounts a on a.account_id = sb.account_id
-                    where sb.salesId = ?
+                    where sb.salesId = ? and sb.status = 'a'
                 ", $data->salesId)->result();
             $res['banks'] = $banks;
         }
@@ -441,10 +437,10 @@ class Sales extends CI_Controller
         try {
             $this->db->trans_begin();
             $data = json_decode($this->input->raw_input_stream);
-            // echo json_encode($data);
-            // return;
             $salesId = $data->sales->salesId;
             $customerId = $data->sales->customerId;
+
+            $oldSale = $this->db->query("select * from tbl_salesmaster where SaleMaster_SlNo = ?", [$salesId])->row();
 
             if (isset($data->customer)) {
                 $customer = (array)$data->customer;
@@ -478,14 +474,16 @@ class Sales extends CI_Controller
                 'employee_id'                    => $data->sales->employeeId,
                 'SaleMaster_SaleDate'            => $data->sales->salesDate,
                 'SaleMaster_SaleType'            => $data->sales->salesType,
-                'SaleMaster_TotalSaleAmount'     => $data->sales->total,
+                'SaleMaster_TotalSaleAmount'     => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_TotalSaleAmount : $data->sales->total,
                 'SaleMaster_TotalDiscountAmount' => $data->sales->discount,
                 'SaleMaster_TaxAmount'           => $data->sales->vat,
                 'SaleMaster_Freight'             => $data->sales->transportCost,
-                'SaleMaster_SubTotalAmount'      => $data->sales->subTotal,
-                'SaleMaster_PaidAmount'          => $data->sales->paid,
-                'SaleMaster_cashPaid'            => $data->sales->cashPaid - $data->sales->returnCash,
-                'SaleMaster_bankPaid'            => $data->sales->bankPaid,
+                'SaleMaster_SubTotalAmount'      => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_SubTotalAmount : $data->sales->subTotal,
+                'SaleMaster_PaidAmount'          => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_PaidAmount : $data->sales->paid,
+                'ex_cash_amount'                 => $data->sales->cashPaid - $oldSale->SaleMaster_cashPaid,
+                'ex_bank_amount'                 => $data->sales->bankPaid - $oldSale->SaleMaster_bankPaid,
+                'SaleMaster_cashPaid'            => count($data->is_exchange) > 0 ? $data->sales->cashPaid - $oldSale->SaleMaster_cashPaid : $data->sales->cashPaid,
+                'SaleMaster_bankPaid'            => count($data->is_exchange) > 0 ? $data->sales->bankPaid - $oldSale->SaleMaster_bankPaid : $data->sales->bankPaid,
                 'SaleMaster_bankPaidwithChagre'  => $data->sales->bankPaidwithChagre,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
@@ -495,6 +493,7 @@ class Sales extends CI_Controller
                 'SaleMaster_Description'         => $data->sales->note,
                 "UpdateBy"                       => $this->session->userdata("FullName"),
                 'UpdateTime'                     => date("Y-m-d H:i:s"),
+                'exchangeDate'                   => count($data->is_exchange) > 0 ? date("Y-m-d H:i:s") : null,
                 "SaleMaster_branchid"            => $this->session->userdata("BRANCHid")
             );
 
@@ -502,7 +501,6 @@ class Sales extends CI_Controller
             $this->db->update('tbl_salesmaster', $sales);
 
             $currentSaleDetails = $this->db->query("select * from tbl_saledetails where SaleMaster_IDNo = ?", $salesId)->result();
-            $this->db->query("delete from tbl_saledetails where SaleMaster_IDNo = ?", $salesId);
 
             foreach ($currentSaleDetails as $product) {
                 $this->db->query("
@@ -511,23 +509,14 @@ class Sales extends CI_Controller
                     where product_id = ?
                     and branch_id = ?
                 ", [$product->SaleDetails_TotalQuantity, $product->Product_IDNo, $this->session->userdata('BRANCHid')]);
-
-                // update color wise stock
-                // $this->db->query("
-                //     update tbl_color_size 
-                //     set stock = stock + ?
-                //     where product_id = ?
-                //     and size_id = ? 
-                //     and branch_id = ?
-                // ", [$product->SaleDetails_TotalQuantity, $product->Product_IDNo, $product->Product_sizeId, $this->session->userdata('BRANCHid')]);
             }
+            $this->db->query("delete from tbl_saledetails where SaleMaster_IDNo = ?", $salesId);
 
             foreach ($data->cart as $cartProduct) {
                 if ($cartProduct->is_exchange == 'true') {
                     $exchange = array(
                         'sale_id'    => $salesId,
                         'product_id' => $cartProduct->productId,
-                        // 'size_name'  => $cartProduct->size,
                         'rate'       => $cartProduct->salesRate,
                         'quantity'   => $cartProduct->quantity,
                         'total'      => $cartProduct->total,
@@ -537,19 +526,10 @@ class Sales extends CI_Controller
                         'branch_id'  => $this->session->userdata('BRANCHid'),
                     );
                     $this->db->insert('tbl_exchange', $exchange);
-
-                    $sales = array(
-                        'SaleMaster_SaleDate' => date("Y-m-d")
-                    );
-        
-                    $this->db->where('SaleMaster_SlNo', $salesId);
-                    $this->db->update('tbl_salesmaster', $sales);
-
                 } else {
                     $saleDetails = array(
                         'SaleMaster_IDNo'           => $salesId,
                         'Product_IDNo'              => $cartProduct->productId,
-                        // 'Product_sizeId'            => $cartProduct->sizeId,
                         'SaleDetails_TotalQuantity' => $cartProduct->quantity,
                         'Purchase_Rate'             => $cartProduct->purchaseRate,
                         'SaleDetails_Rate'          => $cartProduct->salesRate,
@@ -580,20 +560,36 @@ class Sales extends CI_Controller
                 }
             }
 
-            $this->db->query("DELETE FROM tbl_salesmaster_account WHERE salesId = '$salesId'");
+            $this->db->query("UPDATE tbl_salesmaster_account SET status = 'd' WHERE salesId = '$salesId'");
             if (count($data->banks) > 0) {
                 foreach ($data->banks as $bank) {
-                    $salesBank = array(
-                        'salesId'       => $salesId,
-                        'account_id'    => $bank->account_id,
-                        'amount'        => $bank->amount,
-                        'charge_amount' => $bank->charge_amount,
-                        'lastDigit'     => $bank->bankDigit,
-                    );
+                    $olddata = $this->db->query("SELECT * FROM tbl_salesmaster_account WHERE salesId = ? AND account_id = ?", [$salesId, $bank->account_id])->row();
+                    if (empty($olddata)) {
+                        $salesBank = array(
+                            'salesId'              => $salesId,
+                            'account_id'           => $bank->account_id,
+                            'amount'               => count($data->is_exchange) > 0 ? 0 : $bank->amount,
+                            'exchange_bank_amount' => count($data->is_exchange) > 0 ? $bank->amount : 0,
+                            'charge_amount'        => $bank->charge_amount,
+                            'lastDigit'            => $bank->bankDigit,
+                            'status'               => 'a',
+                        );
+                    } else {
+                        $salesBank = array(
+                            'salesId'              => $salesId,
+                            'account_id'           => $bank->account_id,
+                            'amount'               => count($data->is_exchange) > 0 ? $olddata->amount: $bank->amount,
+                            'exchange_bank_amount' => count($data->is_exchange) > 0 ? $bank->amount - $olddata->amount : 0,
+                            'charge_amount'        => $bank->charge_amount,
+                            'lastDigit'            => $bank->bankDigit,
+                            'status'               => 'a',
+                        );
+                    }
 
                     $this->db->insert('tbl_salesmaster_account', $salesBank);
                 }
             }
+            $this->db->query("DELETE FROM tbl_salesmaster_account WHERE salesId = '$salesId' AND status = 'd'");
 
             $this->db->trans_commit();
             $res = ['success' => true, 'message' => 'Sales Updated', 'salesId' => $salesId];
@@ -875,7 +871,7 @@ class Sales extends CI_Controller
 
             $returnDetails = $this->db->query("select * from tbl_salereturndetails srd where srd.SaleReturn_IdNo = ?", $data->id)->result();
 
-            if ($oldReturn->Customer_Type == 'G'){
+            if ($oldReturn->Customer_Type == 'G') {
                 $this->db->query("
                     delete from tbl_customer_payment 
                     where CPayment_invoice = ? 

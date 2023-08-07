@@ -5,7 +5,6 @@
         padding: 8px;
         box-shadow: 0px 1px 2px #454545;
         border-radius: 3px;
-        text-align: center;
     }
     .widgets .widget-icon {
         width: 40px;
@@ -13,10 +12,12 @@
         padding-top: 8px;
         border-radius: 50%;
         color: white;
+        margin: 0 auto;
     }
     .widgets .widget-content {
         flex-grow: 2;
         font-weight: bold;
+        text-align: center;
     }
     .widgets .widget-content .widget-text {
         font-size: 13px;

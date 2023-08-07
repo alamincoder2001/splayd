@@ -1272,7 +1272,34 @@ class Account extends CI_Controller {
                 join tbl_bank_accounts ac on ac.account_id = sma.account_id
                 join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
                 where sma.account_id is not null
+                and sma.amount > 0
                 and sm.Status = 'a'
+                and sm.SaleMaster_branchid = " . $this->session->userdata('BRANCHid') . "
+                
+                UNION
+                select 
+                    'i' as sequence,
+                    sm.SaleMaster_SlNo as id,
+                    concat('Product Sales Exchange- ', c.Customer_Name, ' (Invoice: ', sm.SaleMaster_InvoiceNo, ')') as description, 
+                    sma.account_id,
+                    date(sm.exchangeDate) as transaction_date,
+                    'deposit' as transaction_type,
+                    sma.exchange_bank_amount as deposit,
+                    0.00 as withdraw,
+                    sm.SaleMaster_Description as note,
+                    ac.account_name,
+                    ac.account_number,
+                    ac.bank_name,
+                    ac.branch_name,
+                    0.00 as balance
+                from tbl_salesmaster_account sma
+                join tbl_salesmaster sm on sm.SaleMaster_SlNo = sma.salesId
+                join tbl_bank_accounts ac on ac.account_id = sma.account_id
+                join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
+                where sma.account_id is not null
+                and date(sm.exchangeDate) is not null
+                and sm.Status = 'a'
+                and sma.exchange_bank_amount > 0
                 and sm.SaleMaster_branchid = " . $this->session->userdata('BRANCHid') . "
             ) as tbl
             where 1 = 1 $clauses
@@ -1401,7 +1428,21 @@ class Account extends CI_Controller {
             and sm.SaleMaster_SaleDate between '$data->fromDate' and '$data->toDate'
             
             UNION
+            select 
+                sm.SaleMaster_SlNo as id,
+                date(sm.exchangeDate) as date,
+                concat('Sale Exchange- ', sm.SaleMaster_InvoiceNo, ' - ', c.Customer_Name, ' (', c.Customer_Code, ')', ' - Bill: ', sm.SaleMaster_TotalSaleAmount) as description,
+                sm.ex_cash_amount as in_amount,
+                0.00 as out_amount
+            from tbl_salesmaster sm 
+            join tbl_customer c on c.Customer_SlNo = sm.SalseCustomer_IDNo
+            where sm.Status = 'a'
+            and sm.SaleMaster_branchid = '$this->brunch'
+            and sm.ex_cash_amount > 0
+            and sm.exchangeDate is not null
+            and date(sm.exchangeDate) between '$data->fromDate' and '$data->toDate'
             
+            UNION            
             select 
                 cp.CPayment_id as id,
                 cp.CPayment_date as date,

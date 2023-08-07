@@ -182,10 +182,11 @@ class Model_Table extends CI_Model{
                 " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
             ) as received_sales,
             (
-                select ifnull(sum(sm.takeAmount), 0) from tbl_salesmaster sm
+                select ifnull(sum(sm.ex_cash_amount), 0) from tbl_salesmaster sm
                 where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
-                and sm.Status = 'a' and sm.takeAmount > 0
-                " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
+                and sm.Status = 'a' and sm.ex_cash_amount > 0
+                and sm.exchangeDate is not null
+                " . ($date == null ? "" : " and date(sm.exchangeDate) < '$date'") . "
             ) as pay_exchange_sales,
             (
                 select ifnull(sum(cp.CPayment_amount), 0) from tbl_customer_payment cp
@@ -335,13 +336,22 @@ class Model_Table extends CI_Model{
             select 
                 ba.*,
                 (
-                    select ifnull(sum(sma.amount), 0) from tbl_salesmaster_account sma
+                    select ifnull(sum(sma.amount), 0) from tbl_salesmaster_account sma 
                     left join tbl_salesmaster sm on sm.SaleMaster_SlNo = sma.salesId
                     where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
                     and sm.Status = 'a'
                     and sma.account_id = ba.account_id
                     " . ($date == null ? "" : " and sm.SaleMaster_SaleDate < '$date'") . "
                 ) as received_sales,
+                (
+                    select ifnull(sum(sma.exchange_bank_amount), 0) from tbl_salesmaster_account sma 
+                    left join tbl_salesmaster sm on sm.SaleMaster_SlNo = sma.salesId
+                    where sm.SaleMaster_branchid= " . $this->session->userdata('BRANCHid') . "
+                    and sm.Status = 'a'
+                    and sma.account_id = ba.account_id
+                    and sm.exchangeDate is not null
+                    " . ($date == null ? "" : " and date(sm.exchangeDate) < '$date'") . "
+                ) as received_sales_exchange,
                 (
                     select ifnull(sum(pm.PurchaseMaster_bankPaid), 0) from tbl_purchasemaster pm
                     where pm.status = 'a' and pm.PurchaseMaster_bankPaid > 0
@@ -398,7 +408,7 @@ class Model_Table extends CI_Model{
                     " . ($date == null ? "" : " and sp.SPayment_date < '$date'") . "
                 ) as total_received_from_supplier,
                 (
-                    select (ba.initial_balance + received_sales + total_deposit + total_received_from_customer + total_received_from_supplier) - (total_withdraw + paid_purchase + total_paid_to_customer + total_paid_to_supplier)
+                    select (ba.initial_balance + received_sales + received_sales_exchange + total_deposit + total_received_from_customer + total_received_from_supplier) - (total_withdraw + paid_purchase + total_paid_to_customer + total_paid_to_supplier)
                 ) as balance
             from tbl_bank_accounts ba
             where ba.branch_id = " . $this->session->userdata('BRANCHid') . "

@@ -146,12 +146,12 @@
 									</div>
 								</div>
 
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label class="col-xs-3 control-label no-padding-right"> Size </label>
 									<div class="col-xs-9">
 										<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" v-on:input="productSizeChange" placeholder="select size"></v-select>
 									</div>
-								</div>
+								</div> -->
 
 								<div class="form-group" style="display: none;">
 									<label class="col-xs-3 control-label no-padding-right"> Brand </label>
@@ -217,7 +217,6 @@
 							<th v-if="sales.salesId > 0" style="color:#000;">Is Exchange</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<th style="color:#000;">Size</th>
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
@@ -232,7 +231,6 @@
 							</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<td>{{ product.size }}</td>
 							<td>{{ product.quantity }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
@@ -488,7 +486,7 @@
 		</div>
 	</div>
 
-	<div class="card" style="display:none;position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;" :style="{display: sales.bankStatus == true ? '': 'none'}">
+	<div class="card" style="display:none;position: fixed;background: #b3d8ff;width: 50%;height: 270px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;" :style="{display: sales.bankStatus == true ?'':'none'}">
 		<div class="card-header" style="display: flex;justify-content: space-between;align-items: center;border-bottom: 1px dashed gray;">
 			<div class="card-title">
 				Multiple Bank
@@ -498,16 +496,19 @@
 		<div class="card-body">
 			<div style="margin-top: 5px;">
 				<div class="row">
-					<div class="col-md-5">
-						<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account"></v-select>
+					<div class="col-xs-12 col-md-5">
+						<v-select v-bind:options="accounts" v-model="account" label="display_text" placeholder="Select account" @input="bankChange"></v-select>
 					</div>
-					<div class="col-md-3 no-padding-left">
-						<input type="text" placeholder="last digit" v-model="bankDigit" style="width: 110px;padding: 2px 5px;">
+					<div class="col-xs-4 col-md-2 no-padding-left">
+						<input type="text" placeholder="last digit" v-model="bankDigit" style="width: 100px;padding: 2px 5px;">
 					</div>
-					<div class="col-md-2 no-padding-right">
-						<input type="number" step="0.01" min="0" v-model="bankAmount" style="width: 80px;padding: 2px 5px;">
+					<div class="col-xs-5 col-md-2 no-padding-right">
+						<input type="number" step="0.01" min="0" v-model="bankAmount" v-on:input='chargeAmount()' style="width: 80px;padding: 2px 5px;">
 					</div>
-					<div class="col-md-1">
+					<div class="col-xs-5 col-md-2 no-padding-right">
+						<input type="number" step="0.01" min="0" v-model="charge_amount" readonly style="width: 80px;padding: 2px 5px;">
+					</div>
+					<div class="col-xs-1 col-md-1">
 						<button type="button" @click="bankAdd"><i class="fa fa-plus"></i></button>
 					</div>
 				</div>
@@ -520,6 +521,8 @@
 						<th>Bank Name</th>
 						<th>LastDigit</th>
 						<th>Amount</th>
+						<th>Charge</th>
+						<th>Amount(With 1.5% Charge)</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -529,6 +532,8 @@
 						<td>{{item.bank_name}}</td>
 						<td>{{item.bankDigit}}</td>
 						<td>{{item.amount}}</td>
+						<td>{{item.charge_amount}}</td>
+						<td>{{item.charge_with_amount}}</td>
 						<td>
 							<i @click="removeBank(index)" class="fa fa-trash"></i>
 						</td>
@@ -537,6 +542,7 @@
 						<th colspan="3" class="text-center">Total</th>
 						<th>{{sales.bankPaid}}</th>
 						<th></th>
+						<th>{{sales.bankPaidwithChagre}}</th>
 					</tr>
 				</tbody>
 			</table>
@@ -572,6 +578,7 @@
 					paid: 0.00,
 					cashPaid: 0.00,
 					bankPaid: 0.00,
+					bankPaidwithChagre: 0.00,
 					account_id: '',
 					previousDue: 0.00,
 					due: 0.00,
@@ -633,6 +640,7 @@
 
 				banks: [],
 				bankAmount: 0,
+				charge_amount: 0,
 				bankDigit: "",
 				userType: '<?php echo $this->session->userdata("accountType"); ?>'
 			}
@@ -956,10 +964,13 @@
 				this.sales.customerId = this.selectedCustomer.Customer_SlNo;
 				this.sales.salesFrom = this.selectedBranch.brunch_id;
 
+				let is_exchange = this.cart.filter(ex => ex.is_exchange === 'true');
+
 				let data = {
 					sales: this.sales,
 					cart: this.cart,
-					banks: this.banks
+					banks: this.banks,
+					is_exchange: is_exchange,
 				}
 
 				if (this.selectedCustomer.Customer_Type == 'G' || this.selectedCustomer.Customer_Type == 'New') {
@@ -989,28 +1000,29 @@
 				await axios.post('/get_orders', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r = res.data;
-					let sales = r.sales[0];
-					this.sales.salesBy = sales.AddBy;
-					this.sales.salesFrom = sales.SaleMaster_branchid;
-					this.sales.salesDate = sales.SaleMaster_SaleDate;
-					this.sales.salesType = sales.SaleMaster_SaleType;
-					this.sales.customerId = sales.SalseCustomer_IDNo;
-					this.sales.employeeId = sales.Employee_SlNo;
-					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
-					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
-					this.sales.vat = sales.SaleMaster_TaxAmount;
-					this.sales.transportCost = sales.SaleMaster_Freight;
-					this.sales.total = sales.SaleMaster_TotalSaleAmount;
-					this.sales.paid = sales.SaleMaster_PaidAmount;
-					this.sales.cashPaid = sales.SaleMaster_cashPaid;
-					this.sales.bankPaid = sales.SaleMaster_bankPaid;
-					this.sales.previousDue = sales.SaleMaster_Previous_Due;
-					this.sales.due = sales.SaleMaster_DueAmount;
-					this.sales.takeAmount = sales.takeAmount;
-					this.sales.returnAmount = sales.returnAmount;
-					this.sales.note = sales.SaleMaster_Description;
-					this.sales.Status = sales.Status
+					let r                             = res.data;
+					let sales                         = r.sales[0];
+					    this.sales.salesBy            = sales.AddBy;
+					    this.sales.salesFrom          = sales.SaleMaster_branchid;
+					    this.sales.salesDate          = sales.SaleMaster_SaleDate;
+					    this.sales.salesType          = sales.SaleMaster_SaleType;
+					    this.sales.customerId         = sales.SalseCustomer_IDNo;
+					    this.sales.employeeId         = sales.Employee_SlNo;
+					    this.sales.subTotal           = parseFloat(+parseFloat(sales.SaleMaster_SubTotalAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
+					    this.sales.discount           = sales.SaleMaster_TotalDiscountAmount;
+					    this.sales.vat                = sales.SaleMaster_TaxAmount;
+					    this.sales.transportCost      = sales.SaleMaster_Freight;
+					    this.sales.total              = parseFloat(+parseFloat(sales.SaleMaster_TotalSaleAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
+					    this.sales.paid               = sales.SaleMaster_PaidAmount;
+					    this.sales.cashPaid           = sales.SaleMaster_cashPaid;
+					    this.sales.bankPaid           = sales.SaleMaster_bankPaid;
+					    this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
+					    this.sales.previousDue        = sales.SaleMaster_Previous_Due;
+					    this.sales.due                = sales.SaleMaster_DueAmount;
+					    this.sales.takeAmount         = sales.takeAmount;
+					    this.sales.returnAmount       = sales.returnAmount;
+					    this.sales.note               = sales.SaleMaster_Description;
+					    this.sales.Status             = sales.Status
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
@@ -1060,7 +1072,9 @@
 								account_name: b.account_name,
 								bank_name: b.bank_name,
 								amount: b.amount,
-								bankDigit: b.lastDigit
+								bankDigit: b.lastDigit,
+								charge_amount: b.charge_amount,
+								charge_with_amount: parseFloat(+parseFloat(b.amount) + +parseFloat(b.charge_amount)).toFixed(2)
 							}
 
 							this.banks.push(bank);
@@ -1075,6 +1089,13 @@
 				})
 			},
 
+			bankChange() {
+				let totalPaid = +parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
+				let totalAmount = (parseFloat(this.sales.total) - parseFloat(totalPaid))
+			},
+			chargeAmount() {
+				this.charge_amount = +this.bankAmount * (this.account.charge / 100);
+			},
 			bankAdd() {
 				if (this.account == null) {
 					alert("Select Bank Account");
@@ -1084,16 +1105,20 @@
 					alert("Amount field is required");
 					return
 				}
+
 				if (this.bankDigit == '') {
 					alert("Bank Digit required");
 					return
 				}
+
 
 				let bank = {
 					account_id: this.account.account_id,
 					account_name: this.account.account_name,
 					bank_name: this.account.bank_name,
 					amount: this.bankAmount,
+					charge_amount: this.charge_amount,
+					charge_with_amount: +this.bankAmount + +this.charge_amount,
 					bankDigit: this.bankDigit
 				}
 
@@ -1101,15 +1126,23 @@
 				if (cartInd > -1) {
 					this.banks.splice(cartInd, 1);
 				}
-
 				this.banks.push(bank);
+
+				let chargeAmount = (parseFloat(this.sales.total) * parseFloat(1.5)) / 100;
+
+				this.sales.subTotal = parseFloat(+parseFloat(this.sales.subTotal) + chargeAmount).toFixed(2);
 				this.account = null;
 				this.bankAmount = 0;
+				this.charge_amount = 0;
 				this.bankDigit = "";
 
 				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
 					return acc + +pre.amount
 				}, 0).toFixed(2);
+				this.sales.bankPaidwithChagre = this.banks.reduce((acc, pre) => {
+					return acc + +pre.charge_with_amount
+				}, 0).toFixed(2);
+
 				this.calculateTotal();
 			},
 

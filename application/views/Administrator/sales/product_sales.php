@@ -224,7 +224,6 @@
 							<th v-if="sales.salesId > 0" style="color:#000;">Is Exchange</th>
 							<th style="width:20%;color:#000;">Product Name</th>
 							<th style="width:15%;color:#000;">Category</th>
-							<!-- <th style="color:#000;">Size</th> -->
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
@@ -239,7 +238,6 @@
 							</td>
 							<td>{{ product.name }}</td>
 							<td>{{ product.categoryName }}</td>
-							<!-- <td>{{ product.size }}</td> -->
 							<td>{{ product.quantity }}</td>
 							<td>{{ product.salesRate }}</td>
 							<td>{{ product.total }}</td>
@@ -247,16 +245,16 @@
 						</tr>
 
 						<tr>
-							<td colspan="9"></td>
+							<td colspan="8"></td>
 						</tr>
 
 						<tr style="font-weight: bold;">
-							<td colspan="6">Note</td>
+							<td colspan="5">Note</td>
 							<td colspan="3">Total</td>
 						</tr>
 
 						<tr>
-							<td colspan="6"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
+							<td colspan="5"><textarea style="width: 100%;font-size:13px;" placeholder="Note" v-model="sales.note"></textarea></td>
 							<td colspan="3" style="padding-top: 15px;font-size:18px;">{{ sales.total }}</td>
 						</tr>
 					</tbody>
@@ -268,8 +266,6 @@
 						<tr>
 							<th style="width:7%;color:#000;">Sl</th>
 							<th style="width:20%;color:#000;">Product Name</th>
-							<th style="color:#000;">Color</th>
-							<!-- <th style="color:#000;">Size</th> -->
 							<th style="width:5%;color:#000;">Pcs</th>
 							<th style="width:8%;color:#000;">Rate</th>
 							<th style="width:15%;color:#000;">Total Amount</th>
@@ -279,8 +275,6 @@
 						<tr v-for="(product, sl) in exchanges">
 							<td>{{sl + 1}}</td>
 							<td>{{product.Product_Name}}</td>
-							<td>{{product.color_name}}</td>
-							<!-- <td>{{product.size_name}}</td> -->
 							<td>{{product.quantity}}</td>
 							<td>{{product.rate}}</td>
 							<td>{{product.total}}</td>
@@ -340,7 +334,7 @@
 											<div class="form-group">
 												<label class="col-xs-4 col-md-12 control-label no-padding-right">Discount Persent</label>
 
-												<div class="col-xs-4 col-md-4">
+												<div class="col-xs-4 col-md-4 no-padding-right">
 													<input type="number" id="discountPercent" class="form-control" v-model="discountPercent" v-on:input="calculateTotal" />
 												</div>
 
@@ -400,7 +394,7 @@
 									<tr v-if="sales.salesId > 0 && parseFloat(sales.returnAmount) > parseFloat(sales.takeAmount)">
 										<td>
 											<div class="form-group">
-												<label class="col-xs-4col-md-12 control-label no-padding-right">Return Amount</label>
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Return Cash</label>
 												<div class="col-xs-8 col-md-12">
 													<input type="number" id="returnAmount" class="form-control" v-model="sales.returnAmount" />
 												</div>
@@ -462,10 +456,10 @@
 										</td>
 									</tr>
 
-									<tr v-if="sales.bankPaid <= 0">
+									<tr>
 										<td>
 											<div class="form-group">
-												<label class="col-xs-4 col-md-12 control-label no-padding-right">Return</label>
+												<label class="col-xs-4 col-md-12 control-label no-padding-right">Return Amount</label>
 												<div class="col-xs-8 col-md-12">
 													<input type="number" class="form-control" id="returnCash" v-model="sales.returnCash" />
 												</div>
@@ -520,7 +514,7 @@
 		</div>
 	</div>
 
-	<div class="card" style="display:none;position: fixed;background: #b3d8ff;width: 40%;height: 250px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;" :style="{display: sales.bankStatus == true ?'':'none'}">
+	<div class="card" style="display:none;position: fixed;background: #b3d8ff;width: 50%;height: 270px;top: 20%;right: 25%;padding:10px;z-index:9999;border:1px solid gray;" :style="{display: sales.bankStatus == true ?'':'none'}">
 		<div class="card-header" style="display: flex;justify-content: space-between;align-items: center;border-bottom: 1px dashed gray;">
 			<div class="card-title">
 				Multiple Bank
@@ -597,31 +591,31 @@
 		data() {
 			return {
 				sales: {
-					salesId           : parseInt('<?php echo $salesId; ?>'),
-					invoiceNo         : '<?php echo $invoice; ?>',
-					salesBy           : '<?php echo $this->session->userdata("FullName"); ?>',
-					salesType         : 'retail',
-					salesFrom         : '',
-					salesDate         : '',
-					customerId        : '',
-					employeeId        : null,
-					subTotal          : 0.00,
-					discount          : 0.00,
-					vat               : 0.00,
-					transportCost     : 0.00,
-					total             : 0.00,
-					paid              : 0.00,
-					cashPaid          : 0.00,
-					bankPaid          : 0.00,
+					salesId: parseInt('<?php echo $salesId; ?>'),
+					invoiceNo: '<?php echo $invoice; ?>',
+					salesBy: '<?php echo $this->session->userdata("FullName"); ?>',
+					salesType: 'retail',
+					salesFrom: '',
+					salesDate: '',
+					customerId: '',
+					employeeId: null,
+					subTotal: 0.00,
+					discount: 0.00,
+					vat: 0.00,
+					transportCost: 0.00,
+					total: 0.00,
+					paid: 0.00,
+					cashPaid: 0.00,
+					bankPaid: 0.00,
 					bankPaidwithChagre: 0.00,
-					previousDue       : 0.00,
-					due               : 0.00,
-					isService         : '<?php echo $isService; ?>',
-					note              : '',
-					exchangeTotal     : 0,
-					returnAmount      : 0,
-					takeAmount        : 0,
-					returnCash        : 0,
+					previousDue: 0.00,
+					due: 0.00,
+					isService: '<?php echo $isService; ?>',
+					note: '',
+					exchangeTotal: 0,
+					returnAmount: 0,
+					takeAmount: 0,
+					returnCash: 0,
 				},
 				vatPercent: 0,
 				discountPercent: 0,
@@ -707,7 +701,7 @@
 					this.employees = res.data;
 				})
 			},
-			
+
 			getBranches() {
 				axios.get('/get_branches').then(res => {
 					this.branches = res.data;
@@ -828,7 +822,7 @@
 				this.selectedProduct.quantity = 1
 				this.productTotal();
 				this.$refs.quantity.focus();
-			
+
 				// this.getProductSizes();
 			},
 
@@ -858,8 +852,6 @@
 					productCode: this.selectedProduct.Product_Code,
 					categoryName: this.selectedProduct.ProductCategory_Name,
 					name: this.selectedProduct.Product_Name,
-					// sizeId: this.selectedSize ? this.selectedSize.size_id : '',
-					// size: this.selectedSize ? this.selectedSize.size_name : '',
 					salesRate: this.selectedProduct.Product_SellingPrice,
 					vat: this.selectedProduct.vat,
 					quantity: this.selectedProduct.quantity,
@@ -888,12 +880,15 @@
 					return;
 				}
 
-				let cartInd = this.cart.findIndex(p => p.productId == product.productId && p.sizeId == product.sizeId);
+				let cartInd = this.cart.findIndex(p => p.productId == product.productId);
 				if (cartInd > -1) {
-					this.cart.splice(cartInd, 1);
+					// this.cart.splice(cartInd, 1);
+					this.cart[cartInd].quantity = +parseInt(this.cart[cartInd].quantity) + parseInt(product.quantity);
+					this.cart[cartInd].total = parseFloat(+parseFloat(this.cart[cartInd].total) + parseFloat(product.total)).toFixed(2);
+				} else {
+					this.cart.unshift(product);
 				}
 
-				this.cart.unshift(product);
 				this.clearProduct();
 				this.calculateTotal();
 			},
@@ -964,20 +959,17 @@
 					this.sales.takeAmount = 0;
 				}
 
-				if (this.sales.bankPaid <= 0) {
-					this.sales.returnCash = (parseFloat(this.sales.cashPaid) - parseFloat(this.sales.total)).toFixed(2);
+				this.sales.returnCash = ((+parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid)) - parseFloat(this.sales.total)).toFixed(2);
+				if (this.sales.due <= 0) {
 					this.sales.due = 0;
-				} else {
-					this.sales.returnCash = 0;
 				}
 			},
-			
-			bankChange(){
+
+			bankChange() {
 				let totalPaid = +parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
 				let totalAmount = (parseFloat(this.sales.total) - parseFloat(totalPaid))
 			},
 			chargeAmount() {
-				console.log(this.account)
 				this.charge_amount = +this.bankAmount * (this.account.charge / 100);
 			},
 			bankAdd() {
@@ -997,13 +989,13 @@
 
 
 				let bank = {
-					account_id        : this.account.account_id,
-					account_name      : this.account.account_name,
-					bank_name         : this.account.bank_name,
-					amount            : this.bankAmount,
-					charge_amount     : this.charge_amount,
+					account_id: this.account.account_id,
+					account_name: this.account.account_name,
+					bank_name: this.account.bank_name,
+					amount: this.bankAmount,
+					charge_amount: this.charge_amount,
 					charge_with_amount: +this.bankAmount + +this.charge_amount,
-					bankDigit         : this.bankDigit
+					bankDigit: this.bankDigit
 				}
 
 				let cartInd = this.banks.findIndex(p => p.account_id == bank.account_id);
@@ -1013,7 +1005,7 @@
 				this.banks.push(bank);
 
 				let chargeAmount = (parseFloat(this.sales.total) * parseFloat(1.5)) / 100;
-				
+
 				this.sales.subTotal = parseFloat(+parseFloat(this.sales.subTotal) + chargeAmount).toFixed(2);
 				this.account = null;
 				this.bankAmount = 0;
@@ -1030,7 +1022,7 @@
 				this.calculateTotal();
 			},
 			async saveSales() {
-				
+
 				if (this.selectedCustomer.Customer_SlNo == '') {
 					alert('Select Customer');
 					return;
@@ -1050,10 +1042,12 @@
 					}
 				}
 
+				let is_exchange = this.cart.filter(ex => ex.is_exchange === 'true');
+
 				let url = "/add_sales";
 				if (this.sales.salesId != 0) {
 					url = "/update_sales";
-					this.sales.previousDue = parseFloat((this.sales.previousDue - this.sales_due_on_update)).toFixed(2);
+					// this.sales.previousDue = parseFloat((this.sales.previousDue - this.sales_due_on_update)).toFixed(2);
 				}
 
 				if (parseFloat(this.selectedCustomer.Customer_Credit_Limit) < (parseFloat(this.sales.due) + parseFloat(this.sales.previousDue))) {
@@ -1076,7 +1070,8 @@
 				let data = {
 					sales: this.sales,
 					cart: this.cart,
-					banks: this.banks
+					banks: this.banks,
+					is_exchange: is_exchange,
 				}
 
 				if (this.selectedCustomer.Customer_Type == 'G') {
@@ -1106,29 +1101,29 @@
 				await axios.post('/get_sales', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r = res.data;
-					let sales = r.sales[0];
-					this.sales.salesBy = sales.AddBy;
-					this.sales.salesFrom = sales.SaleMaster_branchid;
-					this.sales.salesDate = sales.SaleMaster_SaleDate;
-					this.sales.salesType = sales.SaleMaster_SaleType;
-					this.sales.customerId = sales.SalseCustomer_IDNo;
-					this.sales.employeeId = sales.Employee_SlNo;
-					this.sales.subTotal = sales.SaleMaster_SubTotalAmount;
-					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
-					this.sales.vat = sales.SaleMaster_TaxAmount;
-					this.sales.transportCost = sales.SaleMaster_Freight;
-					this.sales.total = sales.SaleMaster_TotalSaleAmount;
-					this.sales.paid = sales.SaleMaster_PaidAmount;
-					this.sales.cashPaid = sales.SaleMaster_cashPaid;
-					this.sales.bankPaid = sales.SaleMaster_bankPaid;
-					this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
-					this.sales.previousDue = sales.SaleMaster_Previous_Due;
-					this.sales.due = sales.SaleMaster_DueAmount;
-					this.sales.takeAmount = sales.takeAmount;
-					this.sales.returnAmount = sales.returnAmount;
-					this.sales.note = sales.SaleMaster_Description;
-					this.sales.returnCash = 0;
+					let r                             = res.data;
+					let sales                         = r.sales[0];
+					    this.sales.salesBy            = sales.AddBy;
+					    this.sales.salesFrom          = sales.SaleMaster_branchid;
+					    this.sales.salesDate          = sales.SaleMaster_SaleDate;
+					    this.sales.salesType          = sales.SaleMaster_SaleType;
+					    this.sales.customerId         = sales.SalseCustomer_IDNo;
+					    this.sales.employeeId         = sales.Employee_SlNo;
+					    this.sales.subTotal           = parseFloat(+parseFloat(sales.SaleMaster_SubTotalAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
+					    this.sales.discount           = sales.SaleMaster_TotalDiscountAmount;
+					    this.sales.vat                = sales.SaleMaster_TaxAmount;
+					    this.sales.transportCost      = sales.SaleMaster_Freight;
+					    this.sales.total              = parseFloat(+parseFloat(sales.SaleMaster_TotalSaleAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
+					    this.sales.paid               = sales.SaleMaster_PaidAmount;
+					    this.sales.cashPaid           = sales.SaleMaster_cashPaid;
+					    this.sales.bankPaid           = sales.SaleMaster_bankPaid;
+					    this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
+					    this.sales.previousDue        = sales.SaleMaster_Previous_Due;
+					    this.sales.due                = sales.SaleMaster_DueAmount;
+					    this.sales.takeAmount         = sales.takeAmount;
+					    this.sales.returnAmount       = sales.returnAmount;
+					    this.sales.note               = sales.SaleMaster_Description;
+					    this.sales.returnCash         = 0;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
@@ -1156,8 +1151,6 @@
 						let cartProduct = {
 							productCode: product.Product_Code,
 							productId: product.Product_IDNo,
-							// size: product.size_name,
-							// sizeId: product.Product_sizeId,
 							categoryName: product.ProductCategory_Name,
 							name: product.Product_Name,
 							salesRate: product.SaleDetails_Rate,
@@ -1175,13 +1168,13 @@
 					if (r.banks.length > 0) {
 						r.banks.forEach(b => {
 							let bank = {
-								account_id        : b.account_id,
-								account_name      : b.account_name,
-								bank_name         : b.bank_name,
-								amount            : b.amount,
-								bankDigit         : b.lastDigit,
-								charge_amount     : b.charge_amount,
-								charge_with_amount: +b.amount + +b.charge_amount
+								account_id: b.account_id,
+								account_name: b.account_name,
+								bank_name: b.bank_name,
+								amount: b.amount,
+								bankDigit: b.lastDigit,
+								charge_amount: b.charge_amount,
+								charge_with_amount: parseFloat(+parseFloat(b.amount) + +parseFloat(b.charge_amount)).toFixed(2)
 							}
 
 							this.banks.push(bank);
@@ -1193,7 +1186,7 @@
 					this.customers.splice(gCustomerInd, 1);
 				})
 			},
-			
+
 			removeBank(ind) {
 				this.banks.splice(ind, 1);
 				this.sales.bankPaid = this.banks.reduce((acc, pre) => {
