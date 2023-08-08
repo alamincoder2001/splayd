@@ -199,9 +199,9 @@ const salesInvoice = Vue.component("sales-invoice", {
                                 <td><strong>Pay Amount:</strong></td>
                                 <td style="text-align:right">{{ sales.takeAmount }}</td>
                               </tr>
-                              <tr v-if='sales.SaleMaster_bankPaid > 0'>
+                              <tr>
                                     <td><strong>Total Paid:</strong></td>
-                                    <td style="text-align:right">{{ parseFloat(+parseFloat(sales.SaleMaster_PaidAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2) }}</td>
+                                    <td style="text-align:right">{{ parseFloat(+parseFloat(sales.SaleMaster_PaidAmount) + parseFloat(sales.takeAmount) + banks.reduce((acc, pre) => {return acc + +parseFloat(pre.charge_amount)},0) - parseFloat(sales.returnAmount)).toFixed(2) }}</td>
                               </tr>
 
                               <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
