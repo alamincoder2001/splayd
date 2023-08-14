@@ -62,6 +62,7 @@
                 <table class="table table-bordered table-condensed" id="orderDeliveryTable">
                     <thead>
                         <tr>
+                            <th>Sl</th>
                             <th>Invoice No.</th>
                             <th>Date</th>
                             <th>Customer Name</th>
@@ -79,6 +80,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(sale, sl) in orders">
+                            <td>{{sl + 1}}</td>
                             <td>{{ sale.SaleMaster_InvoiceNo }}</td>
                             <td>{{ sale.SaleMaster_SaleDate }}</td>
                             <td>{{ sale.Customer_Name }}</td>
@@ -94,7 +96,7 @@
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
                         </tr>
                         <tr v-if="orders.length == 0">
-                            <td colspan="14">No Found Data</td>
+                            <td colspan="15">No Found Data</td>
                         </tr>
                     </tbody>
                 </table>

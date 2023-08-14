@@ -6,10 +6,10 @@
 	</div>
 </div>
 
-<script src="<?php echo base_url();?>assets/js/vue/vue.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/axios.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/components/orderInvoice.js"></script>
-<script src="<?php echo base_url();?>assets/js/moment.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/axios.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/components/orderInvoice.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/barcode.min.js"></script>
 <script>
 	new Vue({
@@ -17,17 +17,17 @@
 		components: {
 			orderInvoice
 		},
-		data(){
+		data() {
 			return {
-				salesId: parseInt('<?php echo $salesId;?>')
+				salesId: parseInt('<?php echo $salesId; ?>')
 			}
 		}
 	})
 
-	JsBarcode("#barcode", "<?php echo $invoice; ?>", {
-			format: "CODE128",
-			height: 45,
-			displayValue: false
-		});
+	JsBarcode("#barcode", "<?php echo $invoice->Customer_Name . ', ' . $invoice->Customer_Mobile; ?>", {
+		format: "CODE128",
+		width: 1.5,
+		height: 45,
+		displayValue: false
+	});
 </script>
-

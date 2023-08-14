@@ -110,6 +110,7 @@
                 <table class="table table-bordered table-condensed" id="orderDeliveryTable">
                     <thead>
                         <tr>
+                            <th>Sl</th>
                             <th>Invoice No.</th>
                             <th>Date</th>
                             <th>Customer Name</th>
@@ -129,6 +130,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(sale, sl) in orders">
+                            <td>{{sl + 1}}</td>
                             <td>{{ sale.SaleMaster_InvoiceNo }}</td>
                             <td>{{ sale.SaleMaster_SaleDate }}</td>
                             <td>{{ sale.Customer_Name }}</td>
@@ -144,12 +146,12 @@
                             <td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
                             <td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
                             <th>
-                            <a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
+                                <a href="" title="Delete Order" @click.prevent="deleteSale(sale.SaleMaster_SlNo)"><i class="fa fa-trash"></i></a>
                                 <button @click="StatusChange(sale.SaleMaster_SlNo, sale.delivery_status)" :disabled="sale.delivery_status == 'a'? true:false" :class="sale.delivery_status == 'p'? 'statusPendingBtn' :'statusReceivedBtn'">{{sale.delivery_status == 'p' ? 'Pending': 'Received'}}</button>
                             </th>
                         </tr>
                         <tr v-if="orders.length == 0">
-                            <td colspan="14">No Found Data</td>
+                            <td colspan="16">No Found Data</td>
                         </tr>
                     </tbody>
                 </table>
@@ -204,21 +206,21 @@
                 })
             },
 
-            getSearchResult(){
+            getSearchResult() {
                 if (this.searchType != 'customer') {
                     this.selectedCustomer = null;
                 }
                 let filter = {
                     dateFrom: this.dateFrom,
                     dateTo: this.dateTo,
-                    customerId: this.selectedCustomer == null ? '': this.selectedCustomer.Customer_SlNo
+                    customerId: this.selectedCustomer == null ? '' : this.selectedCustomer.Customer_SlNo
                 }
 
                 axios.post('/get_all_order_filter', filter).then(res => {
                     this.orders = res.data;
                 })
             },
-            
+
             getOrders() {
                 axios.get('/get_all_order').then(res => {
                     this.orders = res.data.filter(order => order.Status == 'a');

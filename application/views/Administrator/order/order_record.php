@@ -143,6 +143,7 @@
 				<table class="record-table" v-if="(searchTypesForRecord.includes(searchType)) && recordType == 'with_details'" style="display:none" v-bind:style="{display: (searchTypesForRecord.includes(searchType)) && recordType == 'with_details' ? '' : 'none'}">
 					<thead>
 						<tr>
+							<td>Sl</td>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Customer Name</th>
@@ -156,8 +157,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<template v-for="sale in sales">
+						<template v-for="(sale, index) in sales">
 							<tr :style="{background: sale.Status == 'a' ? '' : '#F7CB73'}">
+								<td>{{index + 1}}</td>
 								<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 								<td>{{ sale.SaleMaster_SaleDate }}</td>
 								<td>{{ sale.Customer_Name }}</td>
@@ -184,7 +186,7 @@
 								</td>
 							</tr>
 							<tr v-for="(product, sl) in sale.saleDetails.slice(1)">
-								<td colspan="5" v-bind:rowspan="sale.saleDetails.length - 1" v-if="sl == 0"></td>
+								<td colspan="6" v-bind:rowspan="sale.saleDetails.length - 1" v-if="sl == 0"></td>
 								<td>{{ product.Product_Name }}</td>
 								<td style="text-align:right;">{{ product.SaleDetails_Rate }}</td>
 								<td style="text-align:center;">{{ product.SaleDetails_TotalQuantity }}</td>
@@ -192,7 +194,7 @@
 								<td></td>
 							</tr>
 							<tr style="font-weight:bold;">
-								<td colspan="7" style="font-weight:normal;"><strong>Note: </strong>{{ sale.SaleMaster_Description }}</td>
+								<td colspan="8" style="font-weight:normal;"><strong>Note: </strong>{{ sale.SaleMaster_Description }}</td>
 								<td style="text-align:center;">Total Quantity<br>{{ sale.saleDetails.reduce((prev, curr) => {return prev + parseFloat(curr.SaleDetails_TotalQuantity)}, 0) }}</td>
 								<td style="text-align:right;">
 									Total: {{ sale.SaleMaster_TotalSaleAmount }}<br>
@@ -208,6 +210,7 @@
 				<table class="record-table" v-if="(searchTypesForRecord.includes(searchType)) && recordType == 'without_details'" style="display:none" v-bind:style="{display: (searchTypesForRecord.includes(searchType)) && recordType == 'without_details' ? '' : 'none'}">
 					<thead>
 						<tr>
+							<td>Sl</td>
 							<th>Invoice No.</th>
 							<th>Date</th>
 							<th>Customer Name</th>
@@ -225,7 +228,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="sale in sales" :style="{background: sale.Status == 'a' ? '' : '#F7CB73'}">
+						<tr v-for="(sale, index) in sales" :style="{background: sale.Status == 'a' ? '' : '#F7CB73'}">
+							<td>{{index + 1}}</td>
 							<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 							<td>{{ sale.SaleMaster_SaleDate }}</td>
 							<td>{{ sale.Customer_Name }}</td>
@@ -258,7 +262,7 @@
 					</tbody>
 					<tfoot>
 						<tr style="font-weight:bold;">
-							<td colspan="5" style="text-align:right;">Total</td>
+							<td colspan="6" style="text-align:right;">Total</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_SubTotalAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_TaxAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_TotalDiscountAmount)}, 0).toFixed(2) }}</td>
@@ -276,6 +280,7 @@
 					<table class="record-table" v-if="selectedProduct != null">
 						<thead>
 							<tr>
+								<th>Sl</th>
 								<th>Invoice No.</th>
 								<th>Date</th>
 								<th>Customer Name</th>
@@ -285,7 +290,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="sale in sales">
+							<tr v-for="(sale, index) in sales">
+								<td>{{index + 1}}</td>
 								<td>{{ sale.SaleMaster_InvoiceNo }}</td>
 								<td>{{ sale.SaleMaster_SaleDate }}</td>
 								<td>{{ sale.Customer_Name }}</td>
@@ -296,7 +302,7 @@
 						</tbody>
 						<tfoot>
 							<tr style="font-weight:bold;">
-								<td colspan="5" style="text-align:right;">Total Quantity</td>
+								<td colspan="6" style="text-align:right;">Total Quantity</td>
 								<td style="text-align:right;">{{ sales.reduce((prev, curr) => { return prev + parseFloat(curr.SaleDetails_TotalQuantity)}, 0) }}</td>
 							</tr>
 						</tfoot>
@@ -311,7 +317,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<template v-for="sale in sales">
+							<template v-for="(sale, index) in sales">
 								<tr>
 									<td colspan="3" style="text-align:center;background: #ccc;">{{ sale.category_name }}</td>
 								</tr>

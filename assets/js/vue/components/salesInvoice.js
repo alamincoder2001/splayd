@@ -221,7 +221,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                           <p style="white-space: pre-line;font-size:15px;">
                               NO REFUND. You can only <strong>exchange within 3days</strong>
                           </p>
-                          <p style="text-align:center;">                            
+                          <p style="text-align:center;">
                               <img style="width: 60%;height: 70px;" id="barcode" />
                           </p>
                       </div>
