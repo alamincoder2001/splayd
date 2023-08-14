@@ -24,10 +24,10 @@
 		}
 	})
 
-	JsBarcode("#barcode", "<?php echo $invoice->Customer_Code . '-' . $invoice->Customer_Name . '-' . $invoice->Customer_Mobile; ?>", {
+	JsBarcode("#barcode", "<?php echo $invoice->Customer_Code; ?>", {
 		format: "CODE128",
-		width: 1.5,
-		height: 45,
+		width: 2.5,
+		height: 50,
 		displayValue: false
 	});
 </script>

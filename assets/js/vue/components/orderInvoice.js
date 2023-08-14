@@ -149,7 +149,7 @@ const orderInvoice = Vue.component("order-invoice", {
                         <strong>Note: </strong>
                         -->
                         <p style="text-align:center;">
-                            <img style="width: 60%;height: 70px;" id="barcode" />
+                            <img id="barcode" />
                         </p>
                     </div>
                 </div>
