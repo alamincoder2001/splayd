@@ -329,6 +329,7 @@ class Order extends CI_Controller
     {
         $invoice = $this->db->query("SELECT
                         sm.*,
+                        c.Customer_Code,
                         c.Customer_Name,
                         c.Customer_Mobile
                     FROM tbl_salesmaster sm
