@@ -1574,7 +1574,13 @@ class Sales extends CI_Controller
     }
     public function saleInvoicePrint($saleId)
     {
-        $invoice = $this->db->query("SELECT sm.SaleMaster_InvoiceNo FROM tbl_salesmaster sm WHERE sm.SaleMaster_SlNo = '$saleId'")->row()->SaleMaster_InvoiceNo;
+        $invoice = $this->db->query("SELECT
+                    sm.*,
+                    c.Customer_Name,
+                    c.Customer_Mobile
+                FROM tbl_salesmaster sm
+                LEFT JOIN tbl_customer c ON c.Customer_SlNo = sm.SalseCustomer_IDNo
+                WHERE sm.SaleMaster_SlNo = '$saleId'")->row();
         $data['title'] = "Sales Invoice";
         $data['salesId'] = $saleId;
         $data['invoice'] = $invoice;
