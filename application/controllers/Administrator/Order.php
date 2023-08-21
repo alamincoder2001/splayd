@@ -292,7 +292,7 @@ class Order extends CI_Controller
                         $salesBank = array(
                             'salesId'              => $salesId,
                             'account_id'           => $bank->account_id,
-                            'amount'               => count($data->is_exchange) > 0 ? $olddata->amount: $bank->amount,
+                            'amount'               => count($data->is_exchange) > 0 ? $olddata->amount : $bank->amount,
                             'exchange_bank_amount' => count($data->is_exchange) > 0 ? $bank->amount - $olddata->amount : 0,
                             'charge_amount'        => $bank->charge_amount,
                             'lastDigit'            => $bank->bankDigit,
@@ -653,13 +653,23 @@ class Order extends CI_Controller
 
                 // update salesmaster
                 $updateSale = array(
-                    'SaleMaster_bankPaid' => $sale->SaleMaster_bankPaid + $sale->SaleMaster_DueAmount,
+                    'SaleMaster_bankPaid'   => $sale->SaleMaster_bankPaid + $sale->SaleMaster_DueAmount,
                     'SaleMaster_PaidAmount' => $sale->SaleMaster_PaidAmount + $sale->SaleMaster_DueAmount,
-                    'SaleMaster_DueAmount' => 0,
-                    'account_id' => 1
+                    'SaleMaster_DueAmount'  => 0
                 );
+                $salesBank = array(
+                    'salesId'       => $sale->SaleMaster_SlNo,
+                    'account_id'    => 1,
+                    'amount'        => $sale->SaleMaster_bankPaid + $sale->SaleMaster_DueAmount,
+                    'charge_amount' => 0,
+                    'lastDigit'     => 0,
+                    'status'        => 'a',
+                );
+                $this->db->insert('tbl_salesmaster_account', $salesBank);
+                
                 $this->db->where('SaleMaster_SlNo', $sale->SaleMaster_SlNo);
                 $this->db->update('tbl_salesmaster', $updateSale);
+
             }
 
             /*deliver order Details*/
@@ -667,9 +677,9 @@ class Order extends CI_Controller
 
             /*deliver Sale Master Data*/
             $this->db->set('Status', $data->Status)->where('SaleMaster_SlNo', $saleId)->update('tbl_salesmaster');
+
             if ($data->Status == 'a') {
                 foreach ($saleDetails as $detail) {
-
                     /*Update Sales Inventory*/
                     $this->db->query("
                     update tbl_currentinventory 
