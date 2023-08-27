@@ -240,23 +240,23 @@ class Billing_model extends CI_Model {
 		return $result;
 	}
 	   
-  	// public function select_Product_by_id($Product_SlNo){
-	// 	$this->db->select('*');
-	// 	$this->db->from('tbl_product');
-	// 	$this->db->where('Product_SlNo',$Product_SlNo);
-	// 	$query = $this->db->get();
-	// 	$result = $query->row();
-	// 	return $result;
-	// }
   	public function select_Product_by_id($Product_SlNo){
-		$result = $this->db->query("SELECT cs.*, p.Product_Code, p.Product_Name, p.Product_SellingPrice, cl.color_name, sz.size_name
-		FROM tbl_color_size cs
-		LEFT JOIN tbl_product p ON p.Product_SlNo = cs.product_id
-		LEFT JOIN tbl_color cl ON cl.color_SiNo = cs.color_id
-		LEFT JOIN tbl_size sz ON sz.size_SiNo = cs.size_id
-		WHERE cs.id = ?", $Product_SlNo)->row();
+		$this->db->select('*');
+		$this->db->from('tbl_product');
+		$this->db->where('Product_SlNo',$Product_SlNo);
+		$query = $this->db->get();
+		$result = $query->row();
 		return $result;
 	}
+  	// public function select_Product_by_id($Product_SlNo){
+	// 	$result = $this->db->query("SELECT cs.*, p.Product_Code, p.Product_Name, p.Product_SellingPrice, cl.color_name, sz.size_name
+	// 	FROM tbl_color_size cs
+	// 	LEFT JOIN tbl_product p ON p.Product_SlNo = cs.product_id
+	// 	LEFT JOIN tbl_color cl ON cl.color_SiNo = cs.color_id
+	// 	LEFT JOIN tbl_size sz ON sz.size_SiNo = cs.size_id
+	// 	WHERE cs.id = ?", $Product_SlNo)->row();
+	// 	return $result;
+	// }
 	
 	public function select_category_by_brand($id){
 		$this->db->SELECT("tbl_productcategory.ProductCategory_SlNo,tbl_productcategory.ProductCategory_Name from tbl_product inner join tbl_productcategory on tbl_productcategory.ProductCategory_SlNo=tbl_product.ProductCategory_ID where tbl_product.brand='$id'");

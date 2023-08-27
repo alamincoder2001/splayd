@@ -26,8 +26,8 @@
 
 	JsBarcode("#barcode", "<?php echo $invoice->Customer_Code; ?>", {
 		format: "CODE128",
-		width: 2.5,
-		height: 50,
+		width: 5,
+		height: 70,
 		displayValue: false
 	});
 </script>

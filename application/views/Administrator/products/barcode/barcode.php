@@ -77,9 +77,6 @@
                 				<div class="col-sm-2"> 
                 				    <input type="text" name="qty" class="form-control mytext" placeholder="Product quantity ...">
                 				</div>
-                				
-                				<input type="hidden" name="color" value="<?php echo $product->color_name; ?>">
-				                <input type="hidden" name="size" value="<?php echo $product->size_name; ?>">
             				
             				    <label  style="display: none;" class="control-label col-sm-2" for="date">Date</label>
                 				<div class="col-sm-2" style="display: none;"> 
@@ -104,8 +101,6 @@
                             $date = $_POST['date'];
                             $pname = $_POST['pname'];
                             $Price = $_POST['Price'];
-                            $Color = $_POST['color'];
-                            $Size = $_POST['size'];
                         
                             for ($i=0; $i < $qty; $i++) { 
     
