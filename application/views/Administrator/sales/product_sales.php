@@ -1115,8 +1115,8 @@
 					    this.sales.transportCost      = sales.SaleMaster_Freight;
 					    this.sales.total              = parseFloat(+parseFloat(sales.SaleMaster_TotalSaleAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
 					    this.sales.paid               = sales.SaleMaster_PaidAmount;
-					    this.sales.cashPaid           = sales.SaleMaster_cashPaid;
-					    this.sales.bankPaid           = sales.SaleMaster_bankPaid;
+					    this.sales.cashPaid           = parseFloat(parseFloat(sales.SaleMaster_cashPaid) + +parseFloat(sales.ex_cash_amount)).toFixed(2);
+					    this.sales.bankPaid           = parseFloat(parseFloat(sales.SaleMaster_bankPaid) + +parseFloat(sales.ex_bank_amount)).toFixed(2);
 					    this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
 					    this.sales.previousDue        = sales.SaleMaster_Previous_Due;
 					    this.sales.due                = sales.SaleMaster_DueAmount;
