@@ -17,10 +17,10 @@ const orderInvoice = Vue.component("order-invoice", {
                 </div>
                 <div class="row">
                     <div class="col-xs-7" style="font-size:16px;">
-                        <strong>Customer Id:</strong> {{ sales.Customer_Code || '&nbsp;'}}<br>
-                        <strong>Customer Name:</strong> {{ sales.Customer_Name || '&nbsp;'}}<br>
-                        <strong>Customer Address:</strong> {{ sales.Customer_Address || '&nbsp;'}} <br>
-                        <strong>Customer Mobile:</strong> {{ sales.Customer_Mobile || '&nbsp;'}}
+                        Customer Id: <strong>{{ sales.Customer_Code || '&nbsp;'}}</strong><br>
+                        Customer Name: <strong>{{ sales.Customer_Name || '&nbsp;'}}</strong><br>
+                        Customer Address: <strong>{{ sales.Customer_Address || '&nbsp;'}}</strong> <br>
+                        Customer Mobile: <strong>{{ sales.Customer_Mobile || '&nbsp;'}}</strong>
                     </div>
                     <div class="col-xs-5 text-right" style="font-size:16px;">
                         <strong>Order by: {{ sales.AddBy || '&nbsp;' }}</strong><br>
@@ -144,10 +144,6 @@ const orderInvoice = Vue.component("order-invoice", {
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <!--
-                        <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }}<br><br>
-                        <strong>Note: </strong>
-                        -->
                         <p style="text-align:center;">
                             <img id="barcode" />
                         </p>

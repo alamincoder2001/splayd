@@ -214,15 +214,11 @@ const salesInvoice = Vue.component("sales-invoice", {
                   </div>
                   <div class="row">
                       <div class="col-xs-12">
-                          <!--
-                          <strong>In Word: </strong> {{ convertNumberToWords(sales.SaleMaster_TotalSaleAmount) }}<br><br>
-                          <strong>Note: </strong>
-                          -->
                           <p style="white-space: pre-line;font-size:15px;">
                               NO REFUND. You can only <strong>exchange within 3days</strong>
                           </p>
                           <p style="text-align:center;">
-                            <canvas id="barcode"></canvas>
+                            <img id="barcode" />
                           </p>
                       </div>
                   </div>
