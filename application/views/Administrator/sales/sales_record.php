@@ -195,7 +195,7 @@
 									Total: {{ sale.SaleMaster_TotalSaleAmount }}<br>
 									Paid: {{ sale.SaleMaster_PaidAmount }}<br>
 									Due: {{ sale.SaleMaster_DueAmount }}<br>
-									Exchange Total: {{ sale.exchange_total }}
+									Exchange Total: {{ parseFloat(parseFloat(sale.ex_cash_amount) + +parseFloat(sale.ex_bank_amount)).toFixed(2) }}
 								</td>
 								<td></td>
 							</tr>
@@ -239,7 +239,7 @@
 							<td style="text-align:right;">{{ sale.SaleMaster_TotalSaleAmount }}</td>
 							<td style="text-align:right;">{{ sale.SaleMaster_PaidAmount }}</td>
 							<td style="text-align:right;">{{ sale.SaleMaster_DueAmount }}</td>
-							<td style="text-align:right;">{{ sale.exchange_total }}</td>
+							<td style="text-align:right;">{{ parseFloat(parseFloat(sale.ex_cash_amount) + +parseFloat(sale.ex_bank_amount)).toFixed(2) }}</td>
 							<td style="text-align:left;">{{ sale.SaleMaster_Description }}</td>
 							<td style="text-align:center;">
 								<a href="" title="Sale Invoice" v-bind:href="`/sale_invoice_print/${sale.SaleMaster_SlNo}`" target="_blank"><i class="fa fa-file"></i></a>
@@ -263,7 +263,7 @@
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_TotalSaleAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_PaidAmount)}, 0).toFixed(2) }}</td>
 							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.SaleMaster_DueAmount)}, 0).toFixed(2) }}</td>
-							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + parseFloat(curr.exchange_total)}, 0).toFixed(2) }}</td>
+							<td style="text-align:right;">{{ sales.reduce((prev, curr)=>{return prev + +parseFloat(curr.ex_cash_amount)+ +parseFloat(curr.ex_bank_amount)}, 0).toFixed(2) }}</td>
 							<td></td>
 							<td></td>
 						</tr>
