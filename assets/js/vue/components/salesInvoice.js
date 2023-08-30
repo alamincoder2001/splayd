@@ -218,7 +218,7 @@ const salesInvoice = Vue.component("sales-invoice", {
                               NO REFUND. You can only <strong>exchange within 3days</strong>
                           </p>
                           <p style="text-align:center;">
-                            <img id="barcode" />
+                            <svg id="barcode" ></svg>
                           </p>
                       </div>
                   </div>
@@ -452,14 +452,30 @@ const salesInvoice = Vue.component("sales-invoice", {
                               </style>
                           </head>
                           <body>
-                              <div style="text-align:center;">
-                                  <!-- <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br> -->
-                                  <strong style="text-transform:uppercase;font-size:26px;">${this.currentBranch.Company_Name}</strong><br>
-                                  <p style="white-space:pre-line;font-size:18px;">${this.currentBranch.Repot_Heading}</p>
-                                  <strong>Phone: </strong><strong style="font-size:12px;">${this.currentBranch.Company_phone}</strong><br>
-                                  <strong>Email: </strong><strong style="font-size:12px;">${this.currentBranch.Company_email}</strong><br>
+                              <div class="container">
+                                  <table style="width:100%;margin-top:8px;">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                <div style="text-align:center;">
+                                                    <!-- <img src="/uploads/company_profile_thum/${this.currentBranch.Company_Logo_org}" alt="Logo" style="height:80px;margin:0px;" /><br> -->
+                                                    <strong style="text-transform:uppercase;font-size:26px;">${this.currentBranch.Company_Name}</strong><br>
+                                                    <p style="white-space:pre-line;font-size:18px;">${this.currentBranch.Repot_Heading}</p>
+                                                    <strong>Phone: </strong><strong style="font-size:12px;">${this.currentBranch.Company_phone}</strong><br>
+                                                    <strong>Email: </strong><strong style="font-size:12px;">${this.currentBranch.Company_email}</strong><br>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                ${invoiceContent}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                  <table>
                               </div>
-                              ${invoiceContent}
                           </body>
                       </html>
                   `);
