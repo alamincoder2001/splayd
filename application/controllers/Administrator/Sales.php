@@ -474,16 +474,14 @@ class Sales extends CI_Controller
                 'employee_id'                    => $data->sales->employeeId,
                 'SaleMaster_SaleDate'            => $data->sales->salesDate,
                 'SaleMaster_SaleType'            => $data->sales->salesType,
-                'SaleMaster_TotalSaleAmount'     => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_TotalSaleAmount : $data->sales->total,
+                'SaleMaster_TotalSaleAmount'     => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_TotalSaleAmount :$data->sales->total,
                 'SaleMaster_TotalDiscountAmount' => $data->sales->discount,
                 'SaleMaster_TaxAmount'           => $data->sales->vat,
                 'SaleMaster_Freight'             => $data->sales->transportCost,
-                'SaleMaster_SubTotalAmount'      => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_SubTotalAmount : $data->sales->subTotal,
-                'SaleMaster_PaidAmount'          => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_PaidAmount : $data->sales->paid,
-                'ex_cash_amount'                 => $data->sales->cashPaid - $oldSale->SaleMaster_cashPaid,
-                'ex_bank_amount'                 => $data->sales->bankPaid - $oldSale->SaleMaster_bankPaid,
-                'SaleMaster_cashPaid'            => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_cashPaid : $data->sales->cashPaid,
-                'SaleMaster_bankPaid'            => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_bankPaid : $data->sales->bankPaid,
+                'SaleMaster_SubTotalAmount'      => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_SubTotalAmount :$data->sales->subTotal,
+                'SaleMaster_PaidAmount'          => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_PaidAmount :$data->sales->paid,
+                'SaleMaster_cashPaid'            => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_cashPaid :$data->sales->cashPaid,
+                'SaleMaster_bankPaid'            => count($data->is_exchange) > 0 ? $oldSale->SaleMaster_bankPaid :$data->sales->bankPaid,
                 'SaleMaster_bankPaidwithChagre'  => $data->sales->bankPaidwithChagre,
                 'SaleMaster_DueAmount'           => $data->sales->due,
                 'SaleMaster_Previous_Due'        => $data->sales->previousDue,
@@ -496,7 +494,11 @@ class Sales extends CI_Controller
                 'exchangeDate'                   => count($data->is_exchange) > 0 ? date("Y-m-d H:i:s") : null,
                 "SaleMaster_branchid"            => $this->session->userdata("BRANCHid")
             );
-
+            if (count($data->is_exchange) > 0) {
+                $sales['ex_cash_amount'] = $data->sales->cashPaid - $oldSale->SaleMaster_cashPaid;
+                $sales['ex_bank_amount'] = $data->sales->bankPaid - $oldSale->SaleMaster_bankPaid;
+                
+            }
             $this->db->where('SaleMaster_SlNo', $salesId);
             $this->db->update('tbl_salesmaster', $sales);
 

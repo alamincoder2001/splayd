@@ -945,16 +945,16 @@
 						this.sales.bankPaid)).toFixed(2);
 				}
 
-				if (this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) < parseFloat(this.sales.total)) {
+				if (is_exchange.length > 0 && this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) < parseFloat(this.sales.total)) {
 					this.sales.takeAmount = (parseFloat(this.sales.total) - parseFloat(this.sales.paid)).toFixed(2)
 					this.sales.returnAmount = 0;
 				}
-				if (this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) > parseFloat(this.sales.total)) {
+				if (is_exchange.length > 0 && this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) > parseFloat(this.sales.total)) {
 					this.sales.returnAmount = (parseFloat(this.sales.exchangeTotal) - parseFloat(this.sales.total)).toFixed(2)
 					this.sales.takeAmount = 0;
 				}
 
-				if (Math.sign(parseFloat(this.sales.takeAmount)) == -1) {
+				if (is_exchange.length > 0 && Math.sign(parseFloat(this.sales.takeAmount)) == -1) {
 					this.sales.returnAmount = this.sales.takeAmount.replace('-', '');
 					this.sales.takeAmount = 0;
 				}
@@ -1065,7 +1065,9 @@
 				this.sales.customerId = this.selectedCustomer.Customer_SlNo;
 				this.sales.salesFrom = this.selectedBranch.brunch_id;
 				this.sales.paid = parseFloat(this.sales.cashPaid) + parseFloat(this.sales.bankPaid);
-				this.sales.paid = (this.sales.paid - this.sales.returnCash);
+				if (parseFloat(this.sales.returnCash) > 0) {
+					this.sales.paid = (this.sales.paid - this.sales.returnCash);
+				}
 
 				let data = {
 					sales: this.sales,
@@ -1101,29 +1103,29 @@
 				await axios.post('/get_sales', {
 					salesId: this.sales.salesId
 				}).then(res => {
-					let r                             = res.data;
-					let sales                         = r.sales[0];
-					    this.sales.salesBy            = sales.AddBy;
-					    this.sales.salesFrom          = sales.SaleMaster_branchid;
-					    this.sales.salesDate          = sales.SaleMaster_SaleDate;
-					    this.sales.salesType          = sales.SaleMaster_SaleType;
-					    this.sales.customerId         = sales.SalseCustomer_IDNo;
-					    this.sales.employeeId         = sales.Employee_SlNo;
-					    this.sales.subTotal           = parseFloat(+parseFloat(sales.SaleMaster_SubTotalAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
-					    this.sales.discount           = sales.SaleMaster_TotalDiscountAmount;
-					    this.sales.vat                = sales.SaleMaster_TaxAmount;
-					    this.sales.transportCost      = sales.SaleMaster_Freight;
-					    this.sales.total              = parseFloat(+parseFloat(sales.SaleMaster_TotalSaleAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
-					    this.sales.paid               = sales.SaleMaster_PaidAmount;
-					    this.sales.cashPaid           = parseFloat(parseFloat(sales.SaleMaster_cashPaid) + +parseFloat(sales.ex_cash_amount)).toFixed(2);
-					    this.sales.bankPaid           = parseFloat(parseFloat(sales.SaleMaster_bankPaid) + +parseFloat(sales.ex_bank_amount)).toFixed(2);
-					    this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
-					    this.sales.previousDue        = sales.SaleMaster_Previous_Due;
-					    this.sales.due                = sales.SaleMaster_DueAmount;
-					    this.sales.takeAmount         = sales.takeAmount;
-					    this.sales.returnAmount       = sales.returnAmount;
-					    this.sales.note               = sales.SaleMaster_Description;
-					    this.sales.returnCash         = 0;
+					let r = res.data;
+					let sales = r.sales[0];
+					this.sales.salesBy = sales.AddBy;
+					this.sales.salesFrom = sales.SaleMaster_branchid;
+					this.sales.salesDate = sales.SaleMaster_SaleDate;
+					this.sales.salesType = sales.SaleMaster_SaleType;
+					this.sales.customerId = sales.SalseCustomer_IDNo;
+					this.sales.employeeId = sales.Employee_SlNo;
+					this.sales.subTotal = parseFloat(+parseFloat(sales.SaleMaster_SubTotalAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
+					this.sales.discount = sales.SaleMaster_TotalDiscountAmount;
+					this.sales.vat = sales.SaleMaster_TaxAmount;
+					this.sales.transportCost = sales.SaleMaster_Freight;
+					this.sales.total = parseFloat(+parseFloat(sales.SaleMaster_TotalSaleAmount) + parseFloat(sales.takeAmount) - parseFloat(sales.returnAmount)).toFixed(2);
+					this.sales.paid = sales.SaleMaster_PaidAmount;
+					this.sales.cashPaid = parseFloat(parseFloat(sales.SaleMaster_cashPaid) + +parseFloat(sales.ex_cash_amount)).toFixed(2);
+					this.sales.bankPaid = parseFloat(parseFloat(sales.SaleMaster_bankPaid) + +parseFloat(sales.ex_bank_amount)).toFixed(2);
+					this.sales.bankPaidwithChagre = sales.SaleMaster_bankPaidwithChagre;
+					this.sales.previousDue = sales.SaleMaster_Previous_Due;
+					this.sales.due = sales.SaleMaster_DueAmount;
+					this.sales.takeAmount = sales.takeAmount;
+					this.sales.returnAmount = sales.returnAmount;
+					this.sales.note = sales.SaleMaster_Description;
+					this.sales.returnCash = 0;
 
 					this.oldCustomerId = sales.SalseCustomer_IDNo;
 					this.oldPreviousDue = sales.SaleMaster_Previous_Due;
