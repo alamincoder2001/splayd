@@ -1,37 +1,37 @@
 <style>
-    .v-select {
-        margin-bottom: 5px;
-    }
+	.v-select {
+		margin-bottom: 5px;
+	}
 
-    .v-select .dropdown-toggle {
-        padding: 0px;
-    }
+	.v-select .dropdown-toggle {
+		padding: 0px;
+	}
 
-    .v-select input[type=search],
-    .v-select input[type=search]:focus {
-        margin: 0px;
-    }
+	.v-select input[type=search],
+	.v-select input[type=search]:focus {
+		margin: 0px;
+	}
 
-    .v-select .vs__selected-options {
-        overflow: hidden;
-        flex-wrap: nowrap;
-    }
+	.v-select .vs__selected-options {
+		overflow: hidden;
+		flex-wrap: nowrap;
+	}
 
-    .v-select .selected-tag {
-        margin: 2px 0px;
-        white-space: nowrap;
-        position: absolute;
-        left: 0px;
-    }
+	.v-select .selected-tag {
+		margin: 2px 0px;
+		white-space: nowrap;
+		position: absolute;
+		left: 0px;
+	}
 
-    .v-select .vs__actions {
-        margin-top: -5px;
-    }
+	.v-select .vs__actions {
+		margin-top: -5px;
+	}
 
-    .v-select .dropdown-menu {
-        width: auto;
-        overflow-y: auto;
-    }
+	.v-select .dropdown-menu {
+		width: auto;
+		overflow-y: auto;
+	}
 </style>
 <div id="stock">
 	<div class="row">
@@ -42,22 +42,22 @@
 					<v-select v-bind:options="searchTypes" v-model="selectedSearchType" label="text" v-on:input="onChangeSearchType"></v-select>
 				</div>
 			</div>
-	
+
 			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'category'">
 				<div class="col-md-2">
 					<v-select v-bind:options="categories" v-model="selectedCategory" label="ProductCategory_Name"></v-select>
 				</div>
 			</div>
-	
-			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'product' || selectedSearchType.value == 'size'">
+
+			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'key'">
 				<div class="col-md-2">
-					<v-select v-bind:options="products" v-model="selectedProduct" label="display_text"></v-select>
+					<v-select v-bind:options="productkeys" v-model="selectedProductKey" label="Key_Name" @input="onChangeKey"></v-select>
 				</div>
 			</div>
 
-			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'size'">
+			<div class="form-group" style="margin-top:10px;" v-if="selectedSearchType.value == 'product' || selectedSearchType.value == 'key'">
 				<div class="col-md-2">
-					<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name"></v-select>
+					<v-select v-bind:options="products" v-model="selectedProduct" label="display_text"></v-select>
 				</div>
 			</div>
 
@@ -72,9 +72,9 @@
 					<input type="date" class="form-control" v-model="date">
 				</div>
 			</div>
-	
+
 			<div class="form-group">
-				<div class="col-md-2" >
+				<div class="col-md-2">
 					<input type="button" class="btn btn-primary" value="Show Report" v-on:click="getStock" style="margin-top:0px;border:0px;height:28px;">
 				</div>
 			</div>
@@ -119,12 +119,19 @@
 					</tfoot>
 				</table>
 
-				<table class="table table-bordered" v-if="searchType == 'size'" style="display:none" v-bind:style="{display: searchType == 'size' ? '' : 'none'}">
+				<table class="table table-bordered" v-if="searchType == 'key'" style="display:none" v-bind:style="{display: searchType == 'key' ? '' : 'none'}">
 					<thead>
 						<tr>
 							<th>Product Id</th>
 							<th>Product Name</th>
-							<th>Size</th>
+							<th>Category</th>
+							<th>Purchased Quantity</th>
+							<th>Purchase Returned Quantity</th>
+							<th>Damaged Quantity</th>
+							<th>Sold Quantity</th>
+							<th>Sales Returned Quantity</th>
+							<th>Transferred In Quantity</th>
+							<th>Transferred Out Quantity</th>
 							<th>Current Quantity</th>
 							<th>Rate</th>
 							<th>Stock Value</th>
@@ -134,23 +141,30 @@
 						<tr v-for="product in stock">
 							<td>{{ product.Product_Code }}</td>
 							<td>{{ product.Product_Name }}</td>
-							<td>{{ product.size_name }}</td>
-							<td> {{ product.stock }} </td>
+							<td>{{ product.ProductCategory_Name }}</td>
+							<td>{{ product.purchased_quantity }}</td>
+							<td>{{ product.purchase_returned_quantity }}</td>
+							<td>{{ product.damaged_quantity }}</td>
+							<td>{{ product.sold_quantity }}</td>
+							<td>{{ product.sales_returned_quantity }}</td>
+							<td>{{ product.transferred_to_quantity}}</td>
+							<td>{{ product.transferred_from_quantity}}</td>
+							<td>{{ product.current_quantity }} {{ product.Unit_Name }}</td>
 							<td>{{ product.Product_SellingPrice | decimal }}</td>
 							<td>{{ product.stock_value | decimal }}</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr>
-							<th colspan="3" style="text-align:right;">Total Stock</th>
-							<th>{{stock.reduce((acc, pre) => {return acc + +pre.stock},0)}}</th>
+							<th colspan="10" style="text-align:right;">Total Stock</th>
+							<th>{{stock.reduce((acc, pre) => {return acc + +pre.current_quantity},0)}}</th>
 							<th></th>
 							<th>{{ totalStockValue | decimal }}</th>
 						</tr>
 					</tfoot>
 				</table>
 
-				<table class="table table-bordered" v-if="(searchType != 'current' && searchType != 'size') && searchType != null" style="display:none;" v-bind:style="{display: (searchType != 'current' && searchType != 'size') && searchType != null ? '' : 'none'}">
+				<table class="table table-bordered" v-if="(searchType != 'current' && searchType != 'key') && searchType != null" style="display:none;" v-bind:style="{display: (searchType != 'current' && searchType != 'key') && searchType != null ? '' : 'none'}">
 					<thead>
 						<tr>
 							<th>Product Id</th>
@@ -200,24 +214,37 @@
 </div>
 
 
-<script src="<?php echo base_url();?>assets/js/vue/vue.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/axios.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/vue/vue-select.min.js"></script>
-<script src="<?php echo base_url();?>assets/js/moment.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/axios.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/vue/vue-select.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 
 <script>
 	Vue.component('v-select', VueSelect.VueSelect);
 	new Vue({
 		el: '#stock',
-		data(){
+		data() {
 			return {
-				searchTypes: [
-					{text: 'Current Stock', value: 'current'},
-					{text: 'Total Stock', value: 'total'},
-					{text: 'Category Wise Stock', value: 'category'},
-					{text: 'Product Wise Stock', value: 'product'},
-					{text: 'Size Wise Stock', value: 'size'},
-					//{text: 'Brand Wise Stock', value: 'brand'}
+				searchTypes: [{
+						text: 'Current Stock',
+						value: 'current'
+					},
+					{
+						text: 'Total Stock',
+						value: 'total'
+					},
+					{
+						text: 'Category Wise Stock',
+						value: 'category'
+					},
+					{
+						text: 'Product Wise Stock',
+						value: 'product'
+					},
+					{
+						text: 'Key Wise Stock',
+						value: 'key'
+					},
 				],
 				selectedSearchType: {
 					text: 'select',
@@ -225,8 +252,8 @@
 				},
 				searchType: null,
 				date: moment().format('YYYY-MM-DD'),
-				sizes: [],
-				selectedSize: null,
+				productkeys: [],
+				selectedProductKey: null,
 				categories: [],
 				selectedCategory: null,
 				products: [],
@@ -243,103 +270,105 @@
 				return value == null ? '0.00' : parseFloat(value).toFixed(2);
 			}
 		},
-		created(){
-		},
-		methods:{
-			getStock(){
+		created() {},
+		methods: {
+			getStock() {
 				this.searchType = this.selectedSearchType.value;
 				let url = '';
 				let parameters = {};
 
-				if(this.searchType == 'current'){
+				if (this.searchType == 'current') {
 					url = '/get_current_stock';
-				}else if(this.searchType == 'size'){
-					url = '/get_sizewise_stock';
-					parameters.productId = this.selectedProduct == null ? '': this.selectedProduct.Product_SlNo;
-					parameters.sizeId = this.selectedSize == null ? '': this.selectedSize.size_SiNo;
-				}else {
+				} else {
 					url = '/get_total_stock';
+					parameters.productKey = this.selectedProductKey == null ? '' : this.selectedProductKey.Key_SlNo;
+					parameters.productId = this.selectedProduct == null ? '' : this.selectedProduct.Product_SlNo;
 					parameters.date = this.date;
 				}
-				
+
 				this.selectionText = "";
 
-				if(this.searchType == 'category' && this.selectedCategory == null){
+				if (this.searchType == 'category' && this.selectedCategory == null) {
 					alert('Select a category');
 					return;
-				} else if(this.searchType == 'category' && this.selectedCategory != null) {
+				} else if (this.searchType == 'category' && this.selectedCategory != null) {
 					parameters.categoryId = this.selectedCategory.ProductCategory_SlNo;
 					this.selectionText = "Category: " + this.selectedCategory.ProductCategory_Name;
 				}
-				
-				if(this.searchType == 'product' && this.selectedProduct == null){
+
+				if (this.searchType == 'product' && this.selectedProduct == null) {
 					alert('Select a product');
 					return;
-				} else if(this.searchType == 'product' && this.selectedProduct != null) {
+				} else if (this.searchType == 'product' && this.selectedProduct != null) {
 					parameters.productId = this.selectedProduct.Product_SlNo;
 					this.selectionText = "product: " + this.selectedProduct.display_text;
 				}
 
-				if(this.searchType == 'brand' && this.selectedBrand == null){
+				if (this.searchType == 'brand' && this.selectedBrand == null) {
 					alert('Select a brand');
 					return;
-				} else if(this.searchType == 'brand' && this.selectedBrand != null) {
+				} else if (this.searchType == 'brand' && this.selectedBrand != null) {
 					parameters.brandId = this.selectedBrand.brand_SiNo;
 					this.selectionText = "Brand: " + this.selectedBrand.brand_name;
 				}
 
 
 				axios.post(url, parameters).then(res => {
-					if(this.searchType == 'current'){
-						this.stock = res.data.stock.filter((pro)=> pro.current_quantity > 0);
-					}else if(this.searchType == 'size'){
-						this.stock = res.data.stock.filter((pro)=> pro.stock > 0);
-					}
-					else{
+					if (this.searchType == 'current') {
+						this.stock = res.data.stock.filter((pro) => pro.current_quantity > 0);
+					}else {
 						this.stock = res.data.stock;
 					}
 					this.totalStockValue = res.data.totalValue;
 				})
 			},
-			onChangeSearchType(){
+			onChangeSearchType() {
 				this.products = [];
-				this.sizes    = [];
+				this.productkeys = [];
 				this.selectedProduct = null
-				this.selectedSize = null
+				this.selectedProductKey = null
 
 				this.stock = [];
-				if(this.selectedSearchType.value == 'category' && this.categories.length == 0){
+				if (this.selectedSearchType.value == 'category' && this.categories.length == 0) {
 					this.getCategories();
-				} else if(this.selectedSearchType.value == 'brand' && this.brands.length == 0){
+				} else if (this.selectedSearchType.value == 'brand' && this.brands.length == 0) {
 					this.getBrands();
-				} else if(this.selectedSearchType.value == 'product' && this.products.length == 0){
+				} else if (this.selectedSearchType.value == 'product' && this.products.length == 0) {
 					this.getProducts();
-				} else if(this.selectedSearchType.value == 'size'){
-					this.getProducts();
-					this.getProductSize();
+				} else if (this.selectedSearchType.value == 'key') {
+					this.getProductKey();
 				}
 			},
-			getCategories(){
+			async onChangeKey(){
+				await this.getProducts();
+			},
+			getCategories() {
 				axios.get('/get_categories').then(res => {
 					this.categories = res.data;
 				})
 			},
-			getProducts(){
-				axios.post('/get_products', {isService: 'false'}).then(res => {
-					this.products =  res.data;
+			async getProducts() {
+				await axios.post('/get_products', {
+					isService: 'false'
+				}).then(res => {
+					if (this.selectedSearchType.value == 'key' && this.selectedProductKey != null) {
+						this.products = res.data.filter(p => p.productkey_id == this.selectedProductKey.Key_SlNo);
+					}else{
+						this.products = res.data;
+					}
 				})
 			},
-			getBrands(){
+			getBrands() {
 				axios.get('/get_brands').then(res => {
 					this.brands = res.data;
 				})
 			},
-			getProductSize(){
-				axios.get('/get_sizes').then(res => {
-					this.sizes = res.data;
+			getProductKey() {
+				axios.get('/get_productkeys').then(res => {
+					this.productkeys = res.data;
 				})
 			},
-			async print(){
+			async print() {
 				let reportContent = `
 					<div class="container-fluid">
 						<h4 style="text-align:center">${this.selectedSearchType.text} Report</h4 style="text-align:center">
@@ -356,7 +385,7 @@
 
 				var reportWindow = window.open('', 'PRINT', `height=${screen.height}, width=${screen.width}, left=0, top=0`);
 				reportWindow.document.write(`
-					<?php $this->load->view('Administrator/reports/reportHeader.php');?>
+					<?php $this->load->view('Administrator/reports/reportHeader.php'); ?>
 				`);
 
 				reportWindow.document.body.innerHTML += reportContent;

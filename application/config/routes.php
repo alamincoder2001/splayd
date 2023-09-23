@@ -24,6 +24,12 @@ $route['editbrand/(:any)'] = 'Administrator/Page/brandedit/$1';
 $route['updateBrand']      = 'Administrator/Page/Update_brand';
 $route['branddelete']      = 'Administrator/Page/branddelete';
 
+//productkey
+$route['productkey']            = 'Administrator/Products/add_productkey';
+$route['get_productkeys']       = 'Administrator/Products/getProductkeys';
+$route['insertproductkey']      = 'Administrator/Products/insert_productkey';
+$route['productkeydelete']      = 'Administrator/Products/productkeydelete';
+
 
 
 // Expense Head=============

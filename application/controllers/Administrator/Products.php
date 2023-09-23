@@ -72,6 +72,7 @@ class Products extends CI_Controller
             $product = array(
                 'Product_Code' => $data->product->Product_Code,
                 'Product_Name' => $data->product->Product_Name,
+                'productkey_id' => $data->product->productkey_id,
                 'ProductCategory_ID' => $data->product->ProductCategory_ID,
                 'brand' => $data->product->brand,
                 'Product_ReOrederLevel' => $data->product->Product_ReOrederLevel,
@@ -153,6 +154,7 @@ class Products extends CI_Controller
             $product = array(
                 'Product_Code' => $data->product->Product_Code,
                 'Product_Name' => $data->product->Product_Name,
+                'productkey_id' => $data->product->productkey_id,
                 'ProductCategory_ID' => $data->product->ProductCategory_ID,
                 'brand' => $data->product->brand,
                 'Product_ReOrederLevel' => $data->product->Product_ReOrederLevel,
@@ -168,21 +170,21 @@ class Products extends CI_Controller
 
             $this->db->where('Product_SlNo', $productId)->update('tbl_product', $product);
 
-            foreach ($data->cart as $color) {
-                $colorCount = $this->db->query("select * from tbl_color_size where product_id = ?  and size_id = ?  and branch_id = ? ", [$productId, $color->size_SiNo, $this->brunch])->num_rows();
-                if ($colorCount == 0) {
-                    $colorDetails = array(
-                        'product_id' => $productId,
-                        'size_id' => $color->size_SiNo,
-                        'status' => 'a',
-                        'add_by' => $this->session->userdata("FullName"),
-                        'add_time' => date('Y-m-d H:i:s'),
-                        'branch_id' => $this->brunch,
-                    );
+            // foreach ($data->cart as $color) {
+            //     $colorCount = $this->db->query("select * from tbl_color_size where product_id = ?  and size_id = ?  and branch_id = ? ", [$productId, $color->size_SiNo, $this->brunch])->num_rows();
+            //     if ($colorCount == 0) {
+            //         $colorDetails = array(
+            //             'product_id' => $productId,
+            //             'size_id' => $color->size_SiNo,
+            //             'status' => 'a',
+            //             'add_by' => $this->session->userdata("FullName"),
+            //             'add_time' => date('Y-m-d H:i:s'),
+            //             'branch_id' => $this->brunch,
+            //         );
 
-                    $this->db->insert('tbl_color_size', $colorDetails);
-                }
-            }
+            //         $this->db->insert('tbl_color_size', $colorDetails);
+            //     }
+            // }
 
             $res = ['success' => true, 'message' => 'Product updated successfully', 'productId' => $this->mt->generateProductCode()];
         } catch (Exception $ex) {
@@ -243,11 +245,13 @@ class Products extends CI_Controller
                 pc.ProductCategory_Name,
                 br.brand_name,
                 c.color_name,
-                u.Unit_Name
+                u.Unit_Name,
+                pk.Key_Name
             from tbl_product p
             left join tbl_productcategory pc on pc.ProductCategory_SlNo = p.ProductCategory_ID
             left join tbl_brand br on br.brand_SiNo = p.brand
             left join tbl_color c on c.color_SiNo = p.color
+            left join tbl_product_key pk on pk.Key_SlNo = p.productkey_id
             left join tbl_unit u on u.Unit_SlNo = p.Unit_ID
             where p.status = 'a'
             $clauses
@@ -312,6 +316,10 @@ class Products extends CI_Controller
 
         if (isset($data->productId) && $data->productId != null) {
             $clauses .= " and p.Product_SlNo = '$data->productId'";
+        }
+
+        if (isset($data->productKey) && $data->productKey != null) {
+            $clauses .= " and p.productkey_id = '$data->productKey'";
         }
 
         if (isset($data->brandId) && $data->brandId != null) {
@@ -1000,7 +1008,7 @@ class Products extends CI_Controller
 
     public function deleteSize()
     {
-        
+
         try {
             $data = json_decode($this->input->raw_input_stream);
             $this->db->query("update tbl_color_size set status = 'd' where id = ?", $data->sizeId);
@@ -1009,5 +1017,60 @@ class Products extends CI_Controller
             $res = ['success' => false, 'message' => $ex->getMessage()];
         }
         echo json_encode($res);
+    }
+
+    // product key
+
+    public function add_productkey()
+    {
+        $access = $this->mt->userAccess();
+        if (!$access) {
+            redirect(base_url());
+        }
+        $data['title'] = "Add Product Key";
+        $data['content'] = $this->load->view('Administrator/add_productkey', $data, TRUE);
+        $this->load->view('Administrator/index', $data);
+    }
+
+    public function getProductkeys()
+    {
+        $result = $this->db->query("SELECT * FROM `tbl_product_key` WHERE `status` = 'a'")->result();
+        echo json_encode($result);
+    }
+
+    public function insert_productkey()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $productkey = array(
+            "Key_Name" => $data->productkey->Key_Name,
+            "status"               => 'a',
+            "AddBy"                => $this->session->userdata("FullName"),
+            "AddTime"              => date("Y-m-d H:i:s")
+        );
+        if (empty($data->productkey->Key_SlNo)) {
+            $this->db->insert('tbl_product_key', $productkey);
+            $success = 'Save Success';
+        } else {
+            unset($productkey['AddBy']);
+            unset($productkey['AddTime']);
+            $productkey['UpdateBy'] = $this->session->userdata("FullName");
+            $productkey['UpdateTime'] = date("Y-m-d H:i:s");
+            $this->db->where('Key_SlNo', $data->productkey->Key_SlNo);
+            $this->db->update('tbl_product_key', $productkey);
+            $success = 'Update Success';
+        }
+        echo json_encode($success);
+    }
+
+    public function productkeydelete()
+    {
+        $data = json_decode($this->input->raw_input_stream);
+        $productkey = array(
+            "status" => 'd'
+        );
+        $this->db->where('Key_SlNo', $data->keyId);
+        $this->db->update('tbl_product_key', $productkey);
+        $success = 'Delete Success';
+        echo json_encode($success);
     }
 }

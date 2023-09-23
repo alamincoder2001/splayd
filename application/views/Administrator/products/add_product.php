@@ -140,47 +140,22 @@
 					</div>
 					<div class="col-xs-1 col-md-1" style="padding:0;margin-left: -15px;"><a href="/unit" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
 				</div>
+				<div class="form-group clearfix">
+					<label class="control-label col-xs-4 col-md-4">Product Key:</label>
+					<div class="col-xs-7 col-md-7">
+						<v-select v-bind:options="productkeys" v-model="selectedProductKey" label="Key_Name"></v-select>
+					</div>
+					<div class="col-xs-1 col-md-1" style="padding:0;margin-left: -15px;"><a href="/productkey" target="_blank" class="add-button"><i class="fa fa-plus"></i></a></div>
+				</div>
+			</div>
 
+			<div class="col-xs-12 col-md-6">
 				<div class="form-group clearfix">
 					<label class="control-label col-xs-4 col-md-4">VAT:</label>
 					<div class="col-xs-8 col-md-7">
 						<input type="text" class="form-control" v-model="product.vat">
 					</div>
 				</div>
-
-				<!-- <div class="form-group clearfix">
-					<label class="control-label col-xs-4 col-md-4">Size:</label>
-					<div class="col-xs-8 col-md-7">
-						<v-select v-bind:options="sizes" v-model="selectedSize" label="size_name" multiple></v-select>
-					</div>
-				</div> -->
-
-				<!-- <div class="information">
-					<div class="col-sm-12 color_heading"> <strong>Product Size & Color</strong> <button class="btn btn-colorAdd" type="button" data-toggle="modal" data-target="#myModal">+Add</button></div>
-					<div class="table-responsive" style="padding: 5px 3px 0px 3px;">
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>SL</th>
-									<th>Color</th>
-									<th>Size</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(item, ind) in cart">
-									<td>{{ ind + 1 }}</td>
-									<td>{{ item.colorName }}</td>
-									<td>{{ item.sizeName }}</td>
-									<td><a href="" v-on:click.prevent="removeFromCart(ind)"><i class="fa fa-trash"></i></a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div> -->
-			</div>
-
-			<div class="col-xs-12 col-md-6">
 
 				<div class="form-group clearfix">
 					<label class="control-label col-xs-4 col-md-4">Re-order level:</label>
@@ -361,6 +336,7 @@
 						Product_SlNo: '',
 						Product_Code: "<?php echo $productCode; ?>",
 						Product_Name: '',
+						productkey_id: '',
 						ProductCategory_ID: '',
 						brand: '',
 						Product_ReOrederLevel: '',
@@ -388,6 +364,9 @@
 					// selectedSize: null,
 					// cart: [],
 					selectedUnit: null,
+
+					productkeys: [],
+					selectedProductKey: null,
 
 					columns: [{
 							label: 'Product Id',
@@ -452,14 +431,19 @@
 				this.getCategories();
 				this.getBrands();
 				this.getUnits();
+				this.getProductKey();
 				this.getProducts();
-				this.getSizes();
 			},
 			methods: {
 				changeIsService() {
 					if (this.product.is_service) {
 						this.product.Product_Purchase_Rate = 0;
 					}
+				},
+				getProductKey() {
+					axios.get('/get_productkeys').then(res => {
+						this.productkeys = res.data;
+					})
 				},
 				getCategories() {
 					axios.get('/get_categories').then(res => {
@@ -469,11 +453,6 @@
 				getBrands() {
 					axios.get('/get_brands').then(res => {
 						this.brands = res.data;
-					})
-				},
-				getSizes() {
-					axios.get('/get_sizes').then(res => {
-						this.sizes = res.data;
 					})
 				},
 				getUnits() {
@@ -496,17 +475,17 @@
 						alert('Select unit');
 						return;
 					}
-					// if (this.selectedSize == null) {
-					// 	alert('Select Size');
-					// 	return;
-					// }
+					if (this.selectedProductKey == null) {
+						alert('Select Product Key');
+						return;
+					}
 
 					if (this.selectedBrand != null) {
 						this.product.brand = this.selectedBrand.brand_SiNo;
 					}
 
 					this.product.ProductCategory_ID = this.selectedCategory.ProductCategory_SlNo;
-					// this.product.color = this.selectedColor.color_SiNo;
+					this.product.productkey_id = this.selectedProductKey.Key_SlNo;
 					this.product.Unit_ID = this.selectedUnit.Unit_SlNo;
 
 					let url = '/add_product';
@@ -515,8 +494,7 @@
 					}
 
 					let data = {
-						product: this.product,
-						cart: this.selectedSize,
+						product: this.product
 					}
 
 					this.onProgress = true;
@@ -535,7 +513,6 @@
 
 				},
 				editProduct(product) {
-					this.cart = [];
 					let keys = Object.keys(this.product);
 					keys.forEach(key => {
 						this.product[key] = product[key];
@@ -547,26 +524,15 @@
 						ProductCategory_SlNo: product.ProductCategory_ID,
 						ProductCategory_Name: product.ProductCategory_Name
 					}
-
-					// selected size
-					let si = [];
-					product.colors.forEach(color => {
-						let cartColor = {
-							size_SiNo: color.size_id,
-							size_name: color.size_name,
-						}
-						si.push(cartColor);
-					})
-					this.selectedSize = si;
+					this.selectedProductKey = {
+						Key_SlNo: product.productkey_id,
+						Key_Name: product.Key_Name
+					}
 
 					this.selectedUnit = {
 						Unit_SlNo: product.Unit_ID,
 						Unit_Name: product.Unit_Name
 					}
-				},
-				colorAndSize(row) {
-					// console.log(row)
-					this.productColors = row.colors;
 				},
 				deleteSize(sizeId) {
 					if (confirm("Are you sure?")) {
@@ -604,8 +570,8 @@
 						}
 					})
 					this.selectedCategory = null;
-					this.selectedSize = null;
 					this.selectedUnit = null;
+					this.selectedProductKey = null;
 				}
 			}
 		})
