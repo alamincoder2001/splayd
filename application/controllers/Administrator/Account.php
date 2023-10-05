@@ -1695,7 +1695,7 @@ class Account extends CI_Controller {
             and ass.buy_or_sale = 'buy'
             and ass.as_date between '$data->fromDate' and '$data->toDate'
 
-            order by date, id
+            order by date,id desc
         ")->result();
 
         $ledger = array_map(function($ind, $row) use($previousBalance, $ledger) {

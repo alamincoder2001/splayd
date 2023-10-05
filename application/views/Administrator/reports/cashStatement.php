@@ -904,7 +904,7 @@
 			getSales() {
 				axios.post('/get_sales', this.filter)
 					.then(res => {
-						this.sales = res.data.sales;
+						this.sales = res.data.sales.filter(sale => sale.Status == 'a' && sale.SaleMaster_cashPaid > 0);
 					})
 			},
 

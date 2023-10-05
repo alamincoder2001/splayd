@@ -949,7 +949,7 @@
 					this.sales.takeAmount = (parseFloat(this.sales.total) - parseFloat(this.sales.paid)).toFixed(2)
 					this.sales.returnAmount = 0;
 				}
-				if (is_exchange.length > 0 && this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) > parseFloat(this.sales.total)) {
+				if (is_exchange.length > 0 && this.sales.salesId > 0 && parseFloat(this.sales.exchangeTotal) >= parseFloat(this.sales.total)) {
 					this.sales.returnAmount = (parseFloat(this.sales.exchangeTotal) - parseFloat(this.sales.total)).toFixed(2)
 					this.sales.takeAmount = 0;
 				}
